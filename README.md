@@ -20,7 +20,7 @@ Presentor: Raphael Mazouz<br><br>
 
 ##[Project schedule](https://calendar.google.com/)
 
-Please view the wiki-pages for more information
+[Please view the wiki-pages for more information](https://github.com/raphym/Simulation-of-routing-problem-with-intelligent-agents/wiki)
 
 ## Project Documents
 - All documents
