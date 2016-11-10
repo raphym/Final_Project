@@ -21,9 +21,9 @@ class Map
 public:
         Map();
         virtual ~Map();
-        Lamp** loadLamps(); //return the Lamps vector on the boot
-        Provider** loadProviders(); // return the Providers vector on the boot
-        TrafficLight** loadTrafficLights(); // return the TrafficLights vector on the boot
+        std::vector<Lamp*> loadLamps(); //return the Lamps vector on the boot
+        std::vector<Provider*> loadProviders(); // return the Providers vector on the boot
+        std::vector<TrafficLight*> loadTrafficLights(); // return the TrafficLights vector on the boot
         void loadMap(); // Load the entire map to the memory
         void PrintMap(); // print the map
         std::vector<Node*> getNodes(); // return a vectors of all elements of the map (nodes)
@@ -33,10 +33,6 @@ public:
 protected:
 
 private:
-        //Node **elementsOfTheMap; //storage of all the elements of the map
-        int nbLamps; //num of lamps
-        int nbProviders; // num of provider
-        int nbTrafficLight; // num of trafficLight
         std::vector<Node*> vecElementsOfTheMap;
 
 };

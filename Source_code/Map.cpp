@@ -13,15 +13,15 @@ Map::~Map()
 }
 
 
-Lamp** Map::loadLamps()
+vector<Lamp*> Map::loadLamps()
 {
         int i=0;
         //f is a FileStream Object to read informations about the lamps
         FileStream f("lamps.txt");
-        nbLamps = f.LineCounters();
+        int nbLamps = f.LineCounters();
         if (nbLamps==0)
                 exit(-1);
-        Lamp **lamps = new Lamp*[nbLamps];
+        vector<Lamp*> lamps;
 
         string *names=NULL;
         double *posX = NULL;
@@ -33,9 +33,7 @@ Lamp** Map::loadLamps()
 
         f.fill_ObjectsInfo_Into_Arrays(nbLamps,names,posX,posY);
         for(i=0; i<nbLamps; i++)
-        {
-                lamps[i] = new Lamp(names[i],posX[i],posY[i]);
-        }
+                lamps.push_back(new Lamp(names[i],posX[i],posY[i]));
         delete [] posX;
         delete [] posY;
         delete [] names;
@@ -43,7 +41,8 @@ Lamp** Map::loadLamps()
         return lamps;
 }
 
-Provider** Map::loadProviders()
+
+vector<Provider*> Map::loadProviders()
 {
         int i=0;
         string *names=NULL;
@@ -53,10 +52,10 @@ Provider** Map::loadProviders()
 
         //f is a FileStream Object to read informations about the providers
         FileStream f("providers.txt");
-        nbProviders = f.LineCounters();
+        int nbProviders = f.LineCounters();
         if (nbProviders==0)
                 exit(-1);
-        Provider **providers = new Provider*[nbProviders];
+        vector<Provider*> providers;
 
         names = new string[nbProviders];
         posX = new double[nbProviders];
@@ -64,9 +63,7 @@ Provider** Map::loadProviders()
 
         f.fill_ObjectsInfo_Into_Arrays(nbProviders,names,posX,posY);
         for(i=0; i<nbProviders; i++)
-        {
-                providers[i] = new Provider(names[i],posX[i],posY[i]);
-        }
+                providers.push_back(new Provider(names[i],posX[i],posY[i]));
         delete [] posX;
         delete [] posY;
         delete [] names;
@@ -74,7 +71,7 @@ Provider** Map::loadProviders()
         return providers;
 }
 
-TrafficLight** Map::loadTrafficLights()
+vector<TrafficLight*> Map::loadTrafficLights()
 {
         int i=0;
         string *names=NULL;
@@ -83,10 +80,10 @@ TrafficLight** Map::loadTrafficLights()
 
         //f is a FileStream Object to read informations about the trafficLights
         FileStream f("trafficLights.txt");
-        nbTrafficLight = f.LineCounters();
+        int nbTrafficLight = f.LineCounters();
         if (nbTrafficLight==0)
                 exit(-1);
-        TrafficLight **trafficLights = new TrafficLight*[nbTrafficLight];
+        vector<TrafficLight*> trafficLights;
 
         names = new string[nbTrafficLight];
         posX = new double[nbTrafficLight];
@@ -95,9 +92,7 @@ TrafficLight** Map::loadTrafficLights()
 
         f.fill_ObjectsInfo_Into_Arrays(nbTrafficLight,names,posX,posY);
         for(i=0; i<nbTrafficLight; i++)
-        {
-                trafficLights[i] = new TrafficLight(names[i],posX[i],posY[i]);
-        }
+                trafficLights.push_back(new TrafficLight(names[i],posX[i],posY[i]));
         delete [] posX;
         delete [] posY;
         delete [] names;
@@ -107,42 +102,25 @@ TrafficLight** Map::loadTrafficLights()
 
 void Map::loadMap()
 {
-        int i,j;
-
         //regroupper tous les elements:
-        Lamp **lamps= loadLamps();
-        Provider **providers=loadProviders();
-        TrafficLight **trafficLights=loadTrafficLights();
+        vector<Lamp*> lamps= loadLamps();
+        vector<Provider*>providers=loadProviders();
+        vector<TrafficLight*>trafficLights=loadTrafficLights();
 
-        i=j=0;
-        for(i=0; i<nbLamps; i++)
-        {
+        for(int i=0; i<lamps.size(); i++)
                 vecElementsOfTheMap.push_back(lamps[i]);
-                j++;
-        }
 
-        for(i=0; i<nbProviders; i++)
-        {
+        for(int i=0; i<providers.size(); i++)
                 vecElementsOfTheMap.push_back(providers[i]);
-                j++;
-        }
 
-        for(i=0; i<nbTrafficLight; i++)
-        {
+        for(int i=0; i<trafficLights.size(); i++)
                 vecElementsOfTheMap.push_back(trafficLights[i]);
-                j++;
-        }
-
-        delete [] lamps;
-        delete [] providers;
-        delete [] trafficLights;
 }
 
 void Map::addNode(Node *n)
 {
         if(n==NULL)
                 return;
-
         vecElementsOfTheMap.push_back(n);
 }
 

@@ -3,7 +3,6 @@
 using namespace std;
 static int next_id=0;
 
-
 Node::Node(string n,double x, double y) //ctor
 {
         name = new string(n);
@@ -11,7 +10,6 @@ Node::Node(string n,double x, double y) //ctor
         locationY = y;
         id=next_id;
         next_id= next_id + 1;
-        nbAvailableNodes=0;
         isBusy= false;
         isErased=false;
 }
@@ -100,41 +98,21 @@ void Node::receive(int message,int idSource,int idDest)
 
 void Node::scanHotspots(vector<Node*> vecNodes)
 {
-
-        //if there is already vector of hotspots
         if (this->vecAvailableNodes.size()!=0)
                 vecAvailableNodes.clear();
 
-        int i=0;
-        int counter=0;
         double diffX=0;
         double diffY=0;
 
-        for(i=0; i< vecNodes.size(); i++)
+        for(int i=0; i< vecNodes.size(); i++)
         {
+                if(vecNodes[i]->checkIfErased()==true)
+                        continue;
                 diffX = abs(vecNodes[i]->getLocationX() - this->getLocationX());
                 diffY = abs(vecNodes[i]->getLocationY() - this->getLocationY());
-
                 if(diffX <= DISTANCE || diffY <= DISTANCE)
                         if(this->getId() != vecNodes[i]->getId())
-                                counter++;
-        }
-
-        if(counter==0)
-          return;
-
-        for(i=0; i< vecNodes.size(); i++)
-        {
-                diffX = abs(vecNodes[i]->getLocationX() - this->getLocationX());
-                diffY = abs(vecNodes[i]->getLocationY() - this->getLocationY());
-
-                if(diffX <= DISTANCE || diffY <= DISTANCE)
-                {
-                        if(this->getId() != vecNodes[i]->getId())
-                        {
                                 vecAvailableNodes.push_back(vecNodes[i]);
-                        }
-                }
         }
 }
 

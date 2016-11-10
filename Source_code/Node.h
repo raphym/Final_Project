@@ -26,21 +26,15 @@ public:
         bool checkIfErased(); // to check if a node is Erased
 
 
-
 protected:
         std::string *name; //name of the node
+        std::vector<Node*> vecAvailableNodes;
         int id; //id of the node
         double locationX; //location x of the node
         double locationY; // location Y of the node
-        //Node **availableNodes; // array of nodes that this node can see
-        int nbAvailableNodes; // num of nodes in the array
         bool isBusy; // status of the node
         bool isErased; // bool to know if the node is erased
-        std::vector<Node*> vecAvailableNodes;
-
-
 private:
-
 };
 
 #endif // Node_H
