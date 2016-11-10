@@ -6,11 +6,14 @@
 #include "Lamp.h"
 #include "Provider.h"
 #include "TrafficLight.h"
+#include "Node.h"
 
 #include <stdlib.h>     /* atof */
 #include <cmath>
 #include <fstream>
 #include <iostream>
+#include <vector>
+
 
 
 class Map
@@ -23,7 +26,7 @@ public:
         TrafficLight** loadTrafficLights(); // return the TrafficLights vector on the boot
         void loadMap(); // Load the entire map to the memory
         void PrintMap(); // print the map
-        Node** getNodes(); // return a vectors of all elements of the map (nodes)
+        std::vector<Node*> getNodes(); // return a vectors of all elements of the map (nodes)
         int getNumOfElements(); //return the num of the elements in the map
         void addNode(Node *n); // add a node
         void removeNode(int id); // remove a node
@@ -31,11 +34,13 @@ public:
 protected:
 
 private:
-        Node **elementsOfTheMap; //storage of all the elements of the map
+        //Node **elementsOfTheMap; //storage of all the elements of the map
         int nbLamps; //num of lamps
         int nbProviders; // num of provider
         int nbTrafficLight; // num of trafficLight
         int nbOfElements; //num of element of the map
+        std::vector<Node*> vecElementsOfTheMap;
+
 };
 
 #endif // MAP_H

@@ -13,9 +13,8 @@ Map::~Map()
 
         for(i=0; i<nbOfElements; i++)
         {
-                delete elementsOfTheMap[i];
+                delete vecElementsOfTheMap[i];
         }
-        delete [] elementsOfTheMap;
 }
 
 
@@ -49,6 +48,7 @@ Lamp** Map::loadLamps()
 
         return lamps;
 }
+
 Provider** Map::loadProviders()
 {
         int i=0;
@@ -121,24 +121,23 @@ void Map::loadMap()
         Lamp **lamps= loadLamps();
         Provider **providers=loadProviders();
         TrafficLight **trafficLights=loadTrafficLights();
-        elementsOfTheMap = new Node*[nbOfElements];
 
         i=j=0;
         for(i=0; i<nbLamps; i++)
         {
-                elementsOfTheMap[j]=lamps[i];
+                vecElementsOfTheMap.push_back(lamps[i]);
                 j++;
         }
 
         for(i=0; i<nbProviders; i++)
         {
-                elementsOfTheMap[j]=providers[i];
+                vecElementsOfTheMap.push_back(providers[i]);
                 j++;
         }
 
         for(i=0; i<nbTrafficLight; i++)
         {
-                elementsOfTheMap[j]=trafficLights[i];
+                vecElementsOfTheMap.push_back(trafficLights[i]);
                 j++;
         }
 
@@ -151,58 +150,25 @@ void Map::addNode(Node *n)
 {
         if(n==NULL)
                 return;
-        int i=0;
-        nbOfElements++;
-        Node **temp = new Node*[nbOfElements];
-        for(i=0; i<nbOfElements - 1; i++)
-        {
-                temp[i] = elementsOfTheMap[i];
-        }
-        delete [] elementsOfTheMap;
-        elementsOfTheMap = new Node*[nbOfElements];
-        for(i=0; i<nbOfElements - 1; i++)
-        {
-                elementsOfTheMap[i] = temp[i];
-        }
 
-        elementsOfTheMap[i] = n;
-        delete [] temp;
+        vecElementsOfTheMap.push_back(n);
 }
 
 
 
 void Map::removeNode(int id)
 {
-        Node **temp = new Node*[nbOfElements - 1];
-        int i=0;
-        int j=0;
-        for(i=0; i < nbOfElements; i++)
+        for(int i=0; i < vecElementsOfTheMap.size(); i++)
         {
-                if( id != elementsOfTheMap[i]->getId() )
-                {
-                        temp[j]=elementsOfTheMap[i];
-                        j++;
-                }
-
-                if( id == elementsOfTheMap[i]->getId() )
-                {
-                        delete elementsOfTheMap[i];
-                }
-        }
-        delete [] elementsOfTheMap;
-        nbOfElements--;
-        elementsOfTheMap = new Node*[nbOfElements];
-        for(i=0; i<nbOfElements; i++)
-        {
-                elementsOfTheMap[i] = temp[i];
+                if(vecElementsOfTheMap[i]->getId() == id)
+                        vecElementsOfTheMap[i]->erase();
         }
 
-        delete [] temp;
 }
 
-Node** Map::getNodes()
+vector<Node*> Map::getNodes()
 {
-        return elementsOfTheMap;
+        return vecElementsOfTheMap;
 }
 
 
@@ -214,12 +180,13 @@ int Map::getNumOfElements()
 
 void Map::PrintMap()
 {
-        int i;
-        for(i=0; i< nbOfElements; i++ )
+        for(int i=0; i< vecElementsOfTheMap.size(); i++ )
         {
+                if(vecElementsOfTheMap[i]->checkIfErased()==true)
+                        continue;
                 cout << "---------------------------------------------------"<<endl;
-                cout << "ID : " << elementsOfTheMap[i]->getId() <<" | Name : " << elementsOfTheMap[i]->getName() << " | Position : "<<"("<<elementsOfTheMap[i]->getLocationX() << "," << elementsOfTheMap[i]->getLocationY() << ")" <<endl;
+                cout << "ID : " << vecElementsOfTheMap[i]->getId() <<" | Name : " << vecElementsOfTheMap[i]->getName() << " | Position : "<<"("<<vecElementsOfTheMap[i]->getLocationX() << "," << vecElementsOfTheMap[i]->getLocationY() << ")" <<endl;
                 cout << "available Nodes : " << endl;
-                elementsOfTheMap[i]->printAvailableNodes();
+                vecElementsOfTheMap[i]->printAvailableNodes();
         }
 }

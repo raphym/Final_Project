@@ -15,10 +15,10 @@ int main(int argc, char *argv[])
 {
         Map map;
 
-        map.getNodes()[0]->scanHotspots(map.getNodes(), map.getNumOfElements());
-        map.getNodes()[1]->scanHotspots(map.getNodes(), map.getNumOfElements());
-        map.getNodes()[2]->scanHotspots(map.getNodes(), map.getNumOfElements());
-        map.getNodes()[3]->scanHotspots(map.getNodes(), map.getNumOfElements());
+        map.getNodes()[0]->scanHotspots(map.getNodes());
+        map.getNodes()[1]->scanHotspots(map.getNodes());
+        map.getNodes()[2]->scanHotspots(map.getNodes());
+        map.getNodes()[3]->scanHotspots(map.getNodes());
 
         map.PrintMap();
         cout << "----------------------------------------------------------------------------------"<<endl;
@@ -26,10 +26,11 @@ int main(int argc, char *argv[])
 
         map.getNodes()[1]->send(58,1,0);
         cout <<endl;
-        map.removeNode(0);
-        map.getNodes()[0]->scanHotspots(map.getNodes(), map.getNumOfElements());
-        map.getNodes()[1]->scanHotspots(map.getNodes(), map.getNumOfElements());
-        map.getNodes()[2]->scanHotspots(map.getNodes(), map.getNumOfElements());
+        map.removeNode(50);
+        map.getNodes()[0]->scanHotspots(map.getNodes());
+        map.getNodes()[1]->scanHotspots(map.getNodes());
+        map.getNodes()[2]->scanHotspots(map.getNodes());
+
         map.PrintMap();
         cout << "afterRemove" << endl<<endl;
         map.getNodes()[1]->send(58,1,0);

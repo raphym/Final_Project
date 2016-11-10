@@ -14,6 +14,7 @@ Node::Node(string n,double x, double y) //ctor
         nbAvailableNodes=0;
         availableNodes =NULL;
         isBusy= false;
+        isErased=false;
 }
 
 Node::~Node() //dtor
@@ -52,6 +53,15 @@ void Node::setIsBusy(bool b)
         isBusy=b;
 }
 
+bool Node::checkIfErased()
+{
+        return isErased;
+}
+
+void Node::erase()
+{
+        isErased=true;
+}
 void Node::send(int message,int idSource,int idDest)
 {
         bool sent=false;
@@ -92,7 +102,7 @@ void Node::receive(int message,int idSource,int idDest)
 }
 
 
-void Node::scanHotspots(Node **nodes,int theSize)
+void Node::scanHotspots(vector<Node*> vecNodes)
 {
 
         //if there is already vector of hotspots
@@ -104,13 +114,13 @@ void Node::scanHotspots(Node **nodes,int theSize)
         double diffX=0;
         double diffY=0;
 
-        for(i=0; i< theSize; i++)
+        for(i=0; i< vecNodes.size(); i++)
         {
-                diffX = abs(nodes[i]->getLocationX() - this->getLocationX());
-                diffY = abs(nodes[i]->getLocationY() - this->getLocationY());
+                diffX = abs(vecNodes[i]->getLocationX() - this->getLocationX());
+                diffY = abs(vecNodes[i]->getLocationY() - this->getLocationY());
 
                 if(diffX <= DISTANCE || diffY <= DISTANCE)
-                        if(this->getId() != nodes[i]->getId())
+                        if(this->getId() != vecNodes[i]->getId())
                                 counter++;
         }
 
@@ -125,16 +135,16 @@ void Node::scanHotspots(Node **nodes,int theSize)
         this->nbAvailableNodes =counter;
 
         int j=0;
-        for(i=0; i< theSize; i++)
+        for(i=0; i< vecNodes.size(); i++)
         {
-                diffX = abs(nodes[i]->getLocationX() - this->getLocationX());
-                diffY = abs(nodes[i]->getLocationY() - this->getLocationY());
+                diffX = abs(vecNodes[i]->getLocationX() - this->getLocationX());
+                diffY = abs(vecNodes[i]->getLocationY() - this->getLocationY());
 
                 if(diffX <= DISTANCE || diffY <= DISTANCE)
                 {
-                        if(this->getId() != nodes[i]->getId())
+                        if(this->getId() != vecNodes[i]->getId())
                         {
-                                availableNodes[j]=nodes[i];
+                                availableNodes[j]=vecNodes[i];
                                 j++;
                         }
                 }
