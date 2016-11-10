@@ -1,20 +1,16 @@
 #ifndef MAP_H
 #define MAP_H
-#include "FileStream.h"
 #include "string"
+#include <stdlib.h>
+#include <iostream>
+#include <cmath>
+#include <vector>
 
+#include "FileStream.h"
+#include "Node.h"
 #include "Lamp.h"
 #include "Provider.h"
 #include "TrafficLight.h"
-#include "Node.h"
-
-#include <stdlib.h>     /* atof */
-#include <cmath>
-#include <fstream>
-#include <iostream>
-#include <vector>
-
-
 
 class Map
 {

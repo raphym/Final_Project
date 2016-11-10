@@ -21,6 +21,7 @@ vector<Lamp*> Map::loadLamps()
         int nbLamps = f.LineCounters();
         if (nbLamps==0)
                 exit(-1);
+
         vector<Lamp*> lamps;
 
         string *names=NULL;

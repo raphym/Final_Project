@@ -1,14 +1,11 @@
-#include <vector>
-#include <fstream>
 #include <iostream>
 
+#include "Map.h"
 #include "Lamp.h"
 #include "Provider.h"
 #include "TrafficLight.h"
 
-#include "Map.h"
-#include "FileStream.h"
-#include <malloc.h>
+
 using namespace std;
 
 int main(int argc, char *argv[])

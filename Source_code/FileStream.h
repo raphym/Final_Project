@@ -1,9 +1,10 @@
 #ifndef FILESTREAM_H
 #define FILESTREAM_H
 #include <string>
-#define LAMP 1
-#define PROVIDER 2
-#define LIST_EVENT 3
+#include <fstream>
+#include <iostream>
+#include <stdlib.h>
+
 
 class FileStream
 {
