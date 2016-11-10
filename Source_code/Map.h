@@ -27,7 +27,6 @@ public:
         void loadMap(); // Load the entire map to the memory
         void PrintMap(); // print the map
         std::vector<Node*> getNodes(); // return a vectors of all elements of the map (nodes)
-        int getNumOfElements(); //return the num of the elements in the map
         void addNode(Node *n); // add a node
         void removeNode(int id); // remove a node
 
@@ -38,7 +37,6 @@ private:
         int nbLamps; //num of lamps
         int nbProviders; // num of provider
         int nbTrafficLight; // num of trafficLight
-        int nbOfElements; //num of element of the map
         std::vector<Node*> vecElementsOfTheMap;
 
 };

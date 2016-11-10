@@ -12,7 +12,6 @@ Node::Node(string n,double x, double y) //ctor
         id=next_id;
         next_id= next_id + 1;
         nbAvailableNodes=0;
-        availableNodes =NULL;
         isBusy= false;
         isErased=false;
 }
@@ -20,9 +19,6 @@ Node::Node(string n,double x, double y) //ctor
 Node::~Node() //dtor
 {
         delete name;
-
-        if(availableNodes!=NULL)
-                delete [] availableNodes;
 }
 int Node::getId()
 {
@@ -66,13 +62,13 @@ void Node::send(int message,int idSource,int idDest)
 {
         bool sent=false;
         int i=0;
-        for(i=0; i<nbAvailableNodes; i++)
+        for(i=0; i<vecAvailableNodes.size(); i++)
         {
-                if(this->availableNodes[i]->id == idDest  && this->isBusy==false)
+                if(this->vecAvailableNodes[i]->id == idDest  && this->isBusy==false)
                 {
                         this->isBusy=true;
                         sent=true;
-                        this->availableNodes[i]->receive(message,idSource,idDest);
+                        this->vecAvailableNodes[i]->receive(message,idSource,idDest);
                         break;
                 }
         }
@@ -93,10 +89,10 @@ void Node::receive(int message,int idSource,int idDest)
                 cout << "The node with id: "<< this->id << " receive message number "<<message;
                 cout << " From the node with the id :" << idSource <<endl;
 
-                for(i=0; i<nbAvailableNodes; i++)
+                for(i=0; i<vecAvailableNodes.size(); i++)
                 {
-                        if(availableNodes[i]->id==idSource)
-                                availableNodes[i]->isBusy=false;
+                        if(vecAvailableNodes[i]->id==idSource)
+                                vecAvailableNodes[i]->isBusy=false;
                 }
         }
 }
@@ -106,8 +102,8 @@ void Node::scanHotspots(vector<Node*> vecNodes)
 {
 
         //if there is already vector of hotspots
-        if (this->availableNodes!=NULL)
-                delete [] this->availableNodes;
+        if (this->vecAvailableNodes.size()!=0)
+                vecAvailableNodes.clear();
 
         int i=0;
         int counter=0;
@@ -125,16 +121,8 @@ void Node::scanHotspots(vector<Node*> vecNodes)
         }
 
         if(counter==0)
-        {
-                this->nbAvailableNodes =0;
-                this->availableNodes=NULL;
-                return;
-        }
+          return;
 
-        this->availableNodes = new Node*[counter];
-        this->nbAvailableNodes =counter;
-
-        int j=0;
         for(i=0; i< vecNodes.size(); i++)
         {
                 diffX = abs(vecNodes[i]->getLocationX() - this->getLocationX());
@@ -144,8 +132,7 @@ void Node::scanHotspots(vector<Node*> vecNodes)
                 {
                         if(this->getId() != vecNodes[i]->getId())
                         {
-                                availableNodes[j]=vecNodes[i];
-                                j++;
+                                vecAvailableNodes.push_back(vecNodes[i]);
                         }
                 }
         }
@@ -155,30 +142,25 @@ void Node::printAvailableNodes()
 {
         int i=0;
 
-        if(nbAvailableNodes==0)
+        if(vecAvailableNodes.size()==0)
                 cout << "[]" << endl;
-        for(i=0; i<nbAvailableNodes; i++)
+        for(i=0; i<vecAvailableNodes.size(); i++)
         {
-                if (i==0 && i == nbAvailableNodes-1)
-                        cout << "[" <<  availableNodes[0]->getName()<< "(id:"<<availableNodes[0]->id<<")"<< "]" <<endl;
+                if (i==0 && i == vecAvailableNodes.size()-1)
+                        cout << "[" <<  vecAvailableNodes[0]->getName()<< "(id:"<<vecAvailableNodes[0]->id<<")"<< "]" <<endl;
 
                 else if (i==0)
-                        cout << "[" <<  availableNodes[0]->getName()<< "(id:"<<availableNodes[0]->id<<")"<< ",";
+                        cout << "[" <<  vecAvailableNodes[0]->getName()<< "(id:"<<vecAvailableNodes[0]->id<<")"<< ",";
 
-                else if (i==nbAvailableNodes -1 )
-                        cout << availableNodes[i]->getName()<< "(id:"<<availableNodes[i]->id<<")"<< "]"<<endl;
+                else if (i==vecAvailableNodes.size() -1 )
+                        cout << vecAvailableNodes[i]->getName()<< "(id:"<<vecAvailableNodes[i]->id<<")"<< "]"<<endl;
 
                 else
-                        cout << availableNodes[i]->getName()<< "(id:"<<availableNodes[i]->id<<")" << ",";
+                        cout << vecAvailableNodes[i]->getName()<< "(id:"<<vecAvailableNodes[i]->id<<")" << ",";
         }
 }
 
-int Node::getNbAvailableNodes()
+std::vector<Node*> Node::getVectAvailableNodes()
 {
-        return nbAvailableNodes;
-}
-
-Node** Node::getVectAvailableNodes()
-{
-        return availableNodes;
+        return vecAvailableNodes;
 }

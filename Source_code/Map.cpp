@@ -3,18 +3,13 @@ using namespace std;
 
 Map::Map() //ctor
 {
-        nbOfElements=0;
         loadMap();
 }
 
 Map::~Map()
 {
-        int i=0;
-
-        for(i=0; i<nbOfElements; i++)
-        {
+        for(int i=0; i<vecElementsOfTheMap.size(); i++)
                 delete vecElementsOfTheMap[i];
-        }
 }
 
 
@@ -40,7 +35,6 @@ Lamp** Map::loadLamps()
         for(i=0; i<nbLamps; i++)
         {
                 lamps[i] = new Lamp(names[i],posX[i],posY[i]);
-                nbOfElements++;
         }
         delete [] posX;
         delete [] posY;
@@ -72,7 +66,6 @@ Provider** Map::loadProviders()
         for(i=0; i<nbProviders; i++)
         {
                 providers[i] = new Provider(names[i],posX[i],posY[i]);
-                nbOfElements++;
         }
         delete [] posX;
         delete [] posY;
@@ -104,7 +97,6 @@ TrafficLight** Map::loadTrafficLights()
         for(i=0; i<nbTrafficLight; i++)
         {
                 trafficLights[i] = new TrafficLight(names[i],posX[i],posY[i]);
-                nbOfElements++;
         }
         delete [] posX;
         delete [] posY;
@@ -169,12 +161,6 @@ void Map::removeNode(int id)
 vector<Node*> Map::getNodes()
 {
         return vecElementsOfTheMap;
-}
-
-
-int Map::getNumOfElements()
-{
-        return nbOfElements;
 }
 
 
