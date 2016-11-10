@@ -1,6 +1,6 @@
 #ifndef MAP_H
 #define MAP_H
-#include "string"
+#include <string>
 #include <stdlib.h>
 #include <iostream>
 #include <cmath>
@@ -15,7 +15,7 @@
 class Map
 {
 public:
-        Map();
+        Map(std::string name,std::string fileProviders, std::string fileLamps, std::string fileTrafficLights);
         virtual ~Map();
         std::vector<Lamp*> loadLamps(); //return the Lamps vector on the boot
         std::vector<Provider*> loadProviders(); // return the Providers vector on the boot
@@ -27,9 +27,14 @@ public:
         void removeNode(int id); // remove a node
 
 protected:
+        std::string name;
+        std::string fileProviders;
+        std::string fileLamps;
+        std::string fileTrafficLights;
+        std::vector<Node*> vecElementsOfTheMap;
+
 
 private:
-        std::vector<Node*> vecElementsOfTheMap;
 
 };
 

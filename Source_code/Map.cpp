@@ -1,8 +1,12 @@
 #include "Map.h"
 using namespace std;
 
-Map::Map() //ctor
+Map::Map(string name,string fileProviders , string fileLamps , string fileTrafficLights) //ctor
 {
+        this->name=name;
+        this->fileProviders=fileProviders;
+        this->fileLamps=fileLamps;
+        this->fileTrafficLights=fileTrafficLights;
         loadMap();
 }
 
@@ -17,12 +21,13 @@ vector<Lamp*> Map::loadLamps()
 {
         int i=0;
         //f is a FileStream Object to read informations about the lamps
-        FileStream f("lamps.txt");
+        FileStream f(this->fileLamps);
         int nbLamps = f.LineCounters();
         if (nbLamps==0)
                 exit(-1);
 
         vector<Lamp*> lamps;
+        lamps.reserve(nbLamps*sizeof(Lamp));
 
         string *names=NULL;
         double *posX = NULL;
@@ -52,11 +57,12 @@ vector<Provider*> Map::loadProviders()
 
 
         //f is a FileStream Object to read informations about the providers
-        FileStream f("providers.txt");
+        FileStream f(this->fileProviders);
         int nbProviders = f.LineCounters();
         if (nbProviders==0)
                 exit(-1);
         vector<Provider*> providers;
+        providers.reserve(nbProviders * sizeof(Provider));
 
         names = new string[nbProviders];
         posX = new double[nbProviders];
@@ -80,11 +86,12 @@ vector<TrafficLight*> Map::loadTrafficLights()
         double *posY = NULL;
 
         //f is a FileStream Object to read informations about the trafficLights
-        FileStream f("trafficLights.txt");
+        FileStream f(this->fileTrafficLights);
         int nbTrafficLight = f.LineCounters();
         if (nbTrafficLight==0)
                 exit(-1);
         vector<TrafficLight*> trafficLights;
+        trafficLights.reserve(nbTrafficLight * sizeof(TrafficLight));
 
         names = new string[nbTrafficLight];
         posX = new double[nbTrafficLight];
@@ -107,6 +114,9 @@ void Map::loadMap()
         vector<Lamp*> lamps= loadLamps();
         vector<Provider*>providers=loadProviders();
         vector<TrafficLight*>trafficLights=loadTrafficLights();
+        size_t size = lamps.size()+ providers.size() + trafficLights.size();
+
+        vecElementsOfTheMap.reserve(size);
 
         for(int i=0; i<lamps.size(); i++)
                 vecElementsOfTheMap.push_back(lamps[i]);
@@ -116,6 +126,7 @@ void Map::loadMap()
 
         for(int i=0; i<trafficLights.size(); i++)
                 vecElementsOfTheMap.push_back(trafficLights[i]);
+
 }
 
 void Map::addNode(Node *n)
@@ -145,6 +156,7 @@ vector<Node*> Map::getNodes()
 
 void Map::PrintMap()
 {
+        cout << endl << "Name of the Map : " << this->name << endl;
         for(int i=0; i< vecElementsOfTheMap.size(); i++ )
         {
                 if(vecElementsOfTheMap[i]->checkIfErased()==true)
