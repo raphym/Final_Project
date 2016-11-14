@@ -6,6 +6,6 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 
-  Simulation s;
+  Simulation s("Tel-Aviv");
 
 }

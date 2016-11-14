@@ -27,7 +27,7 @@ vector<Lamp*> Map::loadLamps()
                 exit(-1);
 
         vector<Lamp*> lamps;
-        lamps.reserve(nbLamps*sizeof(Lamp));
+        lamps.reserve(nbLamps*sizeof(Lamp*));
 
         string *names=NULL;
         double *posX = NULL;
@@ -62,7 +62,7 @@ vector<Provider*> Map::loadProviders()
         if (nbProviders==0)
                 exit(-1);
         vector<Provider*> providers;
-        providers.reserve(nbProviders * sizeof(Provider));
+        providers.reserve(nbProviders * sizeof(Provider*));
 
         names = new string[nbProviders];
         posX = new double[nbProviders];
@@ -91,7 +91,7 @@ vector<TrafficLight*> Map::loadTrafficLights()
         if (nbTrafficLight==0)
                 exit(-1);
         vector<TrafficLight*> trafficLights;
-        trafficLights.reserve(nbTrafficLight * sizeof(TrafficLight));
+        trafficLights.reserve(nbTrafficLight * sizeof(TrafficLight*));
 
         names = new string[nbTrafficLight];
         posX = new double[nbTrafficLight];
@@ -114,7 +114,9 @@ void Map::loadMap()
         vector<Lamp*> lamps= loadLamps();
         vector<Provider*>providers=loadProviders();
         vector<TrafficLight*>trafficLights=loadTrafficLights();
-        size_t size = lamps.size()+ providers.size() + trafficLights.size();
+        size_t size = lamps.size()*sizeof(Lamp*);
+        size+= providers.size()*sizeof(Provider*);
+        size+= trafficLights.size()*sizeof(TrafficLight*);
 
         vecElementsOfTheMap.reserve(size);
 
@@ -166,4 +168,13 @@ void Map::PrintMap()
                 cout << "available Nodes : " << endl;
                 vecElementsOfTheMap[i]->printAvailableNodes();
         }
+}
+
+
+void Map::refreshMap()
+{
+    for(int i=0 ; i<vecElementsOfTheMap.size();i++)
+    {
+      vecElementsOfTheMap[i]->scanHotspots(vecElementsOfTheMap);
+    }
 }
