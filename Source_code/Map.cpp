@@ -177,7 +177,7 @@ vector<Node*> Map::getNodes()
 
 void Map::PrintMap()
 {
-        cout << endl << "Name of the Map : " << this->name << endl;
+        cout << endl << "Name of the Map : " << this->name << vecElementsOfTheMap.size()<< endl;
         for(int i=0; i< vecElementsOfTheMap.size(); i++ )
         {
                 if(vecElementsOfTheMap[i]->checkIfErased()==true)
@@ -189,11 +189,24 @@ void Map::PrintMap()
         }
 }
 
-
+//Refresh the scan hotspots of each node in the map
 void Map::refreshMap()
 {
         for(int i=0; i<vecElementsOfTheMap.size(); i++)
         {
                 vecElementsOfTheMap[i]->scanHotspots(vecElementsOfTheMap);
+        }
+}
+
+//clear the map of deleted elements
+void Map::Garbage_Collector()
+{
+        for(int i=0; i< vecElementsOfTheMap.size(); i++)
+        {
+                if(vecElementsOfTheMap[i]->checkIfErased()==true)
+                {
+                        delete vecElementsOfTheMap[i];
+                        vecElementsOfTheMap.erase(vecElementsOfTheMap.begin()+i);
+                }
         }
 }

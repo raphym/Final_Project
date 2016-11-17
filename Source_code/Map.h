@@ -25,7 +25,9 @@ public:
         std::vector<Node*> getNodes(); // return a vectors of all elements of the map (nodes)
         void addNode(Node *n); // add a node
         void removeNode(int id); // remove a node
-        void refreshMap();
+        void refreshMap();//Refresh the scan hotspots of each node in the map
+        void Garbage_Collector();//clear the map of deleted elements
+
 
 protected:
         std::string name;

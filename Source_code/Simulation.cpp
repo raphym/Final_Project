@@ -11,11 +11,19 @@ Simulation::Simulation(string city)
 
         map.refreshMap();
         map.PrintMap();
-        map.getNodes()[0]->send(78, 0, 1);
         map.removeNode(1);
         map.refreshMap();
-        map.getNodes()[0]->send(78, 0, 1);
+
         map.PrintMap();
+
+        map.Garbage_Collector();
+        map.PrintMap();
+
+        // map.getNodes()[0]->send(78, 0, 1);
+        // map.removeNode(1);
+        // map.refreshMap();
+        // map.getNodes()[0]->send(78, 0, 1);
+        // map.PrintMap();
 
 
         cout <<endl;
