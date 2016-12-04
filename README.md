@@ -1,4 +1,4 @@
-# Simulation of routing problem with intelligent agents
+# Simulation of message routing by intelligent agents for the use of traffic control
 <br>
 <img src="https://github.com/raphym/Simulation-of-routing-problem-with-intelligent-agents/blob/master/Pictures/image_readme.jpg?raw=true" alt="Project logo" width="500" height="300">
 
