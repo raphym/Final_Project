@@ -9,12 +9,13 @@
 class Node
 {
 public:
-        Node(std::string n,double x, double y);
+        Node(std::string type,std::string n,double x, double y);
         virtual ~Node();
         std::string getName(); //return the name
         int getId(); //return the id
         double getLocationX(); //return the location x
         double getLocationY(); //return the location y
+        std::string getType();
         void send(int message,int idSource,int idDest); // to send a message
         void receive(int message,int idSource,int idDest); // to receive a message
         void scanHotspots(std::vector<Node*>); //to scan the area
@@ -32,6 +33,7 @@ protected:
         int id; //id of the node
         double locationX; //location x of the node
         double locationY; // location Y of the node
+        std::string type;
         bool isBusy; // status of the node
         bool isErased; // bool to know if the node is erased
 private:

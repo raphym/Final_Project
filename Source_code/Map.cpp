@@ -17,7 +17,7 @@ Map::~Map()
 }
 
 
-vector<Lamp*> Map::loadLamps()
+vector<Node*> Map::loadLamps()
 {
         int i=0;
         //f is a FileStream Object to read informations about the lamps
@@ -28,8 +28,8 @@ vector<Lamp*> Map::loadLamps()
                 cout << "your file : " << this->fileLamps << " is corrupted"<< endl;
                 exit(-1);
         }
-        vector<Lamp*> lamps;
-        lamps.reserve(nbLamps*sizeof(Lamp*));
+        vector<Node*> lamps;
+        lamps.reserve(nbLamps*sizeof(Node*));
 
         string *names = new string[nbLamps];
         double *posX = new double[nbLamps];
@@ -47,7 +47,7 @@ vector<Lamp*> Map::loadLamps()
 
 
         for(i=0; i<nbLamps; i++)
-                lamps.push_back(new Lamp(names[i],posX[i],posY[i]));
+                lamps.push_back(new Node("LAMP",names[i],posX[i],posY[i]));
         delete [] posX;
         delete [] posY;
         delete [] names;
@@ -56,7 +56,7 @@ vector<Lamp*> Map::loadLamps()
 }
 
 
-vector<Provider*> Map::loadProviders()
+vector<Node*> Map::loadProviders()
 {
         int i=0;
 
@@ -68,8 +68,8 @@ vector<Provider*> Map::loadProviders()
                 cout << "your file : " << this->fileProviders << " is corrupted"<< endl;
                 exit(-1);
         }
-        vector<Provider*> providers;
-        providers.reserve(nbProviders * sizeof(Provider*));
+        vector<Node*> providers;
+        providers.reserve(nbProviders * sizeof(Node*));
         string *names = new string[nbProviders];
         double *posX = new double[nbProviders];
         double *posY = new double[nbProviders];
@@ -83,7 +83,7 @@ vector<Provider*> Map::loadProviders()
                 exit(-1);
         }
         for(i=0; i<nbProviders; i++)
-                providers.push_back(new Provider(names[i],posX[i],posY[i]));
+                providers.push_back(new Node("PROVIDER",names[i],posX[i],posY[i]));
         delete [] posX;
         delete [] posY;
         delete [] names;
@@ -91,7 +91,7 @@ vector<Provider*> Map::loadProviders()
         return providers;
 }
 
-vector<TrafficLight*> Map::loadTrafficLights()
+vector<Node*> Map::loadTrafficLights()
 {
         int i=0;
         //f is a FileStream Object to read informations about the trafficLights
@@ -103,8 +103,8 @@ vector<TrafficLight*> Map::loadTrafficLights()
                 exit(-1);
         }
 
-        vector<TrafficLight*> trafficLights;
-        trafficLights.reserve(nbTrafficLight * sizeof(TrafficLight*));
+        vector<Node*> trafficLights;
+        trafficLights.reserve(nbTrafficLight * sizeof(Node*));
 
         string *names = new string[nbTrafficLight];
         double *posX = new double[nbTrafficLight];
@@ -119,7 +119,7 @@ vector<TrafficLight*> Map::loadTrafficLights()
                 exit(-1);
         }
         for(i=0; i<nbTrafficLight; i++)
-                trafficLights.push_back(new TrafficLight(names[i],posX[i],posY[i]));
+                trafficLights.push_back(new Node("TRAFFIC_LIGHT",names[i],posX[i],posY[i]));
         delete [] posX;
         delete [] posY;
         delete [] names;
@@ -130,12 +130,12 @@ vector<TrafficLight*> Map::loadTrafficLights()
 void Map::loadMap()
 {
         //regroupper tous les elements:
-        vector<Lamp*> lamps= loadLamps();
-        vector<Provider*>providers=loadProviders();
-        vector<TrafficLight*>trafficLights=loadTrafficLights();
-        size_t size = lamps.size()*sizeof(Lamp*);
-        size+= providers.size()*sizeof(Provider*);
-        size+= trafficLights.size()*sizeof(TrafficLight*);
+        vector<Node*> lamps= loadLamps();
+        vector<Node*>providers=loadProviders();
+        vector<Node*>trafficLights=loadTrafficLights();
+        size_t size = lamps.size()*sizeof(Node*);
+        size+= providers.size()*sizeof(Node*);
+        size+= trafficLights.size()*sizeof(Node*);
 
         vecElementsOfTheMap.reserve(size);
 
@@ -177,13 +177,13 @@ vector<Node*> Map::getNodes()
 
 void Map::PrintMap()
 {
-        cout << endl << "Name of the Map : " << this->name << vecElementsOfTheMap.size()<< endl;
+        cout << endl << "Name of the Map : " << this->name << endl;
         for(int i=0; i< vecElementsOfTheMap.size(); i++ )
         {
                 if(vecElementsOfTheMap[i]->checkIfErased()==true)
                         continue;
                 cout << "---------------------------------------------------"<<endl;
-                cout << "ID : " << vecElementsOfTheMap[i]->getId() <<" | Name : " << vecElementsOfTheMap[i]->getName() << " | Position : "<<"("<<vecElementsOfTheMap[i]->getLocationX() << "," << vecElementsOfTheMap[i]->getLocationY() << ")" <<endl;
+                cout << "TYPE: " << vecElementsOfTheMap[i]->getType() << " | ID : " << vecElementsOfTheMap[i]->getId() <<" | Name : " << vecElementsOfTheMap[i]->getName() << " | Position : "<<"("<<vecElementsOfTheMap[i]->getLocationX() << "," << vecElementsOfTheMap[i]->getLocationY() << ")" <<endl;
                 cout << "available Nodes : " << endl;
                 vecElementsOfTheMap[i]->printAvailableNodes();
         }

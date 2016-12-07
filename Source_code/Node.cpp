@@ -3,8 +3,9 @@
 using namespace std;
 static int next_id=0;
 
-Node::Node(string n,double x, double y) //ctor
+Node::Node(string type,string n,double x, double y) //ctor
 {
+        this->type=type;
         name = new string(n);
         locationX = x;
         locationY = y;
@@ -35,6 +36,11 @@ double Node::getLocationX()
 double Node::getLocationY()
 {
         return locationY;
+}
+
+string Node::getType()
+{
+        return type;
 }
 
 bool Node::checkIfBusy()
