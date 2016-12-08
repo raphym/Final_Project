@@ -104,11 +104,14 @@ void Node::receive(int message,int idSource,int idDest)
 
 void Node::scanHotspots(vector<Node*> vecNodes)
 {
+  //the function check if a node is near to an another with a distance of 40 metters
+  //I calculate according to the  Pythagorean theorem a^2+b^2 = c^2 < 40^2
         if (this->vecAvailableNodes.size()!=0)
                 vecAvailableNodes.clear();
 
         double diffX=0;
         double diffY=0;
+        double result=0;
 
         for(int i=0; i< vecNodes.size(); i++)
         {
@@ -116,11 +119,32 @@ void Node::scanHotspots(vector<Node*> vecNodes)
                         continue;
                 diffX = abs(vecNodes[i]->getLocationX() - this->getLocationX());
                 diffY = abs(vecNodes[i]->getLocationY() - this->getLocationY());
-                if(diffX <= DISTANCE || diffY <= DISTANCE)
-                        if(this->getId() != vecNodes[i]->getId())
-                                vecAvailableNodes.push_back(vecNodes[i]);
+                result = sqrt( pow(diffX, 2) + pow(diffY, 2) );
+
+                if(result <= 40 && this->getId() != vecNodes[i]->getId())
+                        vecAvailableNodes.push_back(vecNodes[i]);
         }
 }
+
+// void Node::printAvailableNodes()
+// {
+//         if(vecAvailableNodes.size()==0)
+//                 cout << "[]" << endl;
+//         for(int i=0; i<vecAvailableNodes.size(); i++)
+//         {
+//                 if (i==0 && i == vecAvailableNodes.size()-1)
+//                         cout << "[" <<  vecAvailableNodes[0]->getName()<< "(id:"<<vecAvailableNodes[0]->id<<")"<< "]" <<endl;
+//
+//                 else if (i==0)
+//                         cout << "[" <<  vecAvailableNodes[0]->getName()<< "(id:"<<vecAvailableNodes[0]->id<<")"<< ",";
+//
+//                 else if (i==vecAvailableNodes.size() -1 )
+//                         cout << vecAvailableNodes[i]->getName()<< "(id:"<<vecAvailableNodes[i]->id<<")"<< "]"<<endl;
+//
+//                 else
+//                         cout << vecAvailableNodes[i]->getName()<< "(id:"<<vecAvailableNodes[i]->id<<")" << ",";
+//         }
+// }
 
 void Node::printAvailableNodes()
 {
@@ -129,16 +153,16 @@ void Node::printAvailableNodes()
         for(int i=0; i<vecAvailableNodes.size(); i++)
         {
                 if (i==0 && i == vecAvailableNodes.size()-1)
-                        cout << "[" <<  vecAvailableNodes[0]->getName()<< "(id:"<<vecAvailableNodes[0]->id<<")"<< "]" <<endl;
+                        cout << "[" <<  vecAvailableNodes[0]->getName()<< "]" <<endl;
 
                 else if (i==0)
-                        cout << "[" <<  vecAvailableNodes[0]->getName()<< "(id:"<<vecAvailableNodes[0]->id<<")"<< ",";
+                        cout << "[" <<  vecAvailableNodes[0]->getName()<< ",";
 
                 else if (i==vecAvailableNodes.size() -1 )
-                        cout << vecAvailableNodes[i]->getName()<< "(id:"<<vecAvailableNodes[i]->id<<")"<< "]"<<endl;
+                        cout << vecAvailableNodes[i]->getName()<< "]"<<endl;
 
                 else
-                        cout << vecAvailableNodes[i]->getName()<< "(id:"<<vecAvailableNodes[i]->id<<")" << ",";
+                        cout << vecAvailableNodes[i]->getName() << ",";
         }
 }
 
