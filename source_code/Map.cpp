@@ -182,7 +182,7 @@ void Map::PrintMap()
         {
                 if(vecElementsOfTheMap[i]->checkIfErased()==true)
                         continue;
-                cout << "---------------------------------------------------"<<endl;
+                cout << "_____________"<<endl<<endl;
                 cout << "TYPE: " << vecElementsOfTheMap[i]->getType() << " | ID : " << vecElementsOfTheMap[i]->getId() <<" | Name : " << vecElementsOfTheMap[i]->getName() << " | Position : "<<"("<<vecElementsOfTheMap[i]->getLocationX() << "," << vecElementsOfTheMap[i]->getLocationY() << ")" <<endl;
                 cout << "available Nodes : " << endl;
                 vecElementsOfTheMap[i]->printAvailableNodes();
