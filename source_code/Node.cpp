@@ -13,6 +13,7 @@ Node::Node(string type,string n,double x, double y) //ctor
         next_id= next_id + 1;
         isBusy= false;
         isErased=false;
+        visited=0;
 }
 
 Node::~Node() //dtor
@@ -104,8 +105,8 @@ void Node::receive(int message,int idSource,int idDest)
 
 void Node::scanHotspots(vector<Node*> vecNodes)
 {
-  //the function check if a node is near to an another with a distance of 40 metters
-  //I calculate according to the  Pythagorean theorem a^2+b^2 = c^2 < 40^2
+        //the function check if a node is near to an another with a distance of 40 metters
+        //I calculate according to the  Pythagorean theorem a^2+b^2 = c^2 < 40^2
         if (this->vecAvailableNodes.size()!=0)
                 vecAvailableNodes.clear();
 
@@ -169,4 +170,30 @@ void Node::printAvailableNodes()
 std::vector<Node*> Node::getVectAvailableNodes()
 {
         return vecAvailableNodes;
+}
+
+int Node::getVisited()
+{
+        return this->visited;
+}
+
+void Node::setVisited()
+{
+        this->visited+=1;
+}
+
+
+vector<int> Node::getlistOfQuorum()
+{
+        return listOfQuorum;
+}
+
+void Node::addTolistOfQuorum(int id)
+{
+        for(int i=0; i< this->listOfQuorum.size(); i++)
+        {
+                if(listOfQuorum[i]==id)
+                        return;
+        }
+        listOfQuorum.push_back(id);
 }
