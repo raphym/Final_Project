@@ -11,8 +11,10 @@
 class Simulation
 {
 public:
-        Simulation(std::string city);
-        virtual ~Simulation();
+Simulation(std::string city);
+virtual ~Simulation();
+
+
 
 protected:
 
