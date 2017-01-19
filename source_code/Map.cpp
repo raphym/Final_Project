@@ -7,13 +7,18 @@ Map::Map(string name,string fileProviders, string fileLamps, string fileTrafficL
         this->fileProviders=fileProviders;
         this->fileLamps=fileLamps;
         this->fileTrafficLights=fileTrafficLights;
+
         loadMap();
 }
 
 Map::~Map()
 {
         for(int i=0; i<vecElementsOfTheMap.size(); i++)
-                delete vecElementsOfTheMap[i];
+        {
+                if(vecElementsOfTheMap[i]!=NULL)
+                        delete vecElementsOfTheMap[i];
+        }
+
 }
 
 
@@ -149,7 +154,7 @@ void Map::loadMap()
                 vecElementsOfTheMap.push_back(trafficLights[i]);
 
 }
-
+//add a node
 void Map::addNode(Node *n)
 {
         if(n==NULL)
@@ -158,7 +163,7 @@ void Map::addNode(Node *n)
 }
 
 
-
+//remove a node
 void Map::removeNode(int id)
 {
         for(int i=0; i < vecElementsOfTheMap.size(); i++)
@@ -168,13 +173,13 @@ void Map::removeNode(int id)
         }
 
 }
-
+// return a vectors of all elements of the map (nodes)
 vector<Node*> Map::getNodes()
 {
         return vecElementsOfTheMap;
 }
 
-
+// print the map
 void Map::PrintMap()
 {
         cout << endl << "Name of the Map : " << this->name << endl;
@@ -186,6 +191,12 @@ void Map::PrintMap()
                 cout << "TYPE: " << vecElementsOfTheMap[i]->getType() << " | ID : " << vecElementsOfTheMap[i]->getId() <<" | Name : " << vecElementsOfTheMap[i]->getName() << " | Position : "<<"("<<vecElementsOfTheMap[i]->getLocationX() << "," << vecElementsOfTheMap[i]->getLocationY() << ")" <<endl;
                 cout << "available Nodes : " << endl;
                 vecElementsOfTheMap[i]->printAvailableNodes();
+
+                if(vecElementsOfTheMap[i]->getType()=="Quorum")
+                {
+                        Quorum *q = (Quorum*)vecElementsOfTheMap[i];
+                        q->printQuorum(vecElementsOfTheMap);
+                }
         }
 }
 
@@ -209,4 +220,180 @@ void Map::Garbage_Collector()
                         vecElementsOfTheMap.erase(vecElementsOfTheMap.begin()+i);
                 }
         }
+}
+
+
+//Function which running BFS on a single Node
+vector<Node*> Map::runBFS(Node *currentNode)
+{
+        int choiceId = currentNode->getId();
+        int pullQueue =1;
+        int nums = vecElementsOfTheMap.size();
+        string *bfsArrayColor = new string[nums];
+        int *bfsArrayDistance = new int [nums];
+        int *bfsArrayPiId = new int [nums];
+
+        for(int i=0; i<nums; i++)
+        {
+                bfsArrayColor[i] = "WHITE";
+                bfsArrayDistance[i] = -1;
+                bfsArrayPiId[i] = -1;
+        }
+
+        bfsArrayColor[choiceId] = "GREY";
+        bfsArrayDistance[choiceId] = 0;
+        bfsArrayPiId[choiceId] = -1;
+
+        queue<Node*> myqueue;
+        myqueue.push(currentNode);
+
+        int pointerId = -1;
+
+        if(currentNode->getVisited()==0)
+                currentNode->setVisited();
+        while(!myqueue.empty() && pullQueue <= MAX_BFS)
+        {
+                pullQueue++;
+                Node *pointer=myqueue.front();
+                myqueue.pop();
+
+                vector<Node*> neighbors = pointer->getVectAvailableNodes();
+                pointerId = pointer->getId();
+                for(int i =0; i< neighbors.size(); i++ )
+                {
+                        int neighborsId=neighbors[i]->getId();
+                        if(bfsArrayColor[neighborsId]=="WHITE" && vecElementsOfTheMap[neighborsId]->getVisited()<2)
+                        {
+                                currentNode->addTolistOfQuorum(neighborsId);
+                                bfsArrayColor[neighborsId]="GREY";
+                                bfsArrayDistance[neighborsId]=bfsArrayDistance[pointerId]+1;
+                                bfsArrayPiId[neighborsId]= pointerId;
+                                myqueue.push(neighbors[i]);
+                                if(neighbors[i]->getVisited()==0)
+                                        neighbors[i]->setVisited();
+                        }
+                }
+                bfsArrayColor[pointerId]="BLACK";
+                vecElementsOfTheMap[pointerId]->setVisited();
+        }
+
+        // cout << "Choice " << vecElementsOfTheMap[choiceId]->getName()<<endl;
+        // for (int i=0; i<vecElementsOfTheMap.size(); i++)
+        // {
+        //         string message ="";
+        //         if(vecElementsOfTheMap[i]->getVisited()==1)
+        //                 message = " || VISITED 1 ";
+        //         if(vecElementsOfTheMap[i]->getVisited()==2)
+        //                 message = " || VISITED 2 ";
+        //
+        //         if(bfsArrayColor[i]!="WHITE")
+        //         {
+        //                 cout << "NAME : "<< vecElementsOfTheMap[i]->getName() << " [ "<< "Color : "<< bfsArrayColor[i] << " || " << "Distance : " << bfsArrayDistance[i]<< message <<" ]"  <<endl;
+        //         }
+        // }
+        // cout << "-----------------------------------" << endl;
+
+
+        vector<Node*> remainderNodes;
+        while(!myqueue.empty())
+        {
+                remainderNodes.push_back(myqueue.front());
+                myqueue.pop();
+        }
+
+        delete [] bfsArrayColor;
+        delete [] bfsArrayDistance;
+        delete [] bfsArrayPiId;
+
+        return remainderNodes;
+}
+
+//Function which construct the quorums it's running the function runBFS
+void Map::quorumConstruct()
+{
+        // For BFS
+        cout << "BFS START" << endl;
+        int currentId = 35;
+        vector<Node *> remainderNodes;
+        vector<Node *> bfsNodes;
+        Node *pointer = NULL;
+        bfsNodes.push_back(vecElementsOfTheMap[currentId]);
+
+        while (!bfsNodes.empty())
+        {
+                pointer = bfsNodes.front();
+                bfsNodes.erase(bfsNodes.begin());
+
+                if (pointer->getVisited() < 2)
+                {
+                        remainderNodes = runBFS(pointer);
+                        for (int i = 0; i < remainderNodes.size(); i++)
+                        {
+                                int id = remainderNodes[i]->getId();
+                                if (check(bfsNodes, id) == false)
+                                        bfsNodes.push_back(remainderNodes[i]);
+                        }
+                        // cout << "Queue : " << endl;
+                        // for (int i = 0; i < bfsNodes.size(); i++) {
+                        //         Node *pointer = bfsNodes[i];
+                        //         cout << pointer->getName() << "_" << pointer->getId() << " //";
+                        // }
+                        // cout << endl << endl;
+                }
+        }
+        cout << "BFS END " << endl;
+
+
+        //check which of the nodes are qurorum
+        int sizeOfVecElementsOfTheMap = vecElementsOfTheMap.size();
+        for(int i=0; i<sizeOfVecElementsOfTheMap; i++)
+        {
+                int sizeOfQuorum = vecElementsOfTheMap[i]->getlistOfQuorum().size();
+                if(sizeOfQuorum > 0)
+                {
+                        string name = vecElementsOfTheMap[i]->getName();
+                        double posX = vecElementsOfTheMap[i]->getLocationX();
+                        double posY = vecElementsOfTheMap[i]->getLocationY();
+                        Quorum *q = new Quorum("Quorum",name,posX,posY);
+                        int id=-1;
+                        for(int k=0; k< sizeOfQuorum; k++)
+                        {
+                                id = vecElementsOfTheMap[i]->getlistOfQuorum()[k];
+                                q->addTolistOfQuorum(id);
+                        }
+                        vecElementsOfTheMap.push_back(q);
+                        vecElementsOfTheMap[i]->erase();
+                }
+        }
+        refreshMap();
+}
+
+//print the quorums
+void Map::printListOfQuorum()
+{
+        for(int i=0; i<vecElementsOfTheMap.size(); i++)
+        {
+                cout << endl;
+                cout << "Name : " << vecElementsOfTheMap[i]->getName();
+                cout << " Voisins : ";
+                int size = vecElementsOfTheMap[i]->getlistOfQuorum().size();
+                if(size!=0)
+                        for(int j=0; j< size; j++)
+                        {
+                                int id = vecElementsOfTheMap[i]->getlistOfQuorum()[j];
+                                cout << " " <<  vecElementsOfTheMap[id]->getName();
+                        }
+                cout << endl;
+        }
+}
+
+//check if a specific Node exists in a vector
+bool Map::check(vector<Node *> bfsNodes, int id)
+{
+        for (int i = 0; i < bfsNodes.size(); i++)
+        {
+                if (bfsNodes[i]->getId() == id)
+                        return true;
+        }
+        return false;
 }
