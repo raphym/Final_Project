@@ -14,6 +14,7 @@ Node::Node(string type,string n,double x, double y) //ctor
         isBusy= false;
         isErased=false;
         visited=0;
+        isBackbone=false;
 }
 
 Node::~Node() //dtor
@@ -63,6 +64,18 @@ void Node::erase()
 {
         isErased=true;
 }
+
+bool Node::isItBackbone()
+{
+        return isBackbone;
+}
+
+void Node::setToBeBackbone()
+{
+        this->isBackbone = true;
+}
+
+
 void Node::send(int message,int idSource,int idDest)
 {
         bool sent=false;
@@ -103,10 +116,11 @@ void Node::receive(int message,int idSource,int idDest)
 }
 
 
-void Node::scanHotspots(vector<Node*> vecNodes)
+void Node::scanHotspots(vector<Node*> inputNodes, vector<Node*> &outputNodes )
 {
         //the function check if a node is near to an another with a distance of 40 metters
         //I calculate according to the  Pythagorean theorem a^2+b^2 = c^2 < 40^2
+        //vector input is the area and vector output is the result
         if (this->vecAvailableNodes.size()!=0)
                 vecAvailableNodes.clear();
 
@@ -114,16 +128,18 @@ void Node::scanHotspots(vector<Node*> vecNodes)
         double diffY=0;
         double result=0;
 
-        for(int i=0; i< vecNodes.size(); i++)
+        for(int i=0; i< inputNodes.size(); i++)
         {
-                if(vecNodes[i]->checkIfErased()==true)
+                if(inputNodes[i]->checkIfErased()==true)
                         continue;
-                diffX = abs(vecNodes[i]->getLocationX() - this->getLocationX());
-                diffY = abs(vecNodes[i]->getLocationY() - this->getLocationY());
+                diffX = abs(inputNodes[i]->getLocationX() - this->getLocationX());
+                diffY = abs(inputNodes[i]->getLocationY() - this->getLocationY());
                 result = sqrt( pow(diffX, 2) + pow(diffY, 2) );
 
-                if(result <= 40 && this->getId() != vecNodes[i]->getId())
-                        vecAvailableNodes.push_back(vecNodes[i]);
+                if(result <= 40 && this->getId() != inputNodes[i]->getId())
+                        outputNodes.push_back(inputNodes[i]);
+
+
         }
 }
 
@@ -167,7 +183,7 @@ void Node::printAvailableNodes()
         }
 }
 
-std::vector<Node*> Node::getVectAvailableNodes()
+std::vector<Node*>&Node::getVectAvailableNodes()
 {
         return vecAvailableNodes;
 }

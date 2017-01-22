@@ -18,8 +18,8 @@ double getLocationY();         //return the location y
 std::string getType();
 void send(int message,int idSource,int idDest);         // to send a message
 void receive(int message,int idSource,int idDest);         // to receive a message
-void scanHotspots(std::vector<Node*>);         //to scan the area
-std::vector<Node*> getVectAvailableNodes();         // return the vector which contains all the elements present in the area
+void scanHotspots(std::vector<Node*> inputNodes, std::vector<Node*> &outputNodes ); //to scan the area
+std::vector<Node*>& getVectAvailableNodes();         // return the vector which contains all the elements present in the area
 void printAvailableNodes();         // print the elements present in the area
 bool checkIfBusy();         // to check if a node is busy
 void setIsBusy(bool b);         // to set the availability of a node
@@ -29,6 +29,8 @@ int getVisited();
 void setVisited();
 std::vector<int> getlistOfQuorum();
 void addTolistOfQuorum(int id);
+bool isItBackbone();
+void setToBeBackbone();
 
 
 
@@ -48,6 +50,7 @@ std::string type;
 bool isBusy;         // status of the node
 bool isErased;         // bool to know if the node is erased
 int visited;
+bool isBackbone; // to know if the node is a backbone
 private:
 };
 

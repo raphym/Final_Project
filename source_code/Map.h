@@ -38,6 +38,7 @@ bool check(std::vector<Node*> bfsNodes,int id); //check if a specific Node exist
 
 
 
+
 protected:
 std::string name;
 std::string fileProviders;

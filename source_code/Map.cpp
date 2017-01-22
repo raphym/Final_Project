@@ -203,9 +203,11 @@ void Map::PrintMap()
 //Refresh the scan hotspots of each node in the map
 void Map::refreshMap()
 {
+        Node *currentNode = NULL;
         for(int i=0; i<vecElementsOfTheMap.size(); i++)
         {
-                vecElementsOfTheMap[i]->scanHotspots(vecElementsOfTheMap);
+                currentNode   = vecElementsOfTheMap[i];
+                currentNode->scanHotspots(vecElementsOfTheMap,currentNode->getVectAvailableNodes());
         }
 }
 
@@ -264,7 +266,9 @@ vector<Node*> Map::runBFS(Node *currentNode)
                         int neighborsId=neighbors[i]->getId();
                         if(bfsArrayColor[neighborsId]=="WHITE" && vecElementsOfTheMap[neighborsId]->getVisited()<2)
                         {
+                                currentNode->setToBeBackbone();
                                 currentNode->addTolistOfQuorum(neighborsId);
+                                vecElementsOfTheMap[neighborsId]->addTolistOfQuorum(currentNode->getId());
                                 bfsArrayColor[neighborsId]="GREY";
                                 bfsArrayDistance[neighborsId]=bfsArrayDistance[pointerId]+1;
                                 bfsArrayPiId[neighborsId]= pointerId;
@@ -308,6 +312,8 @@ vector<Node*> Map::runBFS(Node *currentNode)
         return remainderNodes;
 }
 
+
+
 //Function which construct the quorums it's running the function runBFS
 void Map::quorumConstruct()
 {
@@ -349,12 +355,13 @@ void Map::quorumConstruct()
         for(int i=0; i<sizeOfVecElementsOfTheMap; i++)
         {
                 int sizeOfQuorum = vecElementsOfTheMap[i]->getlistOfQuorum().size();
-                if(sizeOfQuorum > 0)
+                if(vecElementsOfTheMap[i]->isItBackbone()==true)
                 {
                         string name = vecElementsOfTheMap[i]->getName();
                         double posX = vecElementsOfTheMap[i]->getLocationX();
                         double posY = vecElementsOfTheMap[i]->getLocationY();
                         Quorum *q = new Quorum("Quorum",name,posX,posY);
+                        q->setToBeBackbone();
                         int id=-1;
                         for(int k=0; k< sizeOfQuorum; k++)
                         {
@@ -377,7 +384,7 @@ void Map::printListOfQuorum()
                 cout << "Name : " << vecElementsOfTheMap[i]->getName();
                 cout << " Voisins : ";
                 int size = vecElementsOfTheMap[i]->getlistOfQuorum().size();
-                if(size!=0)
+                if(vecElementsOfTheMap[i]->isItBackbone()==true)
                         for(int j=0; j< size; j++)
                         {
                                 int id = vecElementsOfTheMap[i]->getlistOfQuorum()[j];
