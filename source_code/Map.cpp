@@ -197,6 +197,18 @@ void Map::PrintMap()
                         Quorum *q = (Quorum*)vecElementsOfTheMap[i];
                         q->printQuorum(vecElementsOfTheMap);
                 }
+                if(vecElementsOfTheMap[i]->getType()!="Quorum" && vecElementsOfTheMap[i]->getlistOfQuorum().size()>0)
+                {
+                        cout << "Linked to Quorum :" << endl;
+                        Node *currentNode =vecElementsOfTheMap[i];
+                        for(int j = 0; j< currentNode->getlistOfQuorum().size(); j++)
+                        {
+                                cout << vecElementsOfTheMap[currentNode->getlistOfQuorum()[j]]->getName() << " ";
+                        }
+                        cout << endl;
+
+                }
+
         }
 }
 
