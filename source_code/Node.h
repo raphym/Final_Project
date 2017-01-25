@@ -5,11 +5,12 @@
 #include <iostream>
 #include <cmath>
 #define DISTANCE 40
+#define New_Node_Id -2
 
 class Node
 {
 public:
-Node(std::string type,std::string n,double x, double y);
+Node(std::string type,std::string n,int theId ,double x, double y);
 virtual ~Node();
 std::string getName();         //return the name
 int getId();         //return the id

@@ -6,7 +6,7 @@
 class Quorum : public Node
 {
 public:
-        Quorum(std::string type,std::string n,double x, double y);
+        Quorum(std::string type,std::string n,int theId,double x, double y);
         void printQuorum(std::vector<Node*> vecElementsOfTheMap);
         virtual ~Quorum();
 

@@ -3,14 +3,20 @@
 using namespace std;
 static int next_id=0;
 
-Node::Node(string type,string n,double x, double y) //ctor
+Node::Node(string type,string n,int theId,double x, double y)  //ctor
 {
         this->type=type;
         name = new string(n);
         locationX = x;
         locationY = y;
-        id=next_id;
-        next_id= next_id + 1;
+        if(theId==New_Node_Id)
+        {
+                id=next_id;
+                next_id= next_id + 1;
+        }
+        else
+                this->id=theId;
+
         isBusy= false;
         isErased=false;
         visited=0;

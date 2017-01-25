@@ -3,7 +3,7 @@
 
 using namespace std;
 
-Quorum::Quorum(string type,string name,double x, double y) : Node(type,name,x,y)
+Quorum::Quorum(string type,string name,int theId,double x, double y) : Node(type,name,theId,x,y)
 {
 
 }

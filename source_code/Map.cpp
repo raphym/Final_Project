@@ -52,7 +52,7 @@ vector<Node*> Map::loadLamps()
 
 
         for(i=0; i<nbLamps; i++)
-                lamps.push_back(new Node("LAMP",names[i],posX[i],posY[i]));
+                lamps.push_back(new Node("LAMP",names[i],New_Node_Id,posX[i],posY[i]));
         delete [] posX;
         delete [] posY;
         delete [] names;
@@ -88,7 +88,7 @@ vector<Node*> Map::loadProviders()
                 exit(-1);
         }
         for(i=0; i<nbProviders; i++)
-                providers.push_back(new Node("PROVIDER",names[i],posX[i],posY[i]));
+                providers.push_back(new Node("PROVIDER",names[i],New_Node_Id,posX[i],posY[i]));
         delete [] posX;
         delete [] posY;
         delete [] names;
@@ -124,7 +124,7 @@ vector<Node*> Map::loadTrafficLights()
                 exit(-1);
         }
         for(i=0; i<nbTrafficLight; i++)
-                trafficLights.push_back(new Node("TRAFFIC_LIGHT",names[i],posX[i],posY[i]));
+                trafficLights.push_back(new Node("TRAFFIC_LIGHT",names[i],New_Node_Id,posX[i],posY[i]));
         delete [] posX;
         delete [] posY;
         delete [] names;
@@ -366,22 +366,22 @@ void Map::quorumConstruct()
         int sizeOfVecElementsOfTheMap = vecElementsOfTheMap.size();
         for(int i=0; i<sizeOfVecElementsOfTheMap; i++)
         {
-                int sizeOfQuorum = vecElementsOfTheMap[i]->getlistOfQuorum().size();
                 if(vecElementsOfTheMap[i]->isItBackbone()==true)
                 {
-                        string name = vecElementsOfTheMap[i]->getName();
-                        double posX = vecElementsOfTheMap[i]->getLocationX();
-                        double posY = vecElementsOfTheMap[i]->getLocationY();
-                        Quorum *q = new Quorum("Quorum",name,posX,posY);
+                        Node *current = vecElementsOfTheMap[i];
+                        string name = current->getName();
+                        double posX = current->getLocationX();
+                        double posY = current->getLocationY();
+                        int oldId= current->getId();
+                        int sizeOfQuorum = current->getlistOfQuorum().size();
+
+                        Quorum *q = new Quorum("Quorum",name,oldId,posX,posY);
                         q->setToBeBackbone();
-                        int id=-1;
                         for(int k=0; k< sizeOfQuorum; k++)
-                        {
-                                id = vecElementsOfTheMap[i]->getlistOfQuorum()[k];
-                                q->addTolistOfQuorum(id);
-                        }
-                        vecElementsOfTheMap.push_back(q);
-                        vecElementsOfTheMap[i]->erase();
+                                q->addTolistOfQuorum(current->getlistOfQuorum()[k]);
+
+                        vecElementsOfTheMap[i]=q;
+                        delete current;
                 }
         }
         refreshMap();
