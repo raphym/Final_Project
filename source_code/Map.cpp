@@ -264,7 +264,7 @@ vector<Node*> Map::runBFS(Node *currentNode)
         int pointerId = -1;
 
         if(currentNode->getVisited()==0)
-                currentNode->setVisited();
+                currentNode->setVisited(INCREMENT);
         while(!myqueue.empty() && pullQueue <= MAX_BFS)
         {
                 pullQueue++;
@@ -286,11 +286,11 @@ vector<Node*> Map::runBFS(Node *currentNode)
                                 bfsArrayPiId[neighborsId]= pointerId;
                                 myqueue.push(neighbors[i]);
                                 if(neighbors[i]->getVisited()==0)
-                                        neighbors[i]->setVisited();
+                                        neighbors[i]->setVisited(INCREMENT);
                         }
                 }
                 bfsArrayColor[pointerId]="BLACK";
-                vecElementsOfTheMap[pointerId]->setVisited();
+                vecElementsOfTheMap[pointerId]->setVisited(INCREMENT);
         }
 
         // cout << "Choice " << vecElementsOfTheMap[choiceId]->getName()<<endl;
@@ -325,11 +325,18 @@ vector<Node*> Map::runBFS(Node *currentNode)
 }
 
 
+//reset visited
+void Map::resetVisited()
+{
+        for(int i=0; i < vecElementsOfTheMap.size(); i++)
+                vecElementsOfTheMap[i]->setVisited(RESET);
+}
 
 //Function which construct the quorums it's running the function runBFS
 void Map::quorumConstruct()
 {
         // For BFS
+        resetVisited();
         cout << "BFS START" << endl;
         int currentId = 35;
         vector<Node *> remainderNodes;

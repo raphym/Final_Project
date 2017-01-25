@@ -6,6 +6,9 @@
 #include <cmath>
 #define DISTANCE 40
 #define New_Node_Id -2
+#define INCREMENT 5
+#define RESET 6
+
 
 class Node
 {
@@ -27,7 +30,7 @@ void setIsBusy(bool b);         // to set the availability of a node
 void erase();         // Erase the node
 bool checkIfErased();         // to check if a node is Erased
 int getVisited();
-void setVisited();
+void setVisited(int choice);
 std::vector<int> getlistOfQuorum();
 void addTolistOfQuorum(int id);
 bool isItBackbone();

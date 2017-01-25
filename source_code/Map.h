@@ -35,6 +35,7 @@ void quorumConstruct(); //Function which construct the quorums it's running the 
 std::vector<Node*> runBFS(Node*); //Function which running BFS on a single Node
 void printListOfQuorum(); //print the quorums
 bool check(std::vector<Node*> bfsNodes,int id); //check if a specific Node exists in the vector
+void resetVisited();
 
 
 

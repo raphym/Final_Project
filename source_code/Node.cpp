@@ -199,9 +199,13 @@ int Node::getVisited()
         return this->visited;
 }
 
-void Node::setVisited()
+void Node::setVisited(int choice)
 {
-        this->visited+=1;
+        if(choice==INCREMENT)
+                this->visited+=1;
+
+        else if(choice==RESET)
+                this->visited=0;
 }
 
 
