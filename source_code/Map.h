@@ -10,7 +10,7 @@
 
 #include "FileStream.h"
 #include "Node.h"
-#include "Quorum.h"
+#include "Backbone.h"
 #define MAX_BFS 4
 
 

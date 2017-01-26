@@ -192,14 +192,14 @@ void Map::PrintMap()
                 cout << "available Nodes : " << endl;
                 vecElementsOfTheMap[i]->printAvailableNodes();
 
-                if(vecElementsOfTheMap[i]->getType()=="Quorum")
+                if(vecElementsOfTheMap[i]->getType()=="Backbone")
                 {
-                        Quorum *q = (Quorum*)vecElementsOfTheMap[i];
-                        q->printQuorum(vecElementsOfTheMap);
+                        Backbone *b = (Backbone*)vecElementsOfTheMap[i];
+                        b->printQuorum(vecElementsOfTheMap);
                 }
-                if(vecElementsOfTheMap[i]->getType()!="Quorum" && vecElementsOfTheMap[i]->getlistOfQuorum().size()>0)
+                if(vecElementsOfTheMap[i]->getType()!="Backbone" && vecElementsOfTheMap[i]->getlistOfQuorum().size()>0)
                 {
-                        cout << "Linked to Quorum :" << endl;
+                        cout << "Linked to Backbone :" << endl;
                         Node *currentNode =vecElementsOfTheMap[i];
                         for(int j = 0; j< currentNode->getlistOfQuorum().size(); j++)
                         {
@@ -382,12 +382,12 @@ void Map::quorumConstruct()
                         int oldId= current->getId();
                         int sizeOfQuorum = current->getlistOfQuorum().size();
 
-                        Quorum *q = new Quorum("Quorum",name,oldId,posX,posY);
-                        q->setToBeBackbone();
+                        Backbone *b = new Backbone("Backbone",name,oldId,posX,posY);
+                        b->setToBeBackbone();
                         for(int k=0; k< sizeOfQuorum; k++)
-                                q->addTolistOfQuorum(current->getlistOfQuorum()[k]);
+                                b->addTolistOfQuorum(current->getlistOfQuorum()[k]);
 
-                        vecElementsOfTheMap[i]=q;
+                        vecElementsOfTheMap[i]=b;
                         delete current;
                 }
         }
