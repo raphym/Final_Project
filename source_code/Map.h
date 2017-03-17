@@ -35,9 +35,11 @@ void quorumConstruct(); //Function which construct the quorums it's running the 
 std::vector<Node*> runBFS(Node*); //Function which running BFS on a single Node
 void printListOfQuorum(); //print the quorums
 bool check(std::vector<Node*> bfsNodes,int id); //check if a specific Node exists in the vector
-void resetVisited();
-
-
+bool check(std::vector<int> bfsNodes,int id); //check if a specific Node exists in the vector
+void resetVisited(); //reset the feature reset of e specific Node
+void DFS(); //run on DFS on each node of the Map
+void DFS_Visit(std::vector<Node *> graph, Node *current,std::vector<std::string> &vectName,std::vector<int> &vectId); //run DFS on a specific Node
+void printTraceroute();
 
 
 protected:

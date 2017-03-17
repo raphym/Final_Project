@@ -240,6 +240,7 @@ void Map::Garbage_Collector()
 //Function which running BFS on a single Node
 vector<Node*> Map::runBFS(Node *currentNode)
 {
+        //cout << currentNode->getName() << endl; // rajout pour test print the quorums
         int choiceId = currentNode->getId();
         int pullQueue =1;
         int nums = vecElementsOfTheMap.size();
@@ -267,12 +268,16 @@ vector<Node*> Map::runBFS(Node *currentNode)
                 currentNode->setVisited(INCREMENT);
         while(!myqueue.empty() && pullQueue <= MAX_BFS)
         {
+
                 pullQueue++;
                 Node *pointer=myqueue.front();
                 myqueue.pop();
 
+
                 vector<Node*> neighbors = pointer->getVectAvailableNodes();
                 pointerId = pointer->getId();
+
+                //cout << "test "<< pointerId << endl;
                 for(int i =0; i< neighbors.size(); i++ )
                 {
                         int neighborsId=neighbors[i]->getId();
@@ -293,23 +298,8 @@ vector<Node*> Map::runBFS(Node *currentNode)
                 vecElementsOfTheMap[pointerId]->setVisited(INCREMENT);
         }
 
-        // cout << "Choice " << vecElementsOfTheMap[choiceId]->getName()<<endl;
-        // for (int i=0; i<vecElementsOfTheMap.size(); i++)
-        // {
-        //         string message ="";
-        //         if(vecElementsOfTheMap[i]->getVisited()==1)
-        //                 message = " || VISITED 1 ";
-        //         if(vecElementsOfTheMap[i]->getVisited()==2)
-        //                 message = " || VISITED 2 ";
-        //
-        //         if(bfsArrayColor[i]!="WHITE")
-        //         {
-        //                 cout << "NAME : "<< vecElementsOfTheMap[i]->getName() << " [ "<< "Color : "<< bfsArrayColor[i] << " || " << "Distance : " << bfsArrayDistance[i]<< message <<" ]"  <<endl;
-        //         }
-        // }
-        // cout << "-----------------------------------" << endl;
-
-
+        //if the numbers of pullQueue >= maxBFS so before quit the function
+        //save the nodes that discovers but not yet checked theirs neighbors
         vector<Node*> remainderNodes;
         while(!myqueue.empty())
         {
@@ -337,8 +327,8 @@ void Map::quorumConstruct()
 {
         // For BFS
         resetVisited();
-        cout << "BFS START" << endl;
         int currentId = 35;
+        //int currentId = 47;
         vector<Node *> remainderNodes;
         vector<Node *> bfsNodes;
         Node *pointer = NULL;
@@ -351,23 +341,19 @@ void Map::quorumConstruct()
 
                 if (pointer->getVisited() < 2)
                 {
+                        //run bfs and receive the remaining nodes
                         remainderNodes = runBFS(pointer);
+                        //copy the remaining node into the queue bfsNodes
                         for (int i = 0; i < remainderNodes.size(); i++)
                         {
                                 int id = remainderNodes[i]->getId();
                                 if (check(bfsNodes, id) == false)
+                                {
                                         bfsNodes.push_back(remainderNodes[i]);
+                                }
                         }
-                        // cout << "Queue : " << endl;
-                        // for (int i = 0; i < bfsNodes.size(); i++) {
-                        //         Node *pointer = bfsNodes[i];
-                        //         cout << pointer->getName() << "_" << pointer->getId() << " //";
-                        // }
-                        // cout << endl << endl;
                 }
         }
-        cout << "BFS END " << endl;
-
 
         //check which of the nodes are qurorum
         int sizeOfVecElementsOfTheMap = vecElementsOfTheMap.size();
@@ -422,4 +408,89 @@ bool Map::check(vector<Node *> bfsNodes, int id)
                         return true;
         }
         return false;
+}
+//check if a specific Node exists in a vector
+bool Map::check(vector<int> bfsNodes, int id)
+{
+        for (int i = 0; i < bfsNodes.size(); i++)
+        {
+                if (bfsNodes[i] == id)
+                        return true;
+        }
+        return false;
+}
+//run on DFS on each node of the Map
+void Map::DFS()
+{
+        std::vector<Node*> graph;
+        for(int i=0; i< vecElementsOfTheMap.size(); i++)
+        {
+                graph.push_back(vecElementsOfTheMap[i]);
+        }
+
+        for(int i=0; i< graph.size(); i++)
+        {
+                //print test
+                //cout << endl << "RUN DFS on " << graph[i]->getName() << endl;
+                resetVisited();
+                //for each node of the graph create a vector for a traceroute
+                std::vector<string> vectName;
+                std::vector<int> vectID;
+
+                DFS_Visit(graph,graph[i],vectName,vectID);
+                //when finish push the node into the vector Traceroute of the node
+                for(int j=0; j< vectID.size(); j++)
+                {
+                        vector<string> vName = graph[i]->getListTracerouteName();
+                        vector<int> vID = graph[i]->getListTracerouteId();
+                        if(check(vID, vectID[j]) == false)
+                        {
+                                graph[i]->getListTracerouteName().push_back(vectName[j]);
+                                graph[i]->getListTracerouteId().push_back(vectID[j]);
+                        }
+
+                }
+
+        }
+}
+
+
+void Map::DFS_Visit(std::vector<Node *> graph, Node *current,std::vector<string>& vectName,std::vector<int>& vectID)
+{
+        current->setVisited(INCREMENT); //to 1 (GREY)
+        //Discover the neighbors of the currentNode
+        std::vector<Node*> neighbors;
+        current->scanHotspots(graph,neighbors);
+        for(int i=0; i< neighbors.size(); i++)
+        {
+                if(neighbors[i]->getVisited()==0)
+                {
+                        //print test
+                        //cout << "from : " << current->getName() << " to : " << neighbors[i]->getName() << endl;
+                        vectName.push_back(neighbors[i]->getName());
+                        vectID.push_back(neighbors[i]->getId());
+                        if(neighbors[i]->isItBackbone())
+                        {
+                                continue;
+                        }
+
+                        else
+                                DFS_Visit(graph,neighbors[i],vectName,vectID);
+                }
+        }
+        current->setVisited(INCREMENT); //to 2 (BLACK)
+}
+
+
+
+void Map::printTraceroute()
+{
+        cout << endl << "Print of TraceRoute for each node" << endl << endl;
+
+        for(int i=0; i<vecElementsOfTheMap.size(); i++)
+        {
+                vecElementsOfTheMap[i]->printTraceroute();
+        }
+
+        cout << "END of print TraceRoute" << endl<< endl;
 }

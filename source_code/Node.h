@@ -2,6 +2,7 @@
 #define Node_H
 #include <string>
 #include <vector>
+#include <list>
 #include <iostream>
 #include <cmath>
 #define DISTANCE 40
@@ -13,7 +14,7 @@
 class Node
 {
 public:
-Node(std::string type,std::string n,int theId ,double x, double y);
+Node(std::string type,std::string n,int theId,double x, double y);
 virtual ~Node();
 std::string getName();         //return the name
 int getId();         //return the id
@@ -35,14 +36,25 @@ std::vector<int> getlistOfQuorum();
 void addTolistOfQuorum(int id);
 bool isItBackbone();
 void setToBeBackbone();
+std::vector <std::string> &getListTracerouteName(); //return the traceroute (Name of the nodes)
+std::vector <int> &getListTracerouteId(); //return the traceroute (ID of the nodes)
+void printTraceroute(); //print the traceroute for each node
 
 
 
 
 protected:
 std::string *name;         //name of the node
+//this list is the WIFI reception.
 std::vector<Node*> vecAvailableNodes;
+
+// if a node is a backbone so the list will be the nodes it controls.
+// if a node is not a backbone so the list will be the node (backbone) they control it.
 std::vector <int> listOfQuorum;
+
+//vectors for traceroute
+std::vector <std::string>listTracerouteName;
+std::vector <int>listTracerouteId;
 
 
 
@@ -55,6 +67,8 @@ bool isBusy;         // status of the node
 bool isErased;         // bool to know if the node is erased
 int visited;
 bool isBackbone; // to know if the node is a backbone
+
+
 private:
 };
 

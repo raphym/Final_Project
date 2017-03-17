@@ -223,3 +223,26 @@ void Node::addTolistOfQuorum(int id)
         }
         listOfQuorum.push_back(id);
 }
+
+
+vector<string>& Node::getListTracerouteName()
+{
+        return listTracerouteName;
+}
+
+vector<int>& Node::getListTracerouteId()
+{
+        return listTracerouteId;
+}
+
+
+void Node::printTraceroute()
+{
+        cout << "List of " << this->getName() << " : " <<endl;
+
+        for(int i=0; i< listTracerouteName.size(); i++)
+        {
+                cout << "{Name : " << listTracerouteName[i] << " ID : " << listTracerouteId[i] <<"}"<<endl;
+        }
+        cout << endl <<endl;
+}

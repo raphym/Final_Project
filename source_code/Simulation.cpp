@@ -9,10 +9,12 @@ Simulation::Simulation(string city)
 
         Map map(city, pathProviders, pathLamps, pathTrafficLights);
         map.refreshMap();
-        // map.PrintMap();
         map.quorumConstruct();
-        //*map.printNeighbors();
-        map.PrintMap();
+
+        //map.PrintMap();
+        map.DFS();
+
+        map.printTraceroute();
 }
 
 
