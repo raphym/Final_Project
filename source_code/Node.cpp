@@ -149,26 +149,6 @@ void Node::scanHotspots(vector<Node*> inputNodes, vector<Node*> &outputNodes )
         }
 }
 
-// void Node::printAvailableNodes()
-// {
-//         if(vecAvailableNodes.size()==0)
-//                 cout << "[]" << endl;
-//         for(int i=0; i<vecAvailableNodes.size(); i++)
-//         {
-//                 if (i==0 && i == vecAvailableNodes.size()-1)
-//                         cout << "[" <<  vecAvailableNodes[0]->getName()<< "(id:"<<vecAvailableNodes[0]->id<<")"<< "]" <<endl;
-//
-//                 else if (i==0)
-//                         cout << "[" <<  vecAvailableNodes[0]->getName()<< "(id:"<<vecAvailableNodes[0]->id<<")"<< ",";
-//
-//                 else if (i==vecAvailableNodes.size() -1 )
-//                         cout << vecAvailableNodes[i]->getName()<< "(id:"<<vecAvailableNodes[i]->id<<")"<< "]"<<endl;
-//
-//                 else
-//                         cout << vecAvailableNodes[i]->getName()<< "(id:"<<vecAvailableNodes[i]->id<<")" << ",";
-//         }
-// }
-
 void Node::printAvailableNodes()
 {
         if(vecAvailableNodes.size()==0)

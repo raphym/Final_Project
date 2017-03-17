@@ -6,6 +6,9 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 
-        Simulation s("Paris-Eiffel");
+        Simulation *s= new Simulation("Paris-Eiffel");
 
+        s->sendRequest();
+
+        delete s;
 }

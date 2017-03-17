@@ -7,23 +7,28 @@ Simulation::Simulation(string city)
         string pathLamps = "input_files/" + city + "/" + "lamps.txt";
         string pathTrafficLights = "input_files/" + city + "/" + "trafficLights.txt";
 
-        Map map(city, pathProviders, pathLamps, pathTrafficLights);
-        map.refreshMap();
-        map.quorumConstruct();
+        theMap  = new Map(city, pathProviders, pathLamps, pathTrafficLights);
 
-        //map.PrintMap();
-        map.DFS();
+        theMap->refreshMap();
+        theMap->quorumConstruct();
 
-        map.printTraceroute();
+        //theMap->PrintMap();
+        theMap->DFS();
+
+        theMap->printTraceroute();
+
+
+
 }
 
-
-
-
-
+void Simulation::sendRequest()
+{
+        cout << "HERE " << theMap->getNodes().size() << endl;
+}
 
 
 
 Simulation::~Simulation() // dtor
 {
+        delete theMap;
 }
