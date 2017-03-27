@@ -23,7 +23,7 @@ Simulation::Simulation(string city)
 
 void Simulation::sendRequest()
 {
-        cout << "HERE " << theMap->getNodes().size() << endl;
+        //cout << "HERE " << theMap->getNodes().size() << endl;
 }
 
 

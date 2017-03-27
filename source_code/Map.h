@@ -38,7 +38,7 @@ bool check(std::vector<Node*> bfsNodes,int id); //check if a specific Node exist
 bool check(std::vector<int> bfsNodes,int id); //check if a specific Node exists in the vector
 void resetVisited(); //reset the feature reset of e specific Node
 void DFS(); //run on DFS on each node of the Map
-void DFS_Visit(std::vector<Node *> graph, Node *current,std::vector<std::string> &vectName,std::vector<int> &vectId); //run DFS on a specific Node
+void DFS_Visit(std::vector<Node *> graph, Node *current,std::vector<std::string> &vectName,std::vector<int> &vectId,std::vector<int>&vectTracerouteIsItBackbone); //run DFS on a specific Node
 void printTraceroute();
 
 

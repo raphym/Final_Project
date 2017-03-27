@@ -36,8 +36,8 @@ std::vector<int> getlistOfQuorum();
 void addTolistOfQuorum(int id);
 bool isItBackbone();
 void setToBeBackbone();
-std::vector <std::string> &getListTracerouteName(); //return the traceroute (Name of the nodes)
-std::vector <int> &getListTracerouteId(); //return the traceroute (ID of the nodes)
+std::vector<std::vector<int> >& getTheTraceroute();
+
 void printTraceroute(); //print the traceroute for each node
 
 
@@ -53,9 +53,7 @@ std::vector<Node*> vecAvailableNodes;
 std::vector <int> listOfQuorum;
 
 //vectors for traceroute
-std::vector <std::string>listTracerouteName;
-std::vector <int>listTracerouteId;
-
+std::vector<std::vector<int> >theTraceroute;
 
 
 int id;         //id of the node

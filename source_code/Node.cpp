@@ -204,25 +204,23 @@ void Node::addTolistOfQuorum(int id)
         listOfQuorum.push_back(id);
 }
 
-
-vector<string>& Node::getListTracerouteName()
+vector<vector<int> >&Node::getTheTraceroute()
 {
-        return listTracerouteName;
-}
-
-vector<int>& Node::getListTracerouteId()
-{
-        return listTracerouteId;
+        return theTraceroute;
 }
 
 
 void Node::printTraceroute()
 {
-        cout << "List of " << this->getName() << " : " <<endl;
-
-        for(int i=0; i< listTracerouteName.size(); i++)
+        for(int i=0; i< theTraceroute.size(); i++)
         {
-                cout << "{Name : " << listTracerouteName[i] << " ID : " << listTracerouteId[i] <<"}"<<endl;
+                cout << "List of " << this->getName() << " : " <<endl;
+
+                for(int j=0; j< theTraceroute[i].size(); j++)
+                {
+                        cout << "{ ID : " << theTraceroute[i][j] <<" }"<< endl;
+                }
+                cout << endl;
         }
         cout << endl <<endl;
 }
