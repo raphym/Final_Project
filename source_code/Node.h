@@ -5,6 +5,9 @@
 #include <list>
 #include <iostream>
 #include <cmath>
+
+#include "ObjectRequest.h"
+
 #define DISTANCE 40
 #define New_Node_Id -2
 #define INCREMENT 5
@@ -37,9 +40,14 @@ void addTolistOfQuorum(int id);
 bool isItBackbone();
 void setToBeBackbone();
 std::vector<std::vector<int> >& getTheTraceroute();
-
 void printTraceroute(); //print the traceroute for each node
 
+void send(int idSource,int idDest,std::string message,ObjectRequest *obj);         // to send a message
+void receive(int idSource,int idDest,std::string message,ObjectRequest *obj);         // to receive a message
+void sendResponse(int idPacket,int idSource,int idDest,std::vector<int> &tracerouteBack);
+
+
+#define PACKET_ID_CREATOR 1000
 
 
 

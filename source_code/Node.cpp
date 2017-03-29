@@ -2,6 +2,7 @@
 
 using namespace std;
 static int next_id=0;
+static int numberOfSent=0;
 
 Node::Node(string type,string n,int theId,double x, double y)  //ctor
 {
@@ -223,4 +224,131 @@ void Node::printTraceroute()
                 cout << endl;
         }
         cout << endl <<endl;
+}
+
+
+
+
+
+void Node::send(int idSource,int idDest,string message,ObjectRequest *obj)
+{
+        cout << "Numbers of Sent " << numberOfSent  << endl;
+        numberOfSent++;
+
+        cout << "SEND FROM " << idSource << " TO "<< idDest << endl;
+        if(obj==NULL)
+        {
+                int newId = this->id*PACKET_ID_CREATOR;
+                ObjectRequest *obje = new ObjectRequest(newId,idSource,idDest,message);
+                obj=obje;
+        }
+
+        // for(int i=1; i< obj->getHeader().size(); i++)
+        // {
+        //         cout << obj->getHeader()[i] <<" ==> ";
+        // }
+        // cout << endl;
+
+        bool sent=false;
+        int i=0;
+        for(i=0; i<vecAvailableNodes.size(); i++)
+        {
+                if(this->vecAvailableNodes[i]->id == obj->getDestinationId() )
+                {
+                        sent=true;
+                        obj->addToHeader(this->getId());
+                        this->vecAvailableNodes[i]->receive(idSource,idDest,message,obj);
+                        break;
+                }
+        }
+
+
+        if (sent == false)
+        {
+                int idToSend = -1;
+                for(int j=0; j < theTraceroute.size(); j++)
+                {
+                        if(theTraceroute[j].size()>0)
+                        {
+                                if(theTraceroute[j][0]!=idSource) ////////////////////////////////////
+                                {
+                                        idToSend = theTraceroute[j][0];
+                                        break;
+                                }
+                        }
+                }
+
+                for(i=0; i<vecAvailableNodes.size(); i++)
+                {
+                        if(this->vecAvailableNodes[i]->id == idToSend)
+                        {
+                                sent=true;
+                                obj->addToHeader(this->getId());
+                                this->vecAvailableNodes[i]->receive(this->id,idToSend,message,obj);
+                                break;
+                        }
+                }
+
+
+
+        }
+
+        if (sent == false)
+        {
+                cout << "Sorry ,there is no way for this moment. ";
+                cout << "The node with id: "<< idSource << " cannot send any message ";
+                cout << "to the node with the id: " << idDest <<endl;
+        }
+
+}
+void Node::receive(int idSource,int idDest,std::string message,ObjectRequest *obj)
+{
+        vector<int> forResponse;
+        //if it is the destination
+        if(this->id == obj->getDestinationId())
+        {
+                cout << "I am the Node with the id : " << this->getId();
+                cout << " And I received the message  \" " << message;
+                cout << " \" From the node with the id : " << obj->getSenderId() <<endl;
+                int size = obj->getHeader()[0];
+                for(int i=size; i>0; i--)
+                {
+                        forResponse.push_back(obj->getHeader()[i]);
+                }
+                sendResponse(obj->getPacketId(),obj->getDestinationId(),obj->getSenderId(),forResponse);
+        }
+
+        else
+        {
+                send(idSource,idDest,message,obj);
+        }
+}
+
+void Node::sendResponse(int idPacket,int idSource,int idDest,std::vector<int> &tracerouteBack)
+{
+        bool found=false;
+        int i=0;
+        if(this->getId()==idDest)
+        {
+                cout << "I am the Node with the id : " << this->getId() << " And I Received Response of the Request id : " << idPacket;
+                cout << " Sent From the Node with id : " << idSource << endl;
+        }
+
+        if(tracerouteBack.size()>0)
+        {
+
+                int idToSendBack = tracerouteBack[0];
+                tracerouteBack.erase (tracerouteBack.begin());
+                for(i=0; i < this->getVectAvailableNodes().size(); i++)
+                {
+                        if(this->getVectAvailableNodes()[i]->getId()==idToSendBack)
+                        {
+                                found=true;
+                                break;
+                        }
+                }
+        }
+
+        if(found==true)
+                this->getVectAvailableNodes()[i]->sendResponse(idPacket,idSource,idDest,tracerouteBack);
 }

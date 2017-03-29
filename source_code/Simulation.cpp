@@ -15,7 +15,9 @@ Simulation::Simulation(string city)
         //theMap->PrintMap();
         theMap->DFS();
 
-        theMap->printTraceroute();
+        //theMap->printTraceroute();
+
+        theMap->getNodes()[0]->send(0, 43,"hello", NULL);
 
 
 
