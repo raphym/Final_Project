@@ -10,6 +10,7 @@ ObjectRequest::ObjectRequest(int packetId, int senderId,int destinationId, std::
         this->destinationId=destinationId;
         this->message=message;
         this->header.push_back(0);
+        this->received=false;
 
 }
 
@@ -70,4 +71,9 @@ void ObjectRequest::addToHeader(int idDone)
         {
                 this->destinationId = -1;
         }
+}
+
+bool ObjectRequest::checkIfReceived()
+{
+  return this->received;
 }
