@@ -75,5 +75,10 @@ void ObjectRequest::addToHeader(int idDone)
 
 bool ObjectRequest::checkIfReceived()
 {
-  return this->received;
+        return this->received;
+}
+
+void ObjectRequest::receivedFlag()
+{
+        this->received=true;
 }

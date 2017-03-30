@@ -20,6 +20,7 @@ std::string getMessage();
 std::vector<int> &getHeader();
 void addToHeader(int idDone);
 bool checkIfReceived();
+void receivedFlag();
 
 protected:
 int packetId;
