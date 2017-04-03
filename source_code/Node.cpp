@@ -2,7 +2,6 @@
 
 using namespace std;
 static int next_id=0;
-static int numberOfSent=0;
 
 Node::Node(string type,string n,int theId,double x, double y)  //ctor
 {
@@ -227,27 +226,40 @@ void Node::printTraceroute()
 }
 
 
+bool Node::checkIfExist(vector<int> vec,int id)
+{
+        for(int i=1; i<vec.size(); i++)
+        {
+                if(vec[i] == id)
+                {
+                        return true;
+                }
+        }
 
+        return false;
+
+}
+
+void Node::sendRequest(int idSource,int idDest,std::string message)
+{
+        int newId = this->id*PACKET_ID_CREATOR;
+        ObjectRequest *obj = new ObjectRequest(newId,idSource,idDest,message);
+        send(idSource,idDest,message,obj);
+        delete obj;
+}
 
 
 void Node::send(int idSource,int idDest,string message,ObjectRequest *obj)
 {
-        cout << "Numbers of Sent " << numberOfSent  << endl;
-        numberOfSent++;
-
-        cout << "SEND FROM " << idSource << " TO "<< idDest << endl;
         if(obj==NULL)
-        {
-                int newId = this->id*PACKET_ID_CREATOR;
-                ObjectRequest *obje = new ObjectRequest(newId,idSource,idDest,message);
-                obj=obje;
-        }
+                return;
+        cout << "SEND FROM " << idSource << " TO "<< idDest << endl;
 
-        // for(int i=1; i< obj->getHeader().size(); i++)
-        // {
-        //         cout << obj->getHeader()[i] <<" ==> ";
-        // }
-        // cout << endl;
+
+
+        if(obj->checkIfReceived()==true)
+                return;
+
 
         bool sent=false;
         int i=0;
@@ -270,40 +282,44 @@ void Node::send(int idSource,int idDest,string message,ObjectRequest *obj)
                 {
                         if(theTraceroute[j].size()>0)
                         {
-                                if(theTraceroute[j][0]!=idSource) ////////////////////////////////////
+                                if(theTraceroute[j][0]!=idSource &&  checkIfExist(obj->getHeader(),theTraceroute[j][theTraceroute[j].size()-1])==false )
                                 {
                                         idToSend = theTraceroute[j][0];
-                                        break;
+                                        for(i=0; i<vecAvailableNodes.size(); i++)
+                                        {
+                                                if(this->vecAvailableNodes[i]->id == idToSend)
+                                                {
+                                                        sent=true;
+                                                        obj->addToHeader(this->getId());
+                                                        this->vecAvailableNodes[i]->receive(this->id,idToSend,message,obj);
+                                                        break;
+                                                }
+                                        }
                                 }
                         }
                 }
-
-                for(i=0; i<vecAvailableNodes.size(); i++)
-                {
-                        if(this->vecAvailableNodes[i]->id == idToSend)
-                        {
-                                sent=true;
-                                obj->addToHeader(this->getId());
-                                this->vecAvailableNodes[i]->receive(this->id,idToSend,message,obj);
-                                break;
-                        }
-                }
-
-
-
         }
 
         if (sent == false)
         {
-                cout << "Sorry ,there is no way for this moment. ";
-                cout << "The node with id: "<< idSource << " cannot send any message ";
-                cout << "to the node with the id: " << idDest <<endl;
+                //cout << "Sorry ,there is no way for this moment. "<<endl;
+                // cout << "The node with id: "<< idSource << " cannot send any message ";
+                // cout << "to the node with the id: " << idDest <<endl;
+
+                //
+                // for(int i=1 ; i <obj->getHeader().size();i++)
+                // {
+                //   cout << obj[i] << " ==> " ;
+                // }
         }
 
 }
 void Node::receive(int idSource,int idDest,std::string message,ObjectRequest *obj)
 {
+        if(obj==NULL)
+                return;
         vector<int> forResponse;
+
         //if it is the destination
         if(this->id == obj->getDestinationId())
         {
@@ -313,14 +329,30 @@ void Node::receive(int idSource,int idDest,std::string message,ObjectRequest *ob
                 int size = obj->getHeader()[0];
                 for(int i=size; i>0; i--)
                 {
-                        forResponse.push_back(obj->getHeader()[i]);
+                        //If there is a Node that already exist so that says that I went through a false path
+                        //So I have to delete all the false path
+                        if(checkIfExist(forResponse, obj->getHeader()[i])==true)
+                        {
+                                int index=-2;
+                                int indexToFind=obj->getHeader()[i];
+                                while(forResponse.size() >1 && index!=indexToFind)
+                                {
+                                        forResponse.pop_back();
+                                        index=forResponse.back();
+                                }
+                        }
+                        else
+                                forResponse.push_back(obj->getHeader()[i]);
                 }
+                obj->receivedFlag();
                 sendResponse(obj->getPacketId(),obj->getDestinationId(),obj->getSenderId(),forResponse);
+
         }
 
         else
         {
-                send(idSource,idDest,message,obj);
+                if(obj!=NULL)
+                        send(idSource,idDest,message,obj);
         }
 }
 
