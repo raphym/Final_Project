@@ -47,30 +47,8 @@ string ObjectRequest::getMessage()
 
 void ObjectRequest::addToHeader(int idDone)
 {
-        bool found=false;
-
-        //find if already pass by there
-        for(int i=1; i < this->header.size(); i++ )
-        {
-                if(this->header[i]==idDone)
-                {
-                        found=true;
-                        break;
-                }
-        }
-
-        //if there is no problem so insert it and increase the size (header[0])
-        if(found==false)
-        {
-                this->header[0]+=1;
-                this->header.push_back(idDone);
-        }
-
-        //if there is a problem change the destination id to -1 to get it out
-        else if(found==true)
-        {
-                this->destinationId = -1;
-        }
+        this->header[0]+=1;
+        this->header.push_back(idDone);
 }
 
 bool ObjectRequest::checkIfReceived()

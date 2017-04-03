@@ -22,6 +22,7 @@ void addToHeader(int idDone);
 bool checkIfReceived();
 void receivedFlag();
 
+
 protected:
 int packetId;
 int senderId;
