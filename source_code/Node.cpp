@@ -335,16 +335,35 @@ void Node::receive(int idSource,int idDest,std::string message,ObjectRequest *ob
                         {
                                 int index=-2;
                                 int indexToFind=obj->getHeader()[i];
-                                while(forResponse.size() >1 && index!=indexToFind)
+
+                                if(forResponse.back()==obj->getHeader()[i])
                                 {
                                         forResponse.pop_back();
-                                        index=forResponse.back();
+                                }
+                                else
+                                {
+                                        while(forResponse.size() >1 && index!=indexToFind)
+                                        {
+                                                forResponse.pop_back();
+                                                index=forResponse.back();
+                                        }
                                 }
                         }
                         else
                                 forResponse.push_back(obj->getHeader()[i]);
                 }
                 obj->receivedFlag();
+                // for(int i=1 ; i <obj->getHeader().size();i++)
+                // {
+                //   cout << obj->getHeader()[i] << " ==> " ;
+                // }
+                // cout <<endl;
+                // for(int i=1 ; i <forResponse.size();i++)
+                // {
+                //   cout << forResponse[i] << " ==> " ;
+                // }
+                // cout << endl;
+
                 sendResponse(obj->getPacketId(),obj->getDestinationId(),obj->getSenderId(),forResponse);
 
         }
