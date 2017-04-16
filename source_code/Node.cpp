@@ -246,12 +246,12 @@ void Node::sendRequest(int idSource,int idDest,std::string message)
         int newId = this->id*PACKET_ID_CREATOR;
         string encoded = base64_encode(reinterpret_cast<const unsigned char*>(message.c_str()), message.length());
         ObjectRequest *obj = new ObjectRequest(newId,idSource,idDest,encoded);
-        send(idSource,idDest,encoded,obj);
+        send(idSource,idDest,obj);
         delete obj;
 }
 
 
-void Node::send(int idSource,int idDest,string message,ObjectRequest *obj)
+void Node::send(int idSource,int idDest,ObjectRequest *obj)
 {
         if(obj==NULL)
                 return;
@@ -272,7 +272,7 @@ void Node::send(int idSource,int idDest,string message,ObjectRequest *obj)
                 {
                         sent=true;
                         obj->addToHeader(this->getId());
-                        this->vecAvailableNodes[i]->receive(idSource,idDest,message,obj);
+                        this->vecAvailableNodes[i]->receive(idSource,idDest,obj);
                         break;
                 }
         }
@@ -294,7 +294,7 @@ void Node::send(int idSource,int idDest,string message,ObjectRequest *obj)
                                                 {
                                                         sent=true;
                                                         obj->addToHeader(this->getId());
-                                                        this->vecAvailableNodes[i]->receive(this->id,idToSend,message,obj);
+                                                        this->vecAvailableNodes[i]->receive(this->id,idToSend,obj);
                                                         break;
                                                 }
                                         }
@@ -317,7 +317,7 @@ void Node::send(int idSource,int idDest,string message,ObjectRequest *obj)
         }
 
 }
-void Node::receive(int idSource,int idDest,std::string message,ObjectRequest *obj)
+void Node::receive(int idSource,int idDest,ObjectRequest *obj)
 {
         if(obj==NULL)
                 return;
@@ -383,7 +383,7 @@ void Node::receive(int idSource,int idDest,std::string message,ObjectRequest *ob
         else
         {
                 if(obj!=NULL)
-                        send(idSource,idDest,message,obj);
+                        send(idSource,idDest,obj);
         }
 }
 
