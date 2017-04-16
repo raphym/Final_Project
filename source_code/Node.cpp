@@ -263,6 +263,7 @@ void Node::send(int idSource,int idDest,string message,ObjectRequest *obj)
 
         bool sent=false;
         int i=0;
+
         for(i=0; i<vecAvailableNodes.size(); i++)
         {
                 if(this->vecAvailableNodes[i]->id == obj->getDestinationId() )
@@ -302,14 +303,14 @@ void Node::send(int idSource,int idDest,string message,ObjectRequest *obj)
 
         if (sent == false)
         {
-                //cout << "Sorry ,there is no way for this moment. "<<endl;
-                // cout << "The node with id: "<< idSource << " cannot send any message ";
-                // cout << "to the node with the id: " << idDest <<endl;
+                cout << "Sorry ,there is no way for this moment. "<<endl;
+              //  cout << "The node with id: "<< idSource << " cannot send any message ";
+                //cout << "to the node with the id: " << idDest <<endl;
 
                 //
                 // for(int i=1 ; i <obj->getHeader().size();i++)
                 // {
-                //   cout << obj[i] << " ==> " ;
+                //   cout << obj->getHeader()[i] << " ==> " ;
                 // }
         }
 
@@ -336,9 +337,11 @@ void Node::receive(int idSource,int idDest,std::string message,ObjectRequest *ob
                                 int index=-2;
                                 int indexToFind=obj->getHeader()[i];
 
+
                                 if(forResponse.back()==obj->getHeader()[i])
                                 {
-                                        forResponse.pop_back();
+                                        //if the false node is just next to the other false node
+                                        continue;
                                 }
                                 else
                                 {
@@ -353,16 +356,18 @@ void Node::receive(int idSource,int idDest,std::string message,ObjectRequest *ob
                                 forResponse.push_back(obj->getHeader()[i]);
                 }
                 obj->receivedFlag();
+                // cout << endl;
+                // cout << endl << "print all false header " << endl;
                 // for(int i=1 ; i <obj->getHeader().size();i++)
                 // {
                 //   cout << obj->getHeader()[i] << " ==> " ;
                 // }
-                // cout <<endl;
+                // cout << endl <<"---------------------"<<endl;
                 // for(int i=1 ; i <forResponse.size();i++)
                 // {
                 //   cout << forResponse[i] << " ==> " ;
                 // }
-                // cout << endl;
+                // cout << endl << "End print header " <<endl;
 
                 sendResponse(obj->getPacketId(),obj->getDestinationId(),obj->getSenderId(),forResponse);
 
