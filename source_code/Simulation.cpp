@@ -16,16 +16,29 @@ Simulation::Simulation(string city)
         theMap->DFS();
 
         //theMap->printTraceroute();
-
-        theMap->getNodes()[22]->sendRequest(22, 8,"hello");
-
-
+        theMap->refreshMap();
 
 }
 
 void Simulation::sendRequest()
 {
-        //cout << "HERE " << theMap->getNodes().size() << endl;
+        int size = theMap->getNodes().size() -1;
+        theMap->refreshMap();
+
+        for(int i=0; i< size; i++)
+        {
+                cout << "Node I = " << i <<endl;
+
+                for(int j=0; j<size; j++ )
+                {
+                        if(i!=j)
+                        {
+                                cout << "Node J = " << j <<endl;
+                                theMap->getNodes()[i]->sendRequest(i, j,"Hello World");
+                        }
+                }
+
+        }
 }
 
 
