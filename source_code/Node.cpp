@@ -1,4 +1,5 @@
 #include "Node.h"
+#include "base64.h"
 
 using namespace std;
 static int next_id=0;
@@ -243,8 +244,9 @@ bool Node::checkIfExist(vector<int> vec,int id)
 void Node::sendRequest(int idSource,int idDest,std::string message)
 {
         int newId = this->id*PACKET_ID_CREATOR;
-        ObjectRequest *obj = new ObjectRequest(newId,idSource,idDest,message);
-        send(idSource,idDest,message,obj);
+        string encoded = base64_encode(reinterpret_cast<const unsigned char*>(message.c_str()), message.length());
+        ObjectRequest *obj = new ObjectRequest(newId,idSource,idDest,encoded);
+        send(idSource,idDest,encoded,obj);
         delete obj;
 }
 
@@ -304,7 +306,7 @@ void Node::send(int idSource,int idDest,string message,ObjectRequest *obj)
         if (sent == false)
         {
                 cout << "Sorry ,there is no way for this moment. "<<endl;
-              //  cout << "The node with id: "<< idSource << " cannot send any message ";
+                //  cout << "The node with id: "<< idSource << " cannot send any message ";
                 //cout << "to the node with the id: " << idDest <<endl;
 
                 //
@@ -325,8 +327,13 @@ void Node::receive(int idSource,int idDest,std::string message,ObjectRequest *ob
         if(this->id == obj->getDestinationId())
         {
                 cout << "I am the Node with the id : " << this->getId();
-                cout << " And I received the message  \" " << message;
-                cout << " \" From the node with the id : " << obj->getSenderId() <<endl;
+                cout << " And I received the message :  " << endl << obj->getMessage() <<endl;
+                cout << "From the node with the id : " << obj->getSenderId() <<endl;
+                cout << "Decrypting message ..." << endl;
+                cout << "The message decrypted is : " << endl;
+                string decoded = base64_decode(obj->getMessage());
+                cout << decoded << endl;
+
                 int size = obj->getHeader()[0];
                 for(int i=size; i>0; i--)
                 {
