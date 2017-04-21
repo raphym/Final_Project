@@ -259,10 +259,6 @@ void Node::send(int idSource,int idDest,ObjectRequest *obj)
 
 
 
-        if(obj->checkIfReceived()==true)
-                return;
-
-
         bool sent=false;
         int i=0;
 
@@ -362,7 +358,6 @@ void Node::receive(int idSource,int idDest,ObjectRequest *obj)
                         else
                                 forResponse.push_back(obj->getHeader()[i]);
                 }
-                obj->receivedFlag();
                 // cout << endl;
                 // cout << endl << "print all false header " << endl;
                 // for(int i=1 ; i <obj->getHeader().size();i++)
