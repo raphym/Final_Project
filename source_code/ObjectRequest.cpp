@@ -10,8 +10,6 @@ ObjectRequest::ObjectRequest(int packetId, int senderId,int destinationId, std::
         this->destinationId=destinationId;
         this->message=message;
         this->header.push_back(0);
-        this->received=false;
-
 }
 
 ObjectRequest::~ObjectRequest() //dtor
@@ -49,14 +47,4 @@ void ObjectRequest::addToHeader(int idDone)
 {
         this->header[0]+=1;
         this->header.push_back(idDone);
-}
-
-bool ObjectRequest::checkIfReceived()
-{
-        return this->received;
-}
-
-void ObjectRequest::receivedFlag()
-{
-        this->received=true;
 }

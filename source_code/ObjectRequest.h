@@ -19,8 +19,6 @@ int getDestinationId();
 std::string getMessage();
 std::vector<int> &getHeader();
 void addToHeader(int idDone);
-bool checkIfReceived();
-void receivedFlag();
 
 
 protected:
@@ -29,7 +27,7 @@ int senderId;
 int destinationId;
 std::string message;
 std::vector<int> header;
-bool received;
+
 
 private:
 };
