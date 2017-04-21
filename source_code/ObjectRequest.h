@@ -11,8 +11,9 @@
 class ObjectRequest
 {
 public:
-ObjectRequest(int packetId,int senderId,int destinationId, std::string message );
+ObjectRequest(std::string typeOfMessage,int packetId,int senderId,int destinationId, std::string message );
 virtual ~ObjectRequest();
+std::string getmessageType();
 int getPacketId();
 int getSenderId();
 int getDestinationId();
@@ -21,13 +22,14 @@ std::vector<int> &getHeader();
 void addToHeader(int idDone);
 
 
+
 protected:
+std::string messageType;
 int packetId;
 int senderId;
 int destinationId;
 std::string message;
 std::vector<int> header;
-
 
 private:
 };
