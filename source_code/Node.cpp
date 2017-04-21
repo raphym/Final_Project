@@ -241,15 +241,6 @@ bool Node::checkIfExist(vector<int> vec,int id)
 
 }
 
-void Node::sendRequest(int idSource,int idDest,std::string message)
-{
-        int newId = this->id*PACKET_ID_CREATOR;
-        string encoded = base64_encode(reinterpret_cast<const unsigned char*>(message.c_str()), message.length());
-        ObjectRequest *obj = new ObjectRequest(newId,idSource,idDest,encoded);
-        send(idSource,idDest,obj);
-        delete obj;
-}
-
 
 void Node::send(int idSource,int idDest,ObjectRequest *obj)
 {
