@@ -42,7 +42,7 @@ void setToBeBackbone();
 std::vector<std::vector<int> >& getTheTraceroute();
 void printTraceroute(); //print the traceroute for each node
 
-
+ObjectRequest* createRequest(std::string typeOfMessage,int idSource,int idDest,std::string message);
 void send(int idSource,int idDest,ObjectRequest *obj);         // to send a message
 void receive(int idSource,int idDest,ObjectRequest *obj);         // to receive a message
 void sendResponse(int idPacket,int idSource,int idDest,std::vector<int> &tracerouteBack);
