@@ -53,3 +53,8 @@ void ObjectRequest::addToHeader(int idDone)
         this->header[0]+=1;
         this->header.push_back(idDone);
 }
+
+void ObjectRequest::setMessageType(string messageType)
+{
+        this->messageType=messageType;
+}
