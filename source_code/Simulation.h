@@ -1,5 +1,6 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
+#include <fstream>
 
 #include <string>
 #include <iostream>
