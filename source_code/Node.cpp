@@ -256,6 +256,19 @@ bool Node::checkIfIsAlreadySend(string packetId,int idSource,int idDest)
         else cout << "Unable to open file";
         return false;
 }
+void Node::writeSendInDatabase(std::string packetId,int From,int To)
+{
+        ofstream outfile;
+        outfile.open("database.txt",std::ios_base::app);
+        if (outfile.is_open())
+        {
+                outfile << packetId;
+                outfile << " " << From;
+                outfile << " " << To;
+                outfile.close();
+        }
+        else cout << "Unable to open file";
+}
 
 ObjectRequest* Node::send(ObjectRequest *obj)
 {
@@ -289,6 +302,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                 }
                         }
                         obj->addToHeader(choiceToSend);
+                        writeSendInDatabase(obj->getPacketId(),this->id, choiceToSend);
                         return obj;
                 }
 
@@ -317,6 +331,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 {
                         obj->setMessageType("info");
                         obj->addToHeader(choiceToSend);
+                        writeSendInDatabase(obj->getPacketId(),this->id, choiceToSend);
                         return obj;
 
                 }
