@@ -2,7 +2,7 @@
 
 using namespace std;
 
-ObjectRequest::ObjectRequest(string typeOfMessage,int packetId, int senderId,int destinationId, std::string message )   //ctor
+ObjectRequest::ObjectRequest(string typeOfMessage,std::string packetId, int senderId,int destinationId, std::string message )   //ctor
 {
         this->messageType=typeOfMessage;
         this->packetId=packetId;
@@ -22,7 +22,7 @@ string ObjectRequest::getmessageType()
         return messageType;
 }
 
-int ObjectRequest::getPacketId()
+string ObjectRequest::getPacketId()
 {
         return packetId;
 }
