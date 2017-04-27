@@ -20,6 +20,7 @@ int getDestinationId();
 std::string getMessage();
 std::vector<int> &getHeader();
 void addToHeader(int idDone);
+void popFromHeader();
 void setMessageType(std::string messageType);
 
 

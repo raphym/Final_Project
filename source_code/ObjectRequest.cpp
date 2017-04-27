@@ -58,3 +58,12 @@ void ObjectRequest::setMessageType(string messageType)
 {
         this->messageType=messageType;
 }
+
+void ObjectRequest::popFromHeader()
+{
+        if(this->header.size()<=1)
+                return;
+
+        this->header[0] = this->header[0] -1;
+        this->header.pop_back();
+}
