@@ -24,8 +24,6 @@ int getId();         //return the id
 double getLocationX();         //return the location x
 double getLocationY();         //return the location y
 std::string getType();
-void send(int message,int idSource,int idDest);         // to send a message
-void receive(int message,int idSource,int idDest);         // to receive a message
 void scanHotspots(std::vector<Node*> inputNodes, std::vector<Node*> &outputNodes ); //to scan the area
 std::vector<Node*>& getVectAvailableNodes();         // return the vector which contains all the elements present in the area
 void printAvailableNodes();         // print the elements present in the area
@@ -42,13 +40,9 @@ void setToBeBackbone();
 std::vector<std::vector<int> >& getTheTraceroute();
 void printTraceroute(); //print the traceroute for each node
 
-ObjectRequest* createRequest(std::string typeOfMessage,int idSource,int idDest,std::string message);
-void send(int idSource,int idDest,ObjectRequest *obj);         // to send a message
-void receive(int idSource,int idDest,ObjectRequest *obj);         // to receive a message
-void sendResponse(int idPacket,int idSource,int idDest,std::vector<int> &tracerouteBack);
+ObjectRequest* send(ObjectRequest *obj);         // to send a message
 bool checkIfExist(std::vector<int>vec,int id);
 
-#define PACKET_ID_CREATOR 1000
 
 
 
