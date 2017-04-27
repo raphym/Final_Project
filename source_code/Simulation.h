@@ -14,6 +14,8 @@ public:
 Simulation(std::string city);
 virtual ~Simulation();
 void sendRequest();
+std::string getRandomId();
+char genRandom();
 
 
 protected:

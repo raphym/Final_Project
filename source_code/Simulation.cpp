@@ -1,6 +1,14 @@
 #include "Simulation.h"
 
 using namespace std;
+static const char alphanum[] =
+"0123456789"
+"!@#$%^&*"
+"ABCDEFGHIJKLMNOPQRSTUVWXYZ"
+"abcdefghijklmnopqrstuvwxyz";
+
+int stringLength = sizeof(alphanum) - 1;
+
 Simulation::Simulation(string city)
 {
         string pathProviders = "input_files/" + city + "/" + "providers.txt";
@@ -18,6 +26,8 @@ Simulation::Simulation(string city)
         //theMap->printTraceroute();
         theMap->refreshMap();
 
+        cout << getRandomId() <<endl;
+
 }
 
 void Simulation::sendRequest()
@@ -34,11 +44,29 @@ void Simulation::sendRequest()
                         if(i!=j)
                         {
                                 cout << "Node J = " << j <<endl;
-                                theMap->getNodes()[i]->sendRequest(i, j,"Hello World");
+                              //  theMap->getNodes()[i]->sendRequest(i, j,"Hello World");
                         }
                 }
 
         }
+}
+
+char Simulation::genRandom()
+{
+
+    return alphanum[rand() % stringLength];
+}
+
+string Simulation::getRandomId()
+{
+    srand(time(0));
+    std::string Str;
+    for(unsigned int i = 0; i < 20; ++i)
+    {
+        Str += genRandom();
+
+    }
+    return Str;
 }
 
 
