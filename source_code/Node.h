@@ -46,7 +46,7 @@ ObjectRequest* send(ObjectRequest *obj);         // to send a message
 bool checkIfExist(std::vector<int>vec,int id);
 bool checkIfExist(std::vector<Node*>vec,int id);
 bool checkIfIsAlreadySend(std::string packetId,int idSource,int idDest);
-void split(const std::string& s, char delim,std::vector<std::string>& v);
+void split(std::string& s, char delim,std::vector<std::string>& v);
 void writeSendInDatabase(std::string packetId,int From,int To);
 
 

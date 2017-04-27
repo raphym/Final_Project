@@ -213,7 +213,7 @@ bool Node::checkIfExist(vector<Node*> vec,int id)
 }
 
 //function which split a string into a vector
-void Node::split(const string& s, char delim,vector<string>& v)
+void Node::split(string& s, char delim,vector<string>& v)
 {
         auto i = 0;
         auto pos = s.find(delim);
@@ -237,7 +237,7 @@ bool Node::checkIfIsAlreadySend(string packetId,int idSource,int idDest)
         {
                 while ( getline (myfile,line) )
                 {
-                        split(line," ",vecLineToCheck);
+                        split(line,' ',vecLineToCheck);
                         if(vecLineToCheck[0] == packetId)
                         {
                                 if(stoi(vecLineToCheck[1]) == idSource)
@@ -265,6 +265,7 @@ void Node::writeSendInDatabase(std::string packetId,int From,int To)
                 outfile << packetId;
                 outfile << " " << From;
                 outfile << " " << To;
+                outfile << "\n";
                 outfile.close();
         }
         else cout << "Unable to open file";
@@ -274,6 +275,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
 {
         if(this->getId()==obj->getDestinationId())
         {
+                cout << "Destination " << this->id<<endl;
                 obj->setMessageType("ACK");
                 obj->popFromHeader();
                 return obj;
@@ -281,14 +283,19 @@ ObjectRequest* Node::send(ObjectRequest *obj)
 
         if(obj->getmessageType()=="info")
         {
+
                 if(obj->getHeader()[0]>= MAX_HOP)
                 {
+                  cout << "info___MAX_HOP "<< this->id<<endl;
+
                         obj->setMessageType("NAK");
                         obj->popFromHeader();
                         return obj;
                 }
                 else
                 {
+                  cout << "info_normal "<< this->id<<endl;
+
                         int choiceToSend = -2;
                         for(int i=0; i<this->theTraceroute.size(); i++ )
                         {
@@ -310,6 +317,8 @@ ObjectRequest* Node::send(ObjectRequest *obj)
 
         if(obj->getmessageType()=="NAK")
         {
+                cout << "NAK " << this->id<<endl;
+
                 int choiceToSend = -2;
                 bool found=false;
                 for(int i=0; i<this->theTraceroute.size(); i++ )
@@ -329,6 +338,8 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 }
                 if(found==true)
                 {
+                  cout << "NAK__FOUND "<< this->id<<endl;
+
                         obj->setMessageType("info");
                         obj->addToHeader(choiceToSend);
                         writeSendInDatabase(obj->getPacketId(),this->id, choiceToSend);
@@ -337,6 +348,8 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 }
                 if(found==false)
                 {
+                  cout << "NAK__NOT_FOUND " << this->id<<endl;
+
                         obj->popFromHeader();
                         return obj;
                 }
@@ -345,6 +358,8 @@ ObjectRequest* Node::send(ObjectRequest *obj)
 
         if(obj->getmessageType()=="ACK")
         {
+                cout << "ACK "<< this->id<<endl;
+
                 obj->popFromHeader();
                 return obj;
         }
