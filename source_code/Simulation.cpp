@@ -26,7 +26,7 @@ Simulation::Simulation(string city)
         //theMap->printTraceroute();
         theMap->refreshMap();
 
-        cout << getRandomId() <<endl;
+        //cout << getRandomId() <<endl;
 
 }
 
@@ -69,7 +69,12 @@ string Simulation::getRandomId()
     return Str;
 }
 
+void Simulation::startSim()
+{
+  ofstream outfile;
+  outfile.open("database.txt");
 
+}
 
 Simulation::~Simulation() // dtor
 {

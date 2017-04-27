@@ -16,6 +16,7 @@ virtual ~Simulation();
 void sendRequest();
 std::string getRandomId();
 char genRandom();
+void startSim();
 
 
 protected:
