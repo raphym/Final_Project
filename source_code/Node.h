@@ -5,6 +5,7 @@
 #include <list>
 #include <iostream>
 #include <cmath>
+#include <fstream>
 
 #include "ObjectRequest.h"
 
@@ -12,6 +13,7 @@
 #define New_Node_Id -2
 #define INCREMENT 5
 #define RESET 6
+#define MAX_HOP 15
 
 
 class Node
@@ -42,6 +44,9 @@ void printTraceroute(); //print the traceroute for each node
 
 ObjectRequest* send(ObjectRequest *obj);         // to send a message
 bool checkIfExist(std::vector<int>vec,int id);
+bool checkIfExist(std::vector<Node*>vec,int id);
+bool checkIfIsAlreadySend(std::string packetId,int idSource,int idDest);
+void split(const std::string& s, char delim,std::vector<std::string>& v);
 
 
 

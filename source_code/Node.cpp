@@ -198,12 +198,140 @@ bool Node::checkIfExist(vector<int> vec,int id)
         }
 
         return false;
+}
+bool Node::checkIfExist(vector<Node*> vec,int id)
+{
+        for(int i=1; i<vec.size(); i++)
+        {
+                if(vec[i]->getId() == id)
+                {
+                        return true;
+                }
+        }
 
+        return false;
 }
 
+//function which split a string into a vector
+void Node::split(const string& s, char delim,vector<string>& v)
+{
+        auto i = 0;
+        auto pos = s.find(delim);
+        while (pos != string::npos)
+        {
+                v.push_back(s.substr(i, pos-i));
+                i = ++pos;
+                pos = s.find(delim, pos);
+
+                if (pos == string::npos)
+                        v.push_back(s.substr(i, s.length()));
+        }
+}
+
+bool Node::checkIfIsAlreadySend(string packetId,int idSource,int idDest)
+{
+        string line;
+        vector<string> vecLineToCheck;
+        ifstream myfile ("database.txt");
+        if (myfile.is_open())
+        {
+                while ( getline (myfile,line) )
+                {
+                        split(line," ",vecLineToCheck);
+                        if(vecLineToCheck[0] == packetId)
+                        {
+                                if(stoi(vecLineToCheck[1]) == idSource)
+                                {
+                                        if(stoi(vecLineToCheck[2]) == idDest)
+                                        {
+                                                return true;
+                                        }
+                                }
+                        }
+                }
+                myfile.close();
+                return false;
+        }
+
+        else cout << "Unable to open file";
+        return false;
+}
 
 ObjectRequest* Node::send(ObjectRequest *obj)
 {
+        if(this->getId()==obj->getDestinationId())
+        {
+                obj->setMessageType("ACK");
+                obj->popFromHeader();
+                return obj;
+        }
 
-  return obj;
+        if(obj->getmessageType()=="info")
+        {
+                if(obj->getHeader()[0]>= MAX_HOP)
+                {
+                        obj->setMessageType("NAK");
+                        obj->popFromHeader();
+                        return obj;
+                }
+                else
+                {
+                        int choiceToSend = -2;
+                        for(int i=0; i<this->theTraceroute.size(); i++ )
+                        {
+                                if(this->theTraceroute[i].size()>0)
+                                {
+                                        if(checkIfExist(this->vecAvailableNodes, theTraceroute[i][0]) ==true)
+                                        {
+                                                choiceToSend = theTraceroute[i][0];
+                                                break;
+                                        }
+                                }
+                        }
+                        obj->addToHeader(choiceToSend);
+                        return obj;
+                }
+
+        }
+
+        if(obj->getmessageType()=="NAK")
+        {
+                int choiceToSend = -2;
+                bool found=false;
+                for(int i=0; i<this->theTraceroute.size(); i++ )
+                {
+                        if(this->theTraceroute[i].size()>0)
+                        {
+                                if(checkIfExist(this->vecAvailableNodes, theTraceroute[i][0]) ==true)
+                                {
+                                        choiceToSend = theTraceroute[i][0];
+                                        if(checkIfIsAlreadySend(obj->getPacketId(),obj->getSenderId(),obj->getDestinationId())==false)
+                                        {
+                                                found=true;
+                                                break;
+                                        }
+                                }
+                        }
+                }
+                if(found==true)
+                {
+                        obj->setMessageType("info");
+                        obj->addToHeader(choiceToSend);
+                        return obj;
+
+                }
+                if(found==false)
+                {
+                        obj->popFromHeader();
+                        return obj;
+                }
+
+        }
+
+        if(obj->getmessageType()=="ACK")
+        {
+                obj->popFromHeader();
+                return obj;
+        }
+        return NULL;
 }
