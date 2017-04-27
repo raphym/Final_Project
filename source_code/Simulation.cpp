@@ -72,7 +72,13 @@ string Simulation::getRandomId()
 void Simulation::startSim()
 {
         ofstream outfile;
-        outfile.open("database.txt",std::ios_base::app);
+        outfile.open("database.txt");
+        if (outfile.is_open())
+        {
+                outfile << "MessageId From To\n";
+                outfile.close();
+        }
+        else cout << "Unable to open file";
         string packetId = getRandomId();
         ObjectRequest *obj = new ObjectRequest("info",packetId,0,5,"hello" );
 
@@ -92,7 +98,10 @@ void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
                 else
                         index = obj->getHeader()[0];
 
+                //cout << "From " << index << " To " << 6 <<endl;
                 obj =  theMap->getNodes()[index]->send(obj);
+                if(obj->getHeader()[0]==0)
+                  break;
         }
 }
 
