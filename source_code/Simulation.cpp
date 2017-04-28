@@ -75,33 +75,55 @@ void Simulation::startSim()
         outfile.open("database.txt");
         if (outfile.is_open())
         {
-                outfile << "MessageId From To\n";
+                outfile << "____________________\t____________________\t____________________\n";
+                outfile << "-----MESSAGE_ID-----\t--------FROM--------\t---------TO---------\n";
+                outfile << "____________________\t____________________\t____________________\n";
+
                 outfile.close();
         }
         else cout << "Unable to open file";
         string packetId = getRandomId();
-        ObjectRequest *obj = new ObjectRequest("info",packetId,0,5,"hello" );
+        ObjectRequest *obj = new ObjectRequest("info",packetId,11,46,"hello" );
 
-        networkSend(0,5,obj);
+        networkSend(11,46,obj);
 
 }
 
 void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
 {
         int index =-1;
+        bool begin=false;
 
-
-        while(obj->getmessageType()!="ACK" || obj->getmessageType()!="NAK")
+        while(index!=idDest)
         {
-                if(obj->getHeader()[0]==0)
-                        index=idSource;
-                else
-                        index = obj->getHeader()[0];
+                //If there is no direction found
+                if(obj->getHeader()[0]==0 && obj->getmessageType()=="NAK")
+                {
+                        cout << "NAK RECEIVE : "<<idSource<<" CANNOT SENT MESSAGE TO "<<idDest <<endl;
+                        break;
+                }
 
-                //cout << "From " << index << " To " << 6 <<endl;
+                //First sending
+                if(obj->getHeader()[0]==0 && begin==false)
+                {
+                        index=idSource;
+                        obj->addToHeader(index);
+                }
+                //Other sending
+                else
+                {
+                        index = obj->getHeader()[obj->getHeader()[0]];
+                }
+
+                //cout << "From " << index <<endl;
+                theMap->refreshMap();
+                begin=true;
                 obj =  theMap->getNodes()[index]->send(obj);
-                if(obj->getHeader()[0]==0)
-                  break;
+        }
+
+        if(index==idDest)
+        {
+                cout << "ACK RECEIVE : "<<idSource<<" SENT MESSAGE TO "<<idDest <<endl;
         }
 }
 
