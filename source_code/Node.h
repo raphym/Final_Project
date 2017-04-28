@@ -13,7 +13,7 @@
 #define New_Node_Id -2
 #define INCREMENT 5
 #define RESET 6
-#define MAX_HOP 15
+#define MAX_HOP 20
 
 
 class Node
