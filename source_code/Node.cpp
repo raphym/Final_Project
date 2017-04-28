@@ -243,7 +243,7 @@ void Node::split(string& s, char delim,vector<string>& v)
 bool Node::checkIfIsAlreadySend(string packetId,int idSource,int idDest)
 {
         string line;
-        ifstream myfile ("database.txt");
+        ifstream myfile ("output_files/database.txt");
         if (myfile.is_open())
         {
                 while ( getline (myfile,line) )
@@ -271,7 +271,7 @@ bool Node::checkIfIsAlreadySend(string packetId,int idSource,int idDest)
 void Node::writeSendInDatabase(std::string packetId,int From,int To)
 {
         ofstream outfile;
-        outfile.open("database.txt",std::ios_base::app);
+        outfile.open("output_files/database.txt",std::ios_base::app);
         if (outfile.is_open())
         {
                 outfile << packetId;
