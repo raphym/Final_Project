@@ -1,13 +1,13 @@
 #ifndef SIMULATION_H
 #define SIMULATION_H
 #include <fstream>
-
 #include <string>
 #include <iostream>
 #include <vector>
 #include "Map.h"
 #include "Node.h"
 #include "ObjectRequest.h"
+#include "base64.h"
 
 
 class Simulation

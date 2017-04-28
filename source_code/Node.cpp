@@ -1,5 +1,4 @@
 #include "Node.h"
-#include "base64.h"
 
 using namespace std;
 static int next_id=0;
@@ -294,6 +293,10 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 cout <<"--------------------------------------------------"<<endl;
                 cout << "NODE " << this->id<<" RECEIVE MESSAGE FROM " << obj->getSenderId()<<endl;
                 cout << "THE MESSAGE IS : " << obj->getMessage()<<endl;
+                cout << "DECRYPTION OF THE MESSAGE ..." << endl;
+                cout << "THE MESSAGE DECRYPTED IS : " << endl;
+                string decoded = base64_decode(obj->getMessage());
+                cout << decoded << endl;
                 cout << "SENDIND ACK BACK" <<endl;
                 cout <<"--------------------------------------------------"<<endl;
 

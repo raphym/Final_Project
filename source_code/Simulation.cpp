@@ -67,7 +67,8 @@ void Simulation::sendRequests()
                         idDest = stoi(request[1]);
                         message = request[2];
                         packetId = getRandomId();
-                        ObjectRequest *obj = new ObjectRequest("info",packetId,idSource,idDest,message);
+                        string encodedMessage = base64_encode(reinterpret_cast<const unsigned char*>(message.c_str()), message.length());
+                        ObjectRequest *obj = new ObjectRequest("info",packetId,idSource,idDest,encodedMessage);
                         //send the request
                         networkSend(idSource,idDest,obj);
                         delete obj;

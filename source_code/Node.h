@@ -8,6 +8,7 @@
 #include <fstream>
 
 #include "ObjectRequest.h"
+#include "base64.h"
 
 #define DISTANCE 40
 #define New_Node_Id -2
