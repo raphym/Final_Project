@@ -291,7 +291,13 @@ ObjectRequest* Node::send(ObjectRequest *obj)
 {
         if(this->getId()==obj->getDestinationId())
         {
-                //cout << "NODE " << this->id<<" RECEIVE MESSAGE FROM " << obj->getSenderId() << " SENDIND ACK BACK" <<endl;
+                cout <<"--------------------------------------------------"<<endl;
+                cout << "NODE " << this->id<<" RECEIVE MESSAGE FROM " << obj->getSenderId()<<endl;
+                cout << "THE MESSAGE IS : " << obj->getMessage()<<endl;
+                cout << "SENDIND ACK BACK" <<endl;
+                cout <<"--------------------------------------------------"<<endl;
+
+
                 obj->setMessageType("ACK");
                 obj->popFromHeader();
                 return obj;
