@@ -15,12 +15,12 @@ class Simulation
 public:
 Simulation(std::string city);
 virtual ~Simulation();
-void sendRequest();
+void sendRequests();
 std::string getRandomId();
 char genRandom();
 void startSim();
 void networkSend(int idSource,int idDest,ObjectRequest *obj);
-
+void split(std::string& s, char delim,std::vector<std::string>& v);
 
 protected:
 Map *theMap;

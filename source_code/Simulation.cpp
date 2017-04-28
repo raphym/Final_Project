@@ -30,49 +30,10 @@ Simulation::Simulation(string city)
 
 }
 
-void Simulation::sendRequest()
-{
-        int size = theMap->getNodes().size() -1;
-        theMap->refreshMap();
-
-        for(int i=0; i< size; i++)
-        {
-                cout << "Node I = " << i <<endl;
-
-                for(int j=0; j<size; j++ )
-                {
-                        if(i!=j)
-                        {
-                                cout << "Node J = " << j <<endl;
-                                //  theMap->getNodes()[i]->sendRequest(i, j,"Hello World");
-                        }
-                }
-
-        }
-}
-
-char Simulation::genRandom()
-{
-
-        return alphanum[rand() % stringLength];
-}
-
-string Simulation::getRandomId()
-{
-        srand(time(0));
-        std::string Str;
-        for(unsigned int i = 0; i < 20; ++i)
-        {
-                Str += genRandom();
-
-        }
-        return Str;
-}
-
 void Simulation::startSim()
 {
         ofstream outfile;
-        outfile.open("database.txt");
+        outfile.open("output_files/database.txt");
         if (outfile.is_open())
         {
                 outfile << "____________________\t____________________\t____________________\n";
@@ -82,11 +43,38 @@ void Simulation::startSim()
                 outfile.close();
         }
         else cout << "Unable to open file";
-        string packetId = getRandomId();
-        ObjectRequest *obj = new ObjectRequest("info",packetId,11,46,"hello" );
+        sendRequests();
+}
 
-        networkSend(11,46,obj);
+void Simulation::sendRequests()
+{
+        string packetId;
+        int idSource;
+        int idDest;
+        string message;
 
+        string line;
+        ifstream myfile ("input_files/Events-Schedule/Schedule.txt");
+        if (myfile.is_open())
+        {
+                while ( getline (myfile,line) )
+                {
+                        vector<string> request;
+                        split(line,'\t',request);
+
+                        //details of the request
+                        idSource = stoi(request[0]);
+                        idDest = stoi(request[1]);
+                        message = request[2];
+                        packetId = getRandomId();
+                        ObjectRequest *obj = new ObjectRequest("info",packetId,idSource,idDest,message);
+                        //send the request
+                        networkSend(idSource,idDest,obj);
+                        delete obj;
+                }
+                myfile.close();
+        }
+        else cout << "Unable to open file";
 }
 
 void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
@@ -127,6 +115,38 @@ void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
         }
 }
 
+char Simulation::genRandom()
+{
+
+        return alphanum[rand() % stringLength];
+}
+
+string Simulation::getRandomId()
+{
+        srand(time(0));
+        std::string Str;
+        for(unsigned int i = 0; i < 20; ++i)
+        {
+                Str += genRandom();
+
+        }
+        return Str;
+}
+//function which split a string into a vector
+void Simulation::split(string& s, char delim,vector<string>& v)
+{
+        auto i = 0;
+        auto pos = s.find(delim);
+        while (pos != string::npos)
+        {
+                v.push_back(s.substr(i, pos-i));
+                i = ++pos;
+                pos = s.find(delim, pos);
+
+                if (pos == string::npos)
+                        v.push_back(s.substr(i, s.length()));
+        }
+}
 Simulation::~Simulation() // dtor
 {
         delete theMap;

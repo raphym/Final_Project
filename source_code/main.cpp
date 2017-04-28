@@ -7,7 +7,8 @@ int main(int argc, char *argv[])
 {
 
         Simulation *s= new Simulation("Paris-Eiffel");
-        s->sendRequest();
+        //s->sendRequest();
+        s->startSim();
         delete s;
 
 }
