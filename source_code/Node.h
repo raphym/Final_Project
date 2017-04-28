@@ -45,6 +45,8 @@ void printTraceroute(); //print the traceroute for each node
 ObjectRequest* send(ObjectRequest *obj);         // to send a message
 bool checkIfExist(std::vector<int>vec,int id);
 bool checkIfExist(std::vector<Node*>vec,int id);
+bool checkIfExistInHeader(std::vector<int> vec,int id);
+
 bool checkIfIsAlreadySend(std::string packetId,int idSource,int idDest);
 void split(std::string& s, char delim,std::vector<std::string>& v);
 void writeSendInDatabase(std::string packetId,int From,int To);

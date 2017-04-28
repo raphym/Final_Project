@@ -187,7 +187,7 @@ void Node::printTraceroute()
 }
 
 
-bool Node::checkIfExist(vector<int> vec,int id)
+bool Node::checkIfExistInHeader(vector<int> vec,int id)
 {
         for(int i=1; i<vec.size(); i++)
         {
@@ -199,9 +199,21 @@ bool Node::checkIfExist(vector<int> vec,int id)
 
         return false;
 }
+bool Node::checkIfExist(vector<int> vec,int id)
+{
+        for(int i=0; i<vec.size(); i++)
+        {
+                if(vec[i] == id)
+                {
+                        return true;
+                }
+        }
+
+        return false;
+}
 bool Node::checkIfExist(vector<Node*> vec,int id)
 {
-        for(int i=1; i<vec.size(); i++)
+        for(int i=0; i<vec.size(); i++)
         {
                 if(vec[i]->getId() == id)
                 {
@@ -231,13 +243,13 @@ void Node::split(string& s, char delim,vector<string>& v)
 bool Node::checkIfIsAlreadySend(string packetId,int idSource,int idDest)
 {
         string line;
-        vector<string> vecLineToCheck;
         ifstream myfile ("database.txt");
         if (myfile.is_open())
         {
                 while ( getline (myfile,line) )
                 {
-                        split(line,' ',vecLineToCheck);
+                        vector<string> vecLineToCheck;
+                        split(line,'\t',vecLineToCheck);
                         if(vecLineToCheck[0] == packetId)
                         {
                                 if(stoi(vecLineToCheck[1]) == idSource)
@@ -263,8 +275,12 @@ void Node::writeSendInDatabase(std::string packetId,int From,int To)
         if (outfile.is_open())
         {
                 outfile << packetId;
-                outfile << " " << From;
-                outfile << " " << To;
+                outfile << "\t";
+                outfile << "000000000000000000";
+                outfile << From;
+                outfile << "\t";
+                outfile << "000000000000000000";
+                outfile << To;
                 outfile << "\n";
                 outfile.close();
         }
@@ -275,7 +291,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
 {
         if(this->getId()==obj->getDestinationId())
         {
-                cout << "Destination " << this->id<<endl;
+                //cout << "NODE " << this->id<<" RECEIVE MESSAGE FROM " << obj->getSenderId() << " SENDIND ACK BACK" <<endl;
                 obj->setMessageType("ACK");
                 obj->popFromHeader();
                 return obj;
@@ -286,7 +302,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
 
                 if(obj->getHeader()[0]>= MAX_HOP)
                 {
-                  cout << "info___MAX_HOP "<< this->id<<endl;
+                        //cout << "MESSAGE IS INFO BUT MAX_HOP SO IS BECOMING NAK AND RETURN To "<< obj->getHeader()[obj->getHeader().size()-2]<<endl;
 
                         obj->setMessageType("NAK");
                         obj->popFromHeader();
@@ -294,31 +310,55 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 }
                 else
                 {
-                  cout << "info_normal "<< this->id<<endl;
-
                         int choiceToSend = -2;
+                        bool found2=false;
                         for(int i=0; i<this->theTraceroute.size(); i++ )
                         {
                                 if(this->theTraceroute[i].size()>0)
                                 {
+
                                         if(checkIfExist(this->vecAvailableNodes, theTraceroute[i][0]) ==true)
                                         {
-                                                choiceToSend = theTraceroute[i][0];
-                                                break;
+                                                if(checkIfExistInHeader(obj->getHeader(), theTraceroute[i][0]) ==false)
+                                                {
+
+                                                        choiceToSend = theTraceroute[i][0];
+                                                        found2=true;
+                                                        break;
+                                                }
                                         }
                                 }
                         }
-                        obj->addToHeader(choiceToSend);
-                        writeSendInDatabase(obj->getPacketId(),this->id, choiceToSend);
-                        return obj;
+
+                        if(found2==true)
+                        {
+                                obj->addToHeader(choiceToSend);
+                                // cout << endl << "HEADER " <<endl;
+                                // for(int kk = 1; kk<obj->getHeader().size(); kk++)
+                                // {
+                                //         cout << obj->getHeader()[kk] << " / ";
+                                // }
+                                // cout <<endl;
+
+                                //cout << "MESSAGE IS INFO AND GO TO "<< choiceToSend <<endl <<endl;
+                                writeSendInDatabase(obj->getPacketId(),this->id, choiceToSend);
+                                return obj;
+                        }
+                        else
+                        {
+                                //cout << "MESSAGE IS INFO AND IS BECOMING NAK SO RETURN TO "<< obj->getHeader()[obj->getHeader().size()-2]<<endl;
+
+                                obj->setMessageType("NAK");
+                                obj->popFromHeader();
+                                return obj;
+                        }
+
                 }
 
         }
 
         if(obj->getmessageType()=="NAK")
         {
-                cout << "NAK " << this->id<<endl;
-
                 int choiceToSend = -2;
                 bool found=false;
                 for(int i=0; i<this->theTraceroute.size(); i++ )
@@ -328,17 +368,21 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                 if(checkIfExist(this->vecAvailableNodes, theTraceroute[i][0]) ==true)
                                 {
                                         choiceToSend = theTraceroute[i][0];
-                                        if(checkIfIsAlreadySend(obj->getPacketId(),obj->getSenderId(),obj->getDestinationId())==false)
+                                        if(checkIfIsAlreadySend(obj->getPacketId(),this->id,choiceToSend)==false)
                                         {
-                                                found=true;
-                                                break;
+                                                if(checkIfExistInHeader(obj->getHeader(),choiceToSend)==false)
+                                                {
+                                                        found=true;
+                                                        break;
+                                                }
+
                                         }
                                 }
                         }
                 }
                 if(found==true)
                 {
-                  cout << "NAK__FOUND "<< this->id<<endl;
+                        //cout << "MESSAGE WAS NAK AND FOUND DIRECTION ,SO IS BECOMING INFO AND GO TO "<< choiceToSend <<endl;
 
                         obj->setMessageType("info");
                         obj->addToHeader(choiceToSend);
@@ -348,18 +392,22 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 }
                 if(found==false)
                 {
-                  cout << "NAK__NOT_FOUND " << this->id<<endl;
+                        /*
+                           if(obj->getHeader()[0]==1)
+                                cout << "MESSAGE IS NAK AND NOT FOUND DIRECTION,AND HAS NO OTHER DIRECTION TO RETURN" <<endl;
+
+                           else
+                                cout << "MESSAGE IS NAK AND NOT FOUND DIRECTION,SO RETURN TO " << obj->getHeader()[obj->getHeader().size()-2]<<endl;
+                         */
 
                         obj->popFromHeader();
                         return obj;
                 }
-
         }
 
         if(obj->getmessageType()=="ACK")
         {
-                cout << "ACK "<< this->id<<endl;
-
+                //cout << "ACK and go To "<< obj->getHeader()[obj->getHeader().size()-2]<<endl;
                 obj->popFromHeader();
                 return obj;
         }
