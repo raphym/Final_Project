@@ -1,13 +1,6 @@
 #include "Simulation.h"
 
 using namespace std;
-static const char alphanum[] =
-        "0123456789"
-        "!@#$%^&*"
-        "ABCDEFGHIJKLMNOPQRSTUVWXYZ"
-        "abcdefghijklmnopqrstuvwxyz";
-
-int stringLength = sizeof(alphanum) - 1;
 
 Simulation::Simulation(string city)
 {
@@ -48,7 +41,7 @@ void Simulation::startSim()
 
 void Simulation::sendRequests()
 {
-        string packetId;
+        int k=1;
         int idSource;
         int idDest;
         string message;
@@ -66,7 +59,8 @@ void Simulation::sendRequests()
                         idSource = stoi(request[0]);
                         idDest = stoi(request[1]);
                         message = request[2];
-                        packetId = getRandomId();
+                        string packetId = getRandomId(20,k);
+                        k++;
                         string encodedMessage = base64_encode(reinterpret_cast<const unsigned char*>(message.c_str()), message.length());
                         ObjectRequest *obj = new ObjectRequest("info",packetId,idSource,idDest,encodedMessage);
                         //send the request
@@ -76,6 +70,7 @@ void Simulation::sendRequests()
                 myfile.close();
         }
         else cout << "Unable to open file";
+
 }
 
 void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
@@ -116,22 +111,19 @@ void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
         }
 }
 
-char Simulation::genRandom()
+
+string Simulation::getRandomId(int len , int i)
 {
-
-        return alphanum[rand() % stringLength];
-}
-
-string Simulation::getRandomId()
-{
-        srand(time(0));
-        std::string Str;
-        for(unsigned int i = 0; i < 20; ++i)
-        {
-                Str += genRandom();
-
+        srand (i);
+        //srand(time(0));
+        string str = "0123456789ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz";
+        string newstr;
+        int pos;
+        while(newstr.size() != len) {
+                pos = ((rand() % (str.size() - 1)));
+                newstr += str.substr(pos,1);
         }
-        return Str;
+        return newstr;
 }
 //function which split a string into a vector
 void Simulation::split(string& s, char delim,vector<string>& v)
