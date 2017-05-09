@@ -54,7 +54,7 @@ int FileStream::fill_ObjectsInfo_Into_Arrays(int nbLines,string *names, double *
                 {
                         line++; // other line
                         vector <string> v; // a string vector
-                        split(str, ' ', v); //split the line into vector v
+                        split(str, '\t', v); //split the line into vector v
                         if(v.size()!=3) //if there is not 3 arguments so errors
                         {
                                 nbLines--;
