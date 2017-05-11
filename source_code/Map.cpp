@@ -423,11 +423,11 @@ bool Map::check(vector<int> bfsNodes, int id)
 //Construct the traceroutes for the nodes of the graph
 void Map::constructAllTraceroute()
 {
-    int numsOfNodes = vecElementsOfTheMap.size();
-    for(int i=0 ; i < numsOfNodes ; i++)
-    {
-        constructTraceroute(vecElementsOfTheMap[i]->getId());
-    }
+        int numsOfNodes = vecElementsOfTheMap.size();
+        for(int i=0; i < numsOfNodes; i++)
+        {
+                constructTraceroute(vecElementsOfTheMap[i]->getId());
+        }
 }
 
 //Construct a traceroute for a specific node
@@ -465,13 +465,15 @@ void Map::recursiveDFS(int idSource,int idOrigin, bool visited[],int path[], int
         // current path[]
         if( (vecElementsOfTheMap[idSource]->isItBackbone()) && (idSource!=idOrigin) )
         {
-                vector<int> traceroute;
-                for (int i = 0; i<path_index; i++)
+                vector<int>*traceroute = new std::vector<int>();
+
+                for (int i = 1; i<path_index; i++)
                 {
-                  traceroute.push_back(path[i]);
+                        traceroute->push_back(path[i]);
                 }
                 //add the vect of traceroute to the traceroute of the origin node
-                vecElementsOfTheMap[idOrigin]->getTheTraceroute().push_back(traceroute);
+                vecElementsOfTheMap[idOrigin]->getTheTraceroute().push_back(*traceroute);
+                delete traceroute;
         }
 
         else // If current vertex is not a backbone

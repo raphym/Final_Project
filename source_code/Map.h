@@ -39,9 +39,9 @@ bool check(std::vector<int> bfsNodes,int id); //check if a specific Node exists 
 void resetVisited(); //reset the feature reset of e specific Node
 void printTraceroute();
 
-void constructAllTraceroute();//Construct the traceroutes for the nodes of the graph
-void constructTraceroute(int idSource);//Construct a traceroute for a specific node
-void recursiveDFS(int idSource,int idOrigin, bool visited[],int path[], int &path_index);//run DFS recursive to construct a traceroute
+void constructAllTraceroute(); //Construct the traceroutes for the nodes of the graph
+void constructTraceroute(int idSource); //Construct a traceroute for a specific node
+void recursiveDFS(int idSource,int idOrigin, bool visited[],int path[], int &path_index); //run DFS recursive to construct a traceroute
 
 
 
