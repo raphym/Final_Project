@@ -20,9 +20,14 @@ std::string getRandomId(int len , int i);
 void startSim();
 void networkSend(int idSource,int idDest,ObjectRequest *obj);
 void split(std::string& s, char delim,std::vector<std::string>& v);
+void sendRequestsTest();
 
 protected:
 Map *theMap;
+double nbSuccess;
+double nbFailures;
+double nbRequests;
+
 private:
 
 };
