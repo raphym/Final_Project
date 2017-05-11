@@ -216,6 +216,7 @@ bool Node::checkIfExist(vector<Node*> vec,int id)
         {
                 if(vec[i]->getId() == id)
                 {
+
                         return true;
                 }
         }
@@ -288,6 +289,9 @@ void Node::writeSendInDatabase(std::string packetId,int From,int To)
 
 ObjectRequest* Node::send(ObjectRequest *obj)
 {
+
+        //cout << this->getTheTraceroute()[0].size();
+
         if(this->getId()==obj->getDestinationId())
         {
 
@@ -312,7 +316,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
 
                 if(obj->getHeader()[0]>= MAX_HOP)
                 {
-    //                    cout << "MESSAGE IS INFO BUT MAX_HOP SO IS BECOMING NAK AND RETURN To "<< obj->getHeader()[obj->getHeader().size()-2]<<endl;
+                        //cout << "MESSAGE IS INFO BUT MAX_HOP SO IS BECOMING NAK AND RETURN To "<< obj->getHeader()[obj->getHeader().size()-2]<<endl;
 
                         obj->setMessageType("NAK");
                         obj->popFromHeader();
@@ -322,11 +326,12 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 {
                         int choiceToSend = -2;
                         bool found2=false;
+
+
                         for(int i=0; i<this->theTraceroute.size(); i++ )
                         {
                                 if(this->theTraceroute[i].size()>0)
                                 {
-
                                         if(checkIfExist(this->vecAvailableNodes, theTraceroute[i][0]) ==true)
                                         {
                                                 if(checkIfExistInHeader(obj->getHeader(), theTraceroute[i][0]) ==false)
@@ -350,13 +355,16 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                 // }
                                 // cout <<endl;
 
-      //                          cout << "MESSAGE IS INFO AND GO TO "<< choiceToSend <<endl <<endl;
+                        //        cout << "MESSAGE IS INFO AND GO TO "<< choiceToSend <<endl <<endl;
                                 writeSendInDatabase(obj->getPacketId(),this->id, choiceToSend);
                                 return obj;
                         }
                         else
                         {
-        //                        cout << "MESSAGE IS INFO AND IS BECOMING NAK SO RETURN TO "<< obj->getHeader()[obj->getHeader().size()-2]<<endl;
+                                // if(obj->getHeader().size()==2)
+                                //         cout << "MESSAGE IS INFO AND IS BECOMING NAK SO RETURN TO THE ORIGIN"<<endl;
+                                // else
+                                //         cout << "MESSAGE IS INFO AND IS BECOMING NAK SO RETURN TO "<< obj->getHeader()[obj->getHeader().size()-2]<<endl;
 
                                 obj->setMessageType("NAK");
                                 obj->popFromHeader();
@@ -392,7 +400,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 }
                 if(found==true)
                 {
-          //              cout << "MESSAGE WAS NAK AND FOUND DIRECTION ,SO IS BECOMING INFO AND GO TO "<< choiceToSend <<endl;
+                        // cout << "MESSAGE WAS NAK AND FOUND DIRECTION ,SO IS BECOMING INFO AND GO TO "<< choiceToSend <<endl;
 
                         obj->setMessageType("info");
                         obj->addToHeader(choiceToSend);
@@ -404,11 +412,11 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 {
 
 
-                          //  if(obj->getHeader()[0]==1)
-                          //       cout << "MESSAGE IS NAK AND NOT FOUND DIRECTION,AND HAS NO OTHER DIRECTION TO RETURN" <<endl;
-                           //
-                          //  else
-                          //       cout << "MESSAGE IS NAK AND NOT FOUND DIRECTION,SO RETURN TO " << obj->getHeader()[obj->getHeader().size()-2]<<endl;
+                        // if(obj->getHeader()[0]==1)
+                        //         cout << "MESSAGE IS NAK AND NOT FOUND DIRECTION,AND HAS NO OTHER DIRECTION TO RETURN" <<endl;
+                        //
+                        // else
+                        //         cout << "MESSAGE IS NAK AND NOT FOUND DIRECTION,SO RETURN TO " << obj->getHeader()[obj->getHeader().size()-2]<<endl;
 
 
                         obj->popFromHeader();
@@ -418,7 +426,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
 
         if(obj->getmessageType()=="ACK")
         {
-                //cout << "ACK and go To "<< obj->getHeader()[obj->getHeader().size()-2]<<endl;
+                // cout << "ACK and go To "<< obj->getHeader()[obj->getHeader().size()-2]<<endl;
                 obj->popFromHeader();
                 return obj;
         }
