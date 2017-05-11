@@ -419,107 +419,76 @@ bool Map::check(vector<int> bfsNodes, int id)
         }
         return false;
 }
-//run on DFS on each node of the Map
-void Map::DFS()
+
+//Construct the traceroutes for the nodes of the graph
+void Map::constructAllTraceroute()
 {
-        std::vector<Node*> graph;
-        for(int i=0; i< vecElementsOfTheMap.size(); i++)
-        {
-                graph.push_back(vecElementsOfTheMap[i]);
-        }
-
-        for(int i=0; i< graph.size(); i++)
-        {
-                //print test
-                //cout << endl << "RUN DFS on " << graph[i]->getName() << endl;
-                resetVisited();
-                //for each node of the graph create a vector for a traceroute
-                std::vector<string> vectName;
-                std::vector<int> vectID;
-                std::vector <int>vectTracerouteIsItBackbone;
-
-
-
-                DFS_Visit(graph,graph[i],vectName,vectID,vectTracerouteIsItBackbone);
-                //when finish push the node into the vector Traceroute of the node
-
-                std::vector<int>*theTrace = new std::vector<int>();
-                refreshMap();
-                vector <Node*> vecNodeAvailableFromCurrent;
-                vecNodeAvailableFromCurrent.clear();
-                graph[i]->scanHotspots(graph[i]->getVectAvailableNodes(), vecNodeAvailableFromCurrent);
-
-
-
-                for(int j=0; j<vectID.size(); j++ )
-                {
-
-                        if(vectTracerouteIsItBackbone[j]==0)
-                        {
-                                theTrace->push_back(vectID[j]);
-                        }
-                        else
-                        {
-                                theTrace->push_back(vectID[j]);
-                                graph[i]->getTheTraceroute().push_back(*theTrace);
-                                delete theTrace;
-                                theTrace = new std::vector<int>();
-                                //it is a new vector so go search the available node from the graph[i]
-                                j++;
-                                bool b = false;
-                                while(b== false && j<vectID.size())
-                                {
-                                        for(int l=0; l<vecNodeAvailableFromCurrent.size(); l++)
-                                        {
-                                                if(vectID[j] == vecNodeAvailableFromCurrent[l]->getId() )
-                                                {
-                                                        j=j-2;
-                                                        b=true;
-                                                        break;
-                                                }
-                                        }
-                                        j++;
-                                }
-                        }
-                }
-
-                if(theTrace!=NULL)
-                        delete theTrace;
-        }
+    int numsOfNodes = vecElementsOfTheMap.size();
+    for(int i=0 ; i < numsOfNodes ; i++)
+    {
+        constructTraceroute(vecElementsOfTheMap[i]->getId());
+    }
 }
 
-
-void Map::DFS_Visit(std::vector<Node *> graph, Node *current,std::vector<string>& vectName,std::vector<int>& vectID,std::vector<int>&vectTracerouteIsItBackbone)
+//Construct a traceroute for a specific node
+void Map::constructTraceroute(int idSource)
 {
-        current->setVisited(INCREMENT); //to 1 (GREY)
-        //Discover the neighbors of the currentNode
-        std::vector<Node*> neighbors;
-        current->scanHotspots(graph,neighbors);
-        for(int i=0; i< neighbors.size(); i++)
-        {
-                if(neighbors[i]->getVisited()==0)
-                {
-                        //print test
-                        //cout << "from : " << current->getName() << " to : " << neighbors[i]->getName() << endl;
-                        vectName.push_back(neighbors[i]->getName());
-                        vectID.push_back(neighbors[i]->getId());
-                        if(neighbors[i]->isItBackbone())
-                        {
-                                vectTracerouteIsItBackbone.push_back(1);
-                                continue;
-                        }
+        int idOrigin = idSource;
+        // Mark all the vertices as not visited
+        int numsOfNodes=vecElementsOfTheMap.size();
+        bool *visited = new bool[numsOfNodes];
 
-                        else
-                        {
-                                vectTracerouteIsItBackbone.push_back(0);
-                                DFS_Visit(graph,neighbors[i],vectName,vectID,vectTracerouteIsItBackbone);
-                        }
-                }
-        }
-        current->setVisited(INCREMENT); //to 2 (BLACK)
+        // Create an array to store paths
+        int *path = new int[numsOfNodes];
+        int path_index = 0; // Initialize path[] as empty
+
+        // Initialize all vertices as not visited
+        for (int i = 0; i < numsOfNodes; i++)
+                visited[i] = false;
+
+        // Call the recursive helper function to print all paths
+        recursiveDFS(idSource,idOrigin, visited, path, path_index);
+
+        delete [] visited;
+        delete [] path;
 }
 
+//run DFS recursive to construct a traceroute
+void Map::recursiveDFS(int idSource,int idOrigin, bool visited[],int path[], int &path_index)
+{
+        // Mark the current node and store it in path[]
+        visited[idSource] = true;
+        path[path_index] = idSource;
+        path_index++;
 
+        // If current vertex is a backbone and it is not the origin so create a vect of traceroute
+        // current path[]
+        if( (vecElementsOfTheMap[idSource]->isItBackbone()) && (idSource!=idOrigin) )
+        {
+                vector<int> traceroute;
+                for (int i = 0; i<path_index; i++)
+                {
+                  traceroute.push_back(path[i]);
+                }
+                //add the vect of traceroute to the traceroute of the origin node
+                vecElementsOfTheMap[idOrigin]->getTheTraceroute().push_back(traceroute);
+        }
+
+        else // If current vertex is not a backbone
+        {
+                // Recur for all the vertices adjacent to current vertex
+                vector<Node*> neighbors = vecElementsOfTheMap[idSource]->getVectAvailableNodes();
+                for(int i=0; i<neighbors.size(); i++)
+                {
+                        if(!visited[neighbors[i]->getId()])
+                                recursiveDFS(neighbors[i]->getId(),idOrigin, visited, path, path_index);
+                }
+        }
+
+        // Remove current vertex from path[] and mark it as unvisited
+        path_index--;
+        visited[idSource] = false;
+}
 
 void Map::printTraceroute()
 {

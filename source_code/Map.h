@@ -37,9 +37,12 @@ void printListOfQuorum(); //print the quorums
 bool check(std::vector<Node*> bfsNodes,int id); //check if a specific Node exists in the vector
 bool check(std::vector<int> bfsNodes,int id); //check if a specific Node exists in the vector
 void resetVisited(); //reset the feature reset of e specific Node
-void DFS(); //run on DFS on each node of the Map
-void DFS_Visit(std::vector<Node *> graph, Node *current,std::vector<std::string> &vectName,std::vector<int> &vectId,std::vector<int>&vectTracerouteIsItBackbone); //run DFS on a specific Node
 void printTraceroute();
+
+void constructAllTraceroute();//Construct the traceroutes for the nodes of the graph
+void constructTraceroute(int idSource);//Construct a traceroute for a specific node
+void recursiveDFS(int idSource,int idOrigin, bool visited[],int path[], int &path_index);//run DFS recursive to construct a traceroute
+
 
 
 protected:
@@ -48,7 +51,6 @@ std::string fileProviders;
 std::string fileLamps;
 std::string fileTrafficLights;
 std::vector<Node*> vecElementsOfTheMap;
-
 
 
 
