@@ -67,3 +67,38 @@ void ObjectRequest::popFromHeader()
         this->header[0] = this->header[0] -1;
         this->header.pop_back();
 }
+
+vector<int> &ObjectRequest::getDirectionToExecute()
+{
+        return directionToExecute;
+}
+
+vector<int> &ObjectRequest::getVisitedBackbones()
+{
+        return visitedBackbones;
+}
+
+
+vector<int> &ObjectRequest::getVisitedTraceroutes()
+{
+        return visitedTraceroutes;
+}
+
+void ObjectRequest::addToVisitedBackbones(int backboneDone)
+{
+        visitedBackbones.push_back(backboneDone);
+}
+void ObjectRequest::addToVisitedTraceroutes(int tracerouteDone)
+{
+        visitedTraceroutes.push_back(tracerouteDone);
+}
+
+void ObjectRequest::clearDirectionToExecute()
+{
+        directionToExecute.clear();
+}
+
+void ObjectRequest::popFromDirectionToExecute()
+{
+        directionToExecute.pop_back();
+}

@@ -19,8 +19,15 @@ int getSenderId();
 int getDestinationId();
 std::string getMessage();
 std::vector<int> &getHeader();
+std::vector<int> &getDirectionToExecute();
+std::vector<int> &getVisitedBackbones();
+std::vector<int> &getVisitedTraceroutes();
 void addToHeader(int idDone);
+void addToVisitedBackbones(int backboneDone);
+void addToVisitedTraceroutes(int tracerouteDone);
 void popFromHeader();
+void popFromDirectionToExecute();
+void clearDirectionToExecute();
 void setMessageType(std::string messageType);
 
 
@@ -32,6 +39,10 @@ int senderId;
 int destinationId;
 std::string message;
 std::vector<int> header;
+std::vector<int> directionToExecute;
+std::vector<int> visitedBackbones;
+std::vector<int> visitedTraceroutes;
+
 
 private:
 };
