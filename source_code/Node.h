@@ -48,9 +48,9 @@ bool checkIfExist(std::vector<int>vec,int id);
 bool checkIfExist(std::vector<Node*>vec,int id);
 bool checkIfExistInHeader(std::vector<int> vec,int id);
 
-bool checkIfIsAlreadySend(std::string packetId,int idSource,int idDest);
+bool checkIfIsAlreadySend(std::string packetId,int idBackboneFrom,int idBackboneTo);
 void split(std::string& s, char delim,std::vector<std::string>& v);
-void writeSendInDatabase(std::string packetId,int From,int To);
+void writeSendInDatabase(std::string packetId,int idBackboneFrom,int idBackboneTo);
 
 
 

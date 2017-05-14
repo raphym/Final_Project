@@ -240,7 +240,7 @@ void Node::split(string& s, char delim,vector<string>& v)
         }
 }
 
-bool Node::checkIfIsAlreadySend(string packetId,int idSource,int idDest)
+bool Node::checkIfIsAlreadySend(std::string packetId,int idBackboneFrom,int idBackboneTo)
 {
         string line;
         ifstream myfile ("output_files/database.txt");
@@ -252,10 +252,11 @@ bool Node::checkIfIsAlreadySend(string packetId,int idSource,int idDest)
                         split(line,'\t',vecLineToCheck);
                         if(vecLineToCheck[0] == packetId)
                         {
-                                if(stoi(vecLineToCheck[1]) == idSource)
+                                if(stoi(vecLineToCheck[1]) == idBackboneFrom)
                                 {
-                                        if(stoi(vecLineToCheck[2]) == idDest)
+                                        if(stoi(vecLineToCheck[2]) == idBackboneTo)
                                         {
+                                                myfile.close();
                                                 return true;
                                         }
                                 }
@@ -268,7 +269,7 @@ bool Node::checkIfIsAlreadySend(string packetId,int idSource,int idDest)
         else cout << "Unable to open file";
         return false;
 }
-void Node::writeSendInDatabase(std::string packetId,int From,int To)
+void Node::writeSendInDatabase(std::string packetId,int idBackboneFrom,int idBackboneTo)
 {
         ofstream outfile;
         outfile.open("output_files/database.txt",std::ios_base::app);
@@ -277,10 +278,10 @@ void Node::writeSendInDatabase(std::string packetId,int From,int To)
                 outfile << packetId;
                 outfile << "\t";
                 outfile << "000000000000000000";
-                outfile << From;
+                outfile << idBackboneFrom;
                 outfile << "\t";
                 outfile << "000000000000000000";
-                outfile << To;
+                outfile << idBackboneTo;
                 outfile << "\n";
                 outfile.close();
         }
@@ -289,146 +290,294 @@ void Node::writeSendInDatabase(std::string packetId,int From,int To)
 
 ObjectRequest* Node::send(ObjectRequest *obj)
 {
-
-        //cout << this->getTheTraceroute()[0].size();
-
-        if(this->getId()==obj->getDestinationId())
+        /*******************************************************************************************************************INFO*/
+        //if the message is info
+        if(obj->getmessageType()=="INFO")
         {
+                //For debug
+                //cout << "INFO " << this->id<<endl;
+                int index=0;
+                bool canSend=false;
 
-                // cout <<"--------------------------------------------------"<<endl;
-                // cout << "NODE " << this->id<<" RECEIVE MESSAGE FROM " << obj->getSenderId()<<endl;
-                // cout << "THE MESSAGE IS : " << obj->getMessage()<<endl;
-                // cout << "DECRYPTION OF THE MESSAGE ..." << endl;
-                // cout << "THE MESSAGE DECRYPTED IS : " << endl;
-                // string decoded = base64_decode(obj->getMessage());
-                // cout << decoded << endl;
-                // cout << "SENDIND ACK BACK" <<endl;
-                // cout <<"--------------------------------------------------"<<endl;
-
-
-                obj->setMessageType("ACK");
-                obj->popFromHeader();
-                return obj;
-        }
-
-        if(obj->getmessageType()=="info")
-        {
-
-                if(obj->getHeader()[0]>= MAX_HOP)
+                //if arrived to destination
+                if(this->id == obj->getDestinationId())
                 {
-                        //cout << "MESSAGE IS INFO BUT MAX_HOP SO IS BECOMING NAK AND RETURN To "<< obj->getHeader()[obj->getHeader().size()-2]<<endl;
-
-                        obj->setMessageType("NAK");
-                        obj->popFromHeader();
+                        obj->setMessageType("ACK");
                         return obj;
                 }
-                else
+
+                else //this->id != obj->getDestinationId()
                 {
-                        int choiceToSend = -2;
-                        bool found2=false;
-
-
-                        for(int i=0; i<this->theTraceroute.size(); i++ )
+                        //If i am a backbone
+                        if(this->isItBackbone())
                         {
-                                if(this->theTraceroute[i].size()>0)
-                                {
-                                        if(checkIfExist(this->vecAvailableNodes, theTraceroute[i][0]) ==true)
-                                        {
-                                                if(checkIfExistInHeader(obj->getHeader(), theTraceroute[i][0]) ==false)
-                                                {
+                                //if it is the origin insert it to the visitedBackbone
+                                if(this->id == obj->getSenderId())
+                                        obj->addToVisitedBackbones(this->id);
 
-                                                        choiceToSend = theTraceroute[i][0];
-                                                        found2=true;
+                                bool foundInQuorum=false;
+
+                                //check if the idDest isinside the quorum
+                                for(int i=0; i< this->getlistOfQuorum().size(); i++)
+                                {
+                                        if(this->getlistOfQuorum()[i]==obj->getDestinationId())
+                                        {
+                                                foundInQuorum=true;
+                                                break;
+                                        }
+                                }
+
+                                if(foundInQuorum)
+                                {
+                                        //change the message to "info in Quorum"
+                                        obj->setMessageType("INFO_IN_QUORUM");
+                                        //check which traceroute can arrive to the destination
+                                        for(index=0; index < this->getTheTraceroute().size(); index++)
+                                        {
+                                                if(canSend)
+                                                {
                                                         break;
+                                                }
+                                                if(!checkIfExist(this->getTheTraceroute()[index], obj->getDestinationId()))
+                                                        continue;
+
+                                                //check already sent to this traceroute
+                                                if(!checkIfExist(obj->getVisitedTraceroutes(),index))
+                                                {
+                                                        //check wifi connection
+                                                        int idTosend = this->getTheTraceroute()[index][0];
+                                                        for(int i=0; i<this->getVectAvailableNodes().size(); i++)
+                                                        {
+                                                                if(this->getVectAvailableNodes()[i]->getId()==idTosend)
+                                                                {
+                                                                        canSend=true;
+                                                                        index--;
+                                                                        break;
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                }
+
+                                //if not in the quorum
+                                else if(!foundInQuorum)
+                                {
+                                        obj->setMessageType("INFO_TO_QUORUM");
+                                        //check which traceroute can arrive to a backbone
+                                        for(index=0; index < this->getTheTraceroute().size(); index++)
+                                        {
+                                                if(canSend)
+                                                {
+                                                        break;
+                                                }
+                                                //check if already visited a backbone
+                                                int idBackbone=this->getTheTraceroute()[index][this->getTheTraceroute()[index].size()-1];
+                                                if(!checkIfExist(obj->getVisitedBackbones(),idBackbone))
+                                                {
+                                                        //check wifi connection
+                                                        int idTosend = this->getTheTraceroute()[index][0];
+                                                        for(int i=0; i<this->getVectAvailableNodes().size(); i++)
+                                                        {
+                                                                if(this->getVectAvailableNodes()[i]->getId()==idTosend)
+                                                                {
+                                                                        canSend=true;
+                                                                        index--;
+                                                                        break;
+                                                                }
+                                                        }
+                                                }
+                                        }
+                                }
+
+                        }
+                        //else if not backbone
+                        else if(!this->isItBackbone())
+                        {
+
+                                obj->setMessageType("INFO_TO_QUORUM");
+                                //check which traceroute can arrive to a backbone
+                                for(index=0; index < this->getTheTraceroute().size(); index++)
+                                {
+                                        if(canSend)
+                                        {
+                                                break;
+                                        }
+                                        //check if already visited a backbone
+                                        int idBackbone=this->getTheTraceroute()[index][this->getTheTraceroute()[index].size()-1];
+                                        if(!checkIfExist(obj->getVisitedBackbones(),idBackbone))
+                                        {
+                                                //check wifi connection
+                                                int idTosend = this->getTheTraceroute()[index][0];
+                                                for(int i=0; i<this->getVectAvailableNodes().size(); i++)
+                                                {
+                                                        if(this->getVectAvailableNodes()[i]->getId()==idTosend)
+                                                        {
+                                                                canSend=true;
+                                                                index--;
+                                                                break;
+                                                        }
                                                 }
                                         }
                                 }
                         }
 
-                        if(found2==true)
+                        if(canSend)
                         {
-                                obj->addToHeader(choiceToSend);
-                                // cout << endl << "HEADER " <<endl;
-                                // for(int kk = 1; kk<obj->getHeader().size(); kk++)
-                                // {
-                                //         cout << obj->getHeader()[kk] << " / ";
-                                // }
-                                // cout <<endl;
+                                //copie the traceroute into the vector direction to execute
+                                obj->clearDirectionToExecute();
+                                for(int i=this->getTheTraceroute()[index].size()-1; i>=0; i--)
+                                {
+                                        obj->getDirectionToExecute().push_back( this->getTheTraceroute()[index][i] );
+                                }
 
-                        //        cout << "MESSAGE IS INFO AND GO TO "<< choiceToSend <<endl <<endl;
-                                writeSendInDatabase(obj->getPacketId(),this->id, choiceToSend);
+                                //begin to send
+                                obj->addToHeader(obj->getDirectionToExecute().back());
+                                obj->popFromDirectionToExecute();
+                                //write in the database about the quorum
+                                int idBackbone=this->getTheTraceroute()[index][this->getTheTraceroute()[index].size()-1];
+                                if(obj->getmessageType() == "INFO_IN_QUORUM")
+                                {
+                                        obj->addToVisitedTraceroutes(index);
+                                }
+                                if(obj->getmessageType() == "INFO_TO_QUORUM")
+                                {
+                                        obj->addToVisitedBackbones(idBackbone);
+                                }
                                 return obj;
                         }
-                        else
+                        else if(!canSend)
                         {
-                                // if(obj->getHeader().size()==2)
-                                //         cout << "MESSAGE IS INFO AND IS BECOMING NAK SO RETURN TO THE ORIGIN"<<endl;
-                                // else
-                                //         cout << "MESSAGE IS INFO AND IS BECOMING NAK SO RETURN TO "<< obj->getHeader()[obj->getHeader().size()-2]<<endl;
+                                if(obj->getHeader()[0]==1)
+                                {
+                                        obj->setMessageType("NAK");
+                                        return obj;
+                                }
 
+                                if(obj->getmessageType() == "INFO_IN_QUORUM")
+                                {
+                                        obj->setMessageType("NAK"); //TO CHECK !!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+                                        return obj;
+                                }
+
+                                if(obj->getmessageType() == "INFO_TO_QUORUM")
+                                {
+                                        obj->popFromHeader();
+                                        obj->setMessageType("NAK_INFO_TO_QUORUM");
+                                        return obj;
+                                }
+                        }
+                }
+        }
+        /*****************************************************************************************************************INFO_IN_QUORUM*/
+        //if the message is info in quorum
+        if(obj->getmessageType()=="INFO_IN_QUORUM")
+        {
+                //For debug
+                //cout << "INFO_IN_QUORUM " << this->id<<endl;
+
+                //if it is the destination
+                if(this->id==obj->getDestinationId())
+                {
+                        obj->setMessageType("ACK");
+                        return obj;
+                }
+
+                //if the direction is empty return NAK_INFO_IN_QUORUM
+                if(obj->getDirectionToExecute().size()==0)
+                {
+                        obj->setMessageType("NAK_INFO_IN_QUORUM");
+                        return obj;
+                }
+                else //if the direction is not empty , continue the sending
+                {
+                        obj->addToHeader(obj->getDirectionToExecute().back());
+                        obj->popFromDirectionToExecute();
+                        return obj;
+                }
+        }
+
+        /***************************************************************************************************************NAK_INFO_IN_QUORUM*/
+
+        //if the message is nak info in quorum
+        if(obj->getmessageType()=="NAK_INFO_IN_QUORUM")
+        {
+                //For debug
+                //cout << "NAK_INFO_IN_QUORUM " << this->id<<endl;
+
+                obj->getHeader().pop_back();
+                //if you not arrive to the origin so continue to go back
+                if(!this->isItBackbone())
+                {
+                        obj->popFromHeader();
+                        return obj;
+                }
+                else //if you arrived to the origin
+                {
+                        obj->setMessageType("INFO");
+                        return obj;
+                }
+        }
+
+        /***************************************************************************************************************INFO_TO_QUORUM*/
+        //if the message is info to quorum
+        if(obj->getmessageType()=="INFO_TO_QUORUM")
+        {
+                //For debug
+                //cout << "INFO_TO_QUORUM " << this->id<< " For backbone " << obj->getDirectionToExecute()[0]<< endl;
+
+                //if it is the destination
+                if(this->id==obj->getDestinationId())
+                {
+                        obj->setMessageType("ACK");
+                        return obj;
+                }
+
+                //if arrive to the Quorum
+                if(this->isItBackbone())
+                {
+                        obj->setMessageType("INFO");
+                        return obj;
+                }
+                else //not arrived to backbone
+                {
+                        //if the directio is empty return NAK //to check hereeeeeeeeeeeeeeeeeeeeeeeeeee
+                        if(obj->getDirectionToExecute().size()==0)
+                        {
+                                obj->setMessageType("NAK_INFO_TO_QUORUM");
+                                return obj;
+                        }
+                        else //if the direction is not empty , continue the sending to the backbone
+                        {
+                                obj->addToHeader(obj->getDirectionToExecute().back());
+                                obj->popFromDirectionToExecute();
+                                return obj;
+                        }
+                }
+
+        }
+
+        /************************************************************************************************************NAK_INFO_TO_QUORUM*/
+        //if the message is NAK INFO TO QUORUM
+        if(obj->getmessageType()=="NAK_INFO_TO_QUORUM")
+        {
+                //For debug
+                //cout << "NAK_INFO_TO_QUORUM " << this->id<<endl;
+                //if you not arrive to the origin so continue to go back
+                if(!this->isItBackbone())
+                {
+                        if(obj->getHeader()[0]==1)
                                 obj->setMessageType("NAK");
+                        else
                                 obj->popFromHeader();
-                                return obj;
-                        }
 
-                }
-
-        }
-
-        if(obj->getmessageType()=="NAK")
-        {
-                int choiceToSend = -2;
-                bool found=false;
-                for(int i=0; i<this->theTraceroute.size(); i++ )
-                {
-                        if(this->theTraceroute[i].size()>0)
-                        {
-                                if(checkIfExist(this->vecAvailableNodes, theTraceroute[i][0]) ==true)
-                                {
-                                        choiceToSend = theTraceroute[i][0];
-                                        if(checkIfIsAlreadySend(obj->getPacketId(),this->id,choiceToSend)==false)
-                                        {
-                                                if(checkIfExistInHeader(obj->getHeader(),choiceToSend)==false)
-                                                {
-                                                        found=true;
-                                                        break;
-                                                }
-
-                                        }
-                                }
-                        }
-                }
-                if(found==true)
-                {
-                        // cout << "MESSAGE WAS NAK AND FOUND DIRECTION ,SO IS BECOMING INFO AND GO TO "<< choiceToSend <<endl;
-
-                        obj->setMessageType("info");
-                        obj->addToHeader(choiceToSend);
-                        writeSendInDatabase(obj->getPacketId(),this->id, choiceToSend);
-                        return obj;
-
-                }
-                if(found==false)
-                {
-
-
-                        // if(obj->getHeader()[0]==1)
-                        //         cout << "MESSAGE IS NAK AND NOT FOUND DIRECTION,AND HAS NO OTHER DIRECTION TO RETURN" <<endl;
-                        //
-                        // else
-                        //         cout << "MESSAGE IS NAK AND NOT FOUND DIRECTION,SO RETURN TO " << obj->getHeader()[obj->getHeader().size()-2]<<endl;
-
-
-                        obj->popFromHeader();
                         return obj;
                 }
-        }
+                else //if you arrived to the origin
+                {
+                        obj->setMessageType("INFO");
+                        return obj;
+                }
 
-        if(obj->getmessageType()=="ACK")
-        {
-                // cout << "ACK and go To "<< obj->getHeader()[obj->getHeader().size()-2]<<endl;
-                obj->popFromHeader();
-                return obj;
         }
         return NULL;
 }
