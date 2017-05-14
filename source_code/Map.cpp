@@ -285,7 +285,7 @@ vector<Node*> Map::runBFS(Node *currentNode)
                         {
                                 currentNode->setToBeBackbone();
                                 currentNode->addTolistOfQuorum(neighborsId);
-                                vecElementsOfTheMap[neighborsId]->addTolistOfQuorum(currentNode->getId());
+                                //vecElementsOfTheMap[neighborsId]->addTolistOfQuorum(currentNode->getId());//reciprocate
                                 bfsArrayColor[neighborsId]="GREY";
                                 bfsArrayDistance[neighborsId]=bfsArrayDistance[pointerId]+1;
                                 bfsArrayPiId[neighborsId]= pointerId;
@@ -327,7 +327,7 @@ void Map::quorumConstruct()
 {
         // For BFS
         resetVisited();
-        int currentId = 35;
+        int currentId = 0;//35
         //int currentId = 47;
         vector<Node *> remainderNodes;
         vector<Node *> bfsNodes;
