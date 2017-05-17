@@ -26,6 +26,8 @@ std::string getName();         //return the name
 int getId();         //return the id
 double getLocationX();         //return the location x
 double getLocationY();         //return the location y
+void setLocationX(double newX);  //set the location x
+void setLocationY(double newY); //set the location y
 std::string getType();
 void scanHotspots(std::vector<Node*> inputNodes, std::vector<Node*> &outputNodes ); //to scan the area
 std::vector<Node*>& getVectAvailableNodes();         // return the vector which contains all the elements present in the area

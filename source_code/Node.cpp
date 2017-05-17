@@ -46,6 +46,17 @@ double Node::getLocationY()
         return locationY;
 }
 
+void Node::setLocationX(double newX)
+{
+        this->locationX=newX;
+}
+
+void Node::setLocationY(double newY)
+{
+        this->locationY=newY;
+}
+
+
 string Node::getType()
 {
         return type;
