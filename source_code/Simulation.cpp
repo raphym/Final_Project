@@ -12,149 +12,139 @@ Simulation::Simulation(string city)
         string pathTrafficLights = "input_files/" + city + "/" + "trafficLights.txt";
 
         theMap  = new Map(city, pathProviders, pathLamps, pathTrafficLights);
-
         theMap->refreshMap();
         theMap->quorumConstruct();
-
-        //theMap->printListOfQuorum();
-        //theMap->PrintMap();
-        theMap->DFS();
-
-        //theMap->printTraceroute();
+        theMap->refreshMap();
+        theMap->constructAllTraceroute();
         theMap->refreshMap();
 
-        //cout << getRandomId() <<endl;
+
+
+        //for debug
+        //theMap->printListOfQuorum();
+        //theMap->PrintMap();
+        //theMap->printTraceroute();
 
 }
 
 void Simulation::startSim()
 {
-        ofstream outfile;
-        outfile.open("output_files/database.txt");
-        if (outfile.is_open())
-        {
-                outfile << "____________________\t____________________\t____________________\n";
-                outfile << "-----MESSAGE_ID-----\t--------FROM--------\t---------TO---------\n";
-                outfile << "____________________\t____________________\t____________________\n";
-
-                outfile.close();
-        }
-        else cout << "Unable to open file";
         sendRequests();
 }
 
 void Simulation::sendRequests()
 {
-        
-            int k=1;
-            int idSource;
-            int idDest;
-            string message;
-
-            string line;
-            ifstream myfile ("input_files/Events-Schedule/Schedule.txt");
-            if (myfile.is_open())
-            {
-                    while ( getline (myfile,line) )
-                    {
-                            vector<string> request;
-                            split(line,'\t',request);
-
-                            //details of the request
-                            idSource = stoi(request[0]);
-                            idDest = stoi(request[1]);
-                            message = request[2];
-                            string packetId = getRandomId(20,k);
-                            k++;
-                            string encodedMessage = base64_encode(reinterpret_cast<const unsigned char*>(message.c_str()), message.length());
-                            ObjectRequest *obj = new ObjectRequest("info",packetId,idSource,idDest,encodedMessage);
-                            //send the request
-                            networkSend(idSource,idDest,obj);
-                            delete obj;
-                    }
-                    myfile.close();
-            }
-            else cout << "Unable to open file";
-
-
-
-
+        //
+        // int k=1;
+        // int idSource;
+        // int idDest;
+        // string message;
+        // string line;
+        //
+        // //For test
         // float temps;
         // clock_t t1, t2;
         // t1 = clock();
-        // sendRequestsTest();
-        // t2 = clock();
-        // temps = (float)(t2-t1)/CLOCKS_PER_SEC;
-        // //temps = temps/1000;//to sec
         //
-        // cout <<endl<<"Statistic:" <<endl;
-        // cout <<"-----------------------------------" <<endl;
-        // cout <<"number of Requests : " << this->nbRequests <<endl;
-        // cout <<"number of Success : " << this->nbSuccess <<endl;
-        // cout <<"number of Failures : " << this->nbFailures <<endl;
+        // ifstream myfile ("input_files/Events-Schedule/Schedule.txt");
+        // if (myfile.is_open())
+        // {
+        //         while ( getline (myfile,line) )
+        //         {
+        //                 vector<string> request;
+        //                 split(line,'\t',request);
         //
-        // double percentsOfFailures =0;
-        // if(this->nbRequests >0 )
-        //         percentsOfFailures = (this->nbFailures / this->nbRequests)*(100);
+        //                 //details of the request
+        //                 idSource = stoi(request[0]);
+        //                 idDest = stoi(request[1]);
+        //                 message = request[2];
+        //                 string packetId = getRandomId(20,k);
+        //                 k++;
+        //                 string encodedMessage = base64_encode(reinterpret_cast<const unsigned char*>(message.c_str()), message.length());
+        //                 ObjectRequest *obj = new ObjectRequest("INFO",packetId,idSource,idDest,encodedMessage);
+        //                 //send the request
+        //                 this->nbRequests++;
+        //                 networkSend(idSource,idDest,obj);
+        //                 delete obj;
+        //         }
+        //         myfile.close();
         //
-        // cout << "Percentage of failures : " <<percentsOfFailures<<" %"<<endl;
-        // cout << "TIME IN SECOND  : "<<temps<<endl;
-        // cout <<"-----------------------------------" <<endl;
+        //         t2 = clock();
+        //         temps = (float)(t2-t1)/CLOCKS_PER_SEC;
+        //         cout <<endl<<"Statistic:" <<endl;
+        //         cout <<"-----------------------------------" <<endl;
+        //         cout <<"number of Requests : " << this->nbRequests <<endl;
+        //         cout <<"number of Success : " << this->nbSuccess <<endl;
+        //         cout <<"number of Failures : " << this->nbFailures <<endl;
+        //
+        //         double percentsOfFailures =0;
+        //         if(this->nbRequests >0 )
+        //                 percentsOfFailures = (this->nbFailures / this->nbRequests)*(100);
+        //
+        //         cout << "Percentage of failures : " <<percentsOfFailures<<" %"<<endl;
+        //         cout << "TIME IN SECOND  : "<<temps<<endl;
+        //         cout <<"-----------------------------------" <<endl;
+        // }
+        // else cout << "Unable to open file";
 
+
+
+
+        //For test
+        float temps;
+        clock_t t1, t2;
+        t1 = clock();
+        sendRequestsTest();
+        t2 = clock();
+        temps = (float)(t2-t1)/CLOCKS_PER_SEC;
+        //temps = temps/1000;//to sec
+
+        cout <<endl<<"Statistic:" <<endl;
+        cout <<"-----------------------------------" <<endl;
+        cout <<"number of Requests : " << this->nbRequests <<endl;
+        cout <<"number of Success : " << this->nbSuccess <<endl;
+        cout <<"number of Failures : " << this->nbFailures <<endl;
+
+        double percentsOfFailures =0;
+        if(this->nbRequests >0 )
+                percentsOfFailures = (this->nbFailures / this->nbRequests)*(100);
+
+        cout << "Percentage of failures : " <<percentsOfFailures<<" %"<<endl;
+        cout << "TIME IN SECOND  : "<<temps<<endl;
+        cout <<"-----------------------------------" <<endl;
 
 }
 
 void Simulation::sendRequestsTest()
 {
-
-        // int k=1;
-        // string packetId = getRandomId(20,k);
-        // k++;
-        // ObjectRequest *obj = new ObjectRequest("info",packetId,31,1,"hello");
-        // //send the request
-        // networkSend(31,1,obj);
-        // delete obj;
-
         int k=1;
-
         for(int i=0; i < theMap->getNodes().size(); i++)
         {
                 for(int j=0; j < theMap->getNodes().size(); j++)
                 {
-                        if(i!=j) //&& i!=10 && j!=10 && j!=32 && i!=14 && j!=14 && i!=41 && j!=41 && i!=47 && j!=47
+                        if(i!=j && i!=10 && j!=10) //&& i!=10 && j!=10 && j!=32 && j!=14 &&  j!=41 && j!=47
                         {
                                 this->nbRequests++;
-                                ofstream outfile;
-                                outfile.open("output_files/database.txt");
-                                if (outfile.is_open())
-                                {
-                                        outfile << "____________________\t____________________\t____________________\n";
-                                        outfile << "-----MESSAGE_ID-----\t--------FROM--------\t---------TO---------\n";
-                                        outfile << "____________________\t____________________\t____________________\n";
-                                        string packetId = getRandomId(20,k);
-                                        k++;
-                                        ObjectRequest *obj = new ObjectRequest("info",packetId,i,j,"hello");
-                                        //send the request
-                                        networkSend(i,j,obj);
-                                        delete obj;
-                                        outfile.close();
-                                }
-                                else cout << "Unable to open file";
+                                string packetId = getRandomId(20,k);
+                                k++;
+                                ObjectRequest *obj = new ObjectRequest("INFO",packetId,i,j,"hello");
+                                //send the request
+                                networkSend(i,j,obj);
+                                delete obj;
                         }
                 }
         }
-
 }
 
 void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
 {
         int index =-1;
         bool begin=false;
-
         while(index!=idDest)
         {
+
                 //If there is no direction found
-                if(obj->getHeader()[0]==0 && obj->getmessageType()=="NAK")
+                if(obj->getmessageType()=="NAK")
                 {
                         cout << "NAK RECEIVE : "<<idSource<<" CANNOT SENT MESSAGE TO "<<idDest <<endl;
                         this->nbFailures++;
@@ -182,7 +172,7 @@ void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
         if(index==idDest)
         {
                 this->nbSuccess++;
-                //         cout << "ACK RECEIVE : "<<idSource<<" SENT MESSAGE TO "<<idDest <<endl;
+                //cout << "ACK RECEIVE : "<<idSource<<" SENT MESSAGE TO "<<idDest <<endl;
         }
 }
 
