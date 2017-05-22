@@ -7,6 +7,9 @@ Simulation::Simulation(string city)
         this->nbSuccess=0;
         this->nbFailures=0;
         this->nbRequests=0;
+        this->softwareHop=0;
+        this->hardwareHop=0;
+
         string pathProviders = "input_files/" + city + "/" + "providers.txt";
         string pathLamps = "input_files/" + city + "/" + "lamps.txt";
         string pathTrafficLights = "input_files/" + city + "/" + "trafficLights.txt";
@@ -18,8 +21,6 @@ Simulation::Simulation(string city)
         theMap->constructAllTraceroute();
         theMap->refreshMap();
 
-
-
         //for debug
         //theMap->printListOfQuorum();
         //theMap->PrintMap();
@@ -29,100 +30,109 @@ Simulation::Simulation(string city)
 
 void Simulation::startSim()
 {
-        sendRequests();
+        //sendRequests();
+        sendRequestsTest();
+
+        //-----now we calcul the statistics
+        //for the softwareHop hops
+        int nums = searchMaxInVector(vecOfSoftwareHop) +1;
+        int *analysisGraph = constructAnalysisGraph(vecOfSoftwareHop,nums);
+        //for the hardware hops
+        writeDataGraph(analysisGraph,nums,"Graph of software hops");
+        nums = searchMaxInVector(vecOfHardwareHop) +1;
+        analysisGraph = constructAnalysisGraph(vecOfHardwareHop,nums);
+        writeDataGraph(analysisGraph,nums,"Graph of hardware hops");
 }
 
 void Simulation::sendRequests()
 {
-        //
-        // int k=1;
-        // int idSource;
-        // int idDest;
-        // string message;
-        // string line;
-        //
-        // //For test
-        // float temps;
-        // clock_t t1, t2;
-        // t1 = clock();
-        //
-        // ifstream myfile ("input_files/Events-Schedule/Schedule.txt");
-        // if (myfile.is_open())
-        // {
-        //         while ( getline (myfile,line) )
-        //         {
-        //                 vector<string> request;
-        //                 split(line,'\t',request);
-        //
-        //                 //details of the request
-        //                 idSource = stoi(request[0]);
-        //                 idDest = stoi(request[1]);
-        //                 message = request[2];
-        //                 string packetId = getRandomId(20,k);
-        //                 k++;
-        //                 string encodedMessage = base64_encode(reinterpret_cast<const unsigned char*>(message.c_str()), message.length());
-        //                 ObjectRequest *obj = new ObjectRequest("INFO",packetId,idSource,idDest,encodedMessage);
-        //                 //send the request
-        //                 this->nbRequests++;
-        //                 networkSend(idSource,idDest,obj);
-        //                 delete obj;
-        //         }
-        //         myfile.close();
-        //
-        //         t2 = clock();
-        //         temps = (float)(t2-t1)/CLOCKS_PER_SEC;
-        //         cout <<endl<<"Statistic:" <<endl;
-        //         cout <<"-----------------------------------" <<endl;
-        //         cout <<"number of Requests : " << this->nbRequests <<endl;
-        //         cout <<"number of Success : " << this->nbSuccess <<endl;
-        //         cout <<"number of Failures : " << this->nbFailures <<endl;
-        //
-        //         double percentsOfFailures =0;
-        //         if(this->nbRequests >0 )
-        //                 percentsOfFailures = (this->nbFailures / this->nbRequests)*(100);
-        //
-        //         cout << "Percentage of failures : " <<percentsOfFailures<<" %"<<endl;
-        //         cout << "TIME IN SECOND  : "<<temps<<endl;
-        //         cout <<"-----------------------------------" <<endl;
-        // }
-        // else cout << "Unable to open file";
+
+        int k=1;
+        int idSource;
+        int idDest;
+        string message;
+        string line;
 
 
+        //theMap->getNodes()[20]->setLocationY(1000000005);
+        // theMap->getNodes()[13]->setLocationY(5000000005);
+        // theMap->getNodes()[45]->setLocationY(8000000005);
+        // theMap->getNodes()[27]->setLocationY(8000000005);
+        // theMap->getNodes()[29]->setLocationY(8000000005);
+        // theMap->getNodes()[51]->setLocationY(8000000005);
+        // theMap->getNodes()[26]->setLocationY(8000000005);
+        theMap->refreshMap();
 
-
-        //For test
         float temps;
         clock_t t1, t2;
         t1 = clock();
-        sendRequestsTest();
-        t2 = clock();
-        temps = (float)(t2-t1)/CLOCKS_PER_SEC;
-        //temps = temps/1000;//to sec
 
-        cout <<endl<<"Statistic:" <<endl;
-        cout <<"-----------------------------------" <<endl;
-        cout <<"number of Requests : " << this->nbRequests <<endl;
-        cout <<"number of Success : " << this->nbSuccess <<endl;
-        cout <<"number of Failures : " << this->nbFailures <<endl;
+        ifstream myfile ("input_files/Events-Schedule/Schedule.txt");
+        if (myfile.is_open())
+        {
+                while ( getline (myfile,line) )
+                {
+                        vector<string> request;
+                        split(line,'\t',request);
 
-        double percentsOfFailures =0;
-        if(this->nbRequests >0 )
-                percentsOfFailures = (this->nbFailures / this->nbRequests)*(100);
+                        //details of the request
+                        idSource = stoi(request[0]);
+                        idDest = stoi(request[1]);
+                        message = request[2];
+                        string packetId = getRandomId(20,k);
+                        k++;
+                        string encodedMessage = base64_encode(reinterpret_cast<const unsigned char*>(message.c_str()), message.length());
+                        ObjectRequest *obj = new ObjectRequest("INFO",packetId,idSource,idDest,encodedMessage);
+                        //send the request
+                        this->nbRequests++;
+                        networkSend(idSource,idDest,obj);
+                        delete obj;
+                        //init hop
+                        softwareHop=0;
+                        hardwareHop=0;
+                }
+                myfile.close();
 
-        cout << "Percentage of failures : " <<percentsOfFailures<<" %"<<endl;
-        cout << "TIME IN SECOND  : "<<temps<<endl;
-        cout <<"-----------------------------------" <<endl;
+                //for the Statistic
+                t2 = clock();
+                temps = (float)(t2-t1)/CLOCKS_PER_SEC;
+                ofstream outfile;
+                outfile.open("output_files/Statistic.txt",std::ios_base::app);
+                if (outfile.is_open())
+                {
+                        outfile << endl<<"Statistic:" <<endl;
+                        outfile << "-----------------------------------" <<endl;
+                        outfile << "number of Requests : " << this->nbRequests <<endl;
+                        outfile << "number of Success : " << this->nbSuccess <<endl;
+                        outfile << "number of Failures : " << this->nbFailures <<endl;
+                        double percentsOfFailures =0;
+                        if(this->nbRequests >0 )
+                                percentsOfFailures = (this->nbFailures / this->nbRequests)*(100);
 
+                        outfile << "Percentage of failures : " <<percentsOfFailures<<" %"<<endl;
+                        outfile << "TIME IN SECOND  : "<<temps<<endl;
+                        outfile <<"-----------------------------------" <<endl;
+                        outfile.close();
+                }
+                else cout << "Unable to open file";
+        }
+        else cout << "Unable to open file";
 }
 
 void Simulation::sendRequestsTest()
 {
+
+        float temps;
+        clock_t t1, t2;
+        t1 = clock();
+        //Start the test
+
         int k=1;
         for(int i=0; i < theMap->getNodes().size(); i++)
         {
                 for(int j=0; j < theMap->getNodes().size(); j++)
                 {
-                        if(i!=j && i!=10 && j!=10) //&& i!=10 && j!=10 && j!=32 && j!=14 &&  j!=41 && j!=47
+                        if(i!=j) //&& i!=10 && j!=10 && j!=32 && j!=14 &&  j!=41 && j!=47
                         {
                                 this->nbRequests++;
                                 string packetId = getRandomId(20,k);
@@ -131,9 +141,40 @@ void Simulation::sendRequestsTest()
                                 //send the request
                                 networkSend(i,j,obj);
                                 delete obj;
+                                //init hop
+                                softwareHop=0;
+                                hardwareHop=0;
                         }
                 }
         }
+
+        //End test
+        t2 = clock();
+        temps = (float)(t2-t1)/CLOCKS_PER_SEC;
+        //temps = temps/1000;//to sec
+        //for the Statistic
+        t2 = clock();
+        temps = (float)(t2-t1)/CLOCKS_PER_SEC;
+        ofstream outfile;
+        outfile.open("output_files/Statistic.txt",std::ios_base::app);
+        if (outfile.is_open())
+        {
+                outfile << endl<<"Statistic:" <<endl;
+                outfile << "-----------------------------------" <<endl;
+                outfile << "number of Requests : " << this->nbRequests <<endl;
+                outfile << "number of Success : " << this->nbSuccess <<endl;
+                outfile << "number of Failures : " << this->nbFailures <<endl;
+                double percentsOfFailures =0;
+                if(this->nbRequests >0 )
+                        percentsOfFailures = (this->nbFailures / this->nbRequests)*(100);
+
+                outfile << "Percentage of failures : " <<percentsOfFailures<<" %"<<endl;
+                outfile << "TIME IN SECOND  : "<<temps<<endl;
+                outfile <<"-----------------------------------" <<endl;
+                outfile.close();
+        }
+        else cout << "Unable to open file";
+
 }
 
 void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
@@ -151,16 +192,23 @@ void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
                         break;
                 }
 
+
                 //First sending
                 if(obj->getHeader()[0]==0 && begin==false)
                 {
                         index=idSource;
                         obj->addToHeader(index);
+                        softwareHop++;
+                        hardwareHop++;
                 }
                 //Other sending
                 else
                 {
                         index = obj->getHeader()[obj->getHeader()[0]];
+                        hardwareHop++;
+                        if(theMap->getNodes()[index]->isItBackbone() && index!=idDest && begin==true && obj->getmessageType()=="INFO")
+                                softwareHop++;
+
                 }
 
                 //cout << "From " << index <<endl;
@@ -172,8 +220,13 @@ void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
         if(index==idDest)
         {
                 this->nbSuccess++;
+                softwareHop++;
                 //cout << "ACK RECEIVE : "<<idSource<<" SENT MESSAGE TO "<<idDest <<endl;
         }
+
+        //cout << endl<<"softwareHop : " << softwareHop <<endl;
+        vecOfSoftwareHop.push_back(softwareHop);
+        vecOfHardwareHop.push_back(hardwareHop);
 }
 
 
@@ -205,6 +258,83 @@ void Simulation::split(string& s, char delim,vector<string>& v)
                         v.push_back(s.substr(i, s.length()));
         }
 }
+
+void Simulation::printVector(string vectorName, vector<int> vec)
+{
+        cout <<endl;
+        cout << "Printing " << vectorName<<endl;
+        for(int i=0; i< vec.size(); i++)
+        {
+                cout << vec[i] << "==>";
+        }
+        cout <<endl;
+}
+
+void Simulation::printArray(std::string vectorName, int* arr,int nums)
+{
+        cout <<endl;
+        cout << "-----------------------------";
+        cout <<endl;
+        cout << "Printing " << vectorName<<endl;
+        for(int i=0; i< nums; i++)
+        {
+                cout << arr[i] << "==>";
+        }
+        cout <<endl;
+        cout << "-----------------------------";
+        cout <<endl;
+}
+
+
+int Simulation::searchMaxInVector(std::vector<int>v)
+{
+        int max = v[0];
+        for(int i =0; i< v.size(); i++ )
+        {
+                if(v[i]>max)
+                        max=v[i];
+        }
+
+        return max;
+        //cout << "max : " << max<<endl;
+}
+
+int* Simulation::constructAnalysisGraph(std::vector<int>v,int nums)
+{
+
+        int *graph = new int[nums];
+
+        //init the y axis
+        for(int i=0; i < nums; i++)
+        {
+                graph[i]=0;
+        }
+        //run on the v and update the array
+        for(int i=0; i <v.size(); i++)
+        {
+                graph[v[i]]++;
+        }
+        return graph;
+}
+
+void Simulation::writeDataGraph(int *analysisGraph,int nums,string name)
+{
+        ofstream outfile;
+        string path = "output_files/";
+        path+=name;
+        path+=".txt";
+        outfile.open(path); //std::ios_base::app
+        if (outfile.is_open())
+        {
+                outfile << "---------------------------------------------------";
+                outfile << endl << name << endl;
+                for(int i=0; i <nums; i++)
+                        outfile << i << "\t" << analysisGraph[i] <<endl;
+                outfile.close();
+        }
+        else cout << "Unable to open file";
+}
+
 Simulation::~Simulation() // dtor
 {
         delete theMap;
