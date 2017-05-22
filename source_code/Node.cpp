@@ -306,7 +306,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
         if(obj->getmessageType()=="INFO")
         {
                 //For debug
-                //cout << "INFO " << this->id<<endl;
+                cout << "INFO " << this->id<<endl;
                 int index=0;
                 bool canSend=false;
 
@@ -368,9 +368,9 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                                                         break;
                                                                 }
                                                                 //Problem of WIFI
-                                                                if(i==this->getVectAvailableNodes()[i]->getId())
+                                                                if(i==this->getVectAvailableNodes().size()-1)
                                                                 {
-                                                                  cout << "WIFI PROBLEM : The node disappeared "<<endl;
+                                                                        cout << "WIFI PROBLEM : The node disappeared "<<endl;
                                                                 }
                                                         }
                                                 }
@@ -392,8 +392,6 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                                 int idBackbone=this->getTheTraceroute()[index][this->getTheTraceroute()[index].size()-1];
                                                 if(!checkIfExist(obj->getVisitedBackbones(),idBackbone))
                                                 {
-                                                        //add to the visited backbone
-                                                        obj->addToVisitedBackbones(idBackbone);
                                                         //check wifi connection
                                                         int idTosend = this->getTheTraceroute()[index][0];
                                                         for(int i=0; i<this->getVectAvailableNodes().size(); i++)
@@ -402,12 +400,14 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                                                 {
                                                                         canSend=true;
                                                                         index--;
+                                                                        //add to the visited backbone
+                                                                        obj->addToVisitedBackbones(idBackbone);
                                                                         break;
                                                                 }
                                                                 //Problem of WIFI
-                                                                if(i==this->getVectAvailableNodes()[i]->getId())
+                                                                if(i==this->getVectAvailableNodes().size()-1)
                                                                 {
-                                                                  cout << "WIFI PROBLEM : The node disappeared "<<endl;
+                                                                        cout << "WIFI PROBLEM : The node disappeared "<<endl;
                                                                 }
                                                         }
                                                 }
@@ -431,8 +431,6 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                         int idBackbone=this->getTheTraceroute()[index][this->getTheTraceroute()[index].size()-1];
                                         if(!checkIfExist(obj->getVisitedBackbones(),idBackbone))
                                         {
-                                                //add to the visited backbone
-                                                obj->addToVisitedBackbones(idBackbone);
                                                 //check wifi connection
                                                 int idTosend = this->getTheTraceroute()[index][0];
                                                 for(int i=0; i<this->getVectAvailableNodes().size(); i++)
@@ -441,12 +439,14 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                                         {
                                                                 canSend=true;
                                                                 index--;
+                                                                //add to the visited backbone
+                                                                obj->addToVisitedBackbones(idBackbone);
                                                                 break;
                                                         }
                                                         //Problem of WIFI
-                                                        if(i==this->getVectAvailableNodes()[i]->getId())
+                                                        if(i==this->getVectAvailableNodes().size()-1)
                                                         {
-                                                          cout << "WIFI PROBLEM : The node disappeared "<<endl;
+                                                                cout << "WIFI PROBLEM : The node disappeared "<<endl;
                                                         }
                                                 }
                                         }
@@ -505,7 +505,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
         if(obj->getmessageType()=="INFO_IN_QUORUM")
         {
                 //For debug
-                //cout << "INFO_IN_QUORUM " << this->id<<endl;
+                cout << "INFO_IN_QUORUM " << this->id<<endl;
 
                 //if it is the destination
                 if(this->id==obj->getDestinationId())
@@ -522,9 +522,30 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 }
                 else //if the direction is not empty , continue the sending
                 {
-                        obj->addToHeader(obj->getDirectionToExecute().back());
-                        obj->popFromDirectionToExecute();
-                        return obj;
+                        //
+                        //A verifier
+                        //check wifi connection
+                        int idTosend = obj->getDirectionToExecute().back();
+                        for(int i=0; i<this->getVectAvailableNodes().size(); i++)
+                        {
+                                if(this->getVectAvailableNodes()[i]->getId()==idTosend)
+                                {
+                                        obj->addToHeader(obj->getDirectionToExecute().back());
+                                        obj->popFromDirectionToExecute();
+                                        return obj;
+                                }
+                                //Problem of WIFI
+                                if(i==this->getVectAvailableNodes().size()-1)
+                                {
+                                        cout << "WIFI PROBLEM : The node disappeared INFO_IN_QUORUM in : " <<this->id <<endl;
+                                        obj->setMessageType("NAK_INFO_TO_QUORUM");
+                                        return obj;
+                                }
+                        }
+
+                        // obj->addToHeader(obj->getDirectionToExecute().back());
+                        // obj->popFromDirectionToExecute();
+                        // return obj;
                 }
         }
 
@@ -534,7 +555,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
         if(obj->getmessageType()=="NAK_INFO_IN_QUORUM")
         {
                 //For debug
-//                cout << "NAK_INFO_IN_QUORUM " << this->id<<endl;
+                cout << "NAK_INFO_IN_QUORUM " << this->id<<endl;
                 //We know that the node is in the quorum
                 //We cannot found any ways to arrive to the destination
                 //the traceroutes don't pass through this node
@@ -567,7 +588,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
         if(obj->getmessageType()=="INFO_TO_QUORUM")
         {
                 //For debug
-                //cout << "INFO_TO_QUORUM " << this->id<< " For backbone " << obj->getDirectionToExecute()[0]<< endl;
+                cout << "INFO_TO_QUORUM " << this->id<< " For backbone " << obj->getDirectionToExecute()[0]<< endl;
 
                 //if it is the destination
                 if(this->id==obj->getDestinationId())
@@ -592,9 +613,26 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                         }
                         else //if the direction is not empty , continue the sending to the backbone
                         {
-                                obj->addToHeader(obj->getDirectionToExecute().back());
-                                obj->popFromDirectionToExecute();
-                                return obj;
+                                //check wifi connection
+                                int idTosend = obj->getDirectionToExecute().back();
+                                for(int i=0; i<this->getVectAvailableNodes().size(); i++)
+                                {
+                                        if(this->getVectAvailableNodes()[i]->getId()==idTosend)
+                                        {
+                                                obj->addToHeader(obj->getDirectionToExecute().back());
+                                                obj->popFromDirectionToExecute();
+                                                return obj;
+                                        }
+                                        //Problem of WIFI
+                                        //A verifier
+                                        if(i==this->getVectAvailableNodes().size()-1)
+                                        {
+                                                cout << "WIFI PROBLEM : The node disappeared , INFO_TO_QUORUM in : "<< this->id<<endl;
+                                                obj->setMessageType("NAK_INFO_TO_QUORUM");
+                                                return obj;
+                                        }
+                                }
+
                         }
                 }
 
@@ -605,7 +643,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
         if(obj->getmessageType()=="NAK_INFO_TO_QUORUM")
         {
                 //For debug
-                //cout << "NAK_INFO_TO_QUORUM " << this->id<<endl;
+                cout << "NAK_INFO_TO_QUORUM " << this->id<<endl;
                 //if you not arrive to the origin so continue to go back
                 if(!this->isItBackbone())
                 {
