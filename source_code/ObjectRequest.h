@@ -29,8 +29,8 @@ void popFromHeader();
 void popFromDirectionToExecute();
 void clearDirectionToExecute();
 void setMessageType(std::string messageType);
-
-
+void clearVisitedTraceroutes();
+void popFromVisitedBackbones();
 
 protected:
 std::string messageType;

@@ -102,3 +102,12 @@ void ObjectRequest::popFromDirectionToExecute()
 {
         directionToExecute.pop_back();
 }
+
+void ObjectRequest::clearVisitedTraceroutes()
+{
+        visitedTraceroutes.clear();
+}
+void ObjectRequest::popFromVisitedBackbones()
+{
+        visitedBackbones.pop_back();
+}
