@@ -488,13 +488,14 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                 if(obj->getmessageType() == "INFO_IN_QUORUM")
                                 {
                                         obj->setMessageType("NAK_INFO_IN_QUORUM");
+                                        obj->popFromHeader();
                                         return obj;
                                 }
 
                                 if(obj->getmessageType() == "INFO_TO_QUORUM")
                                 {
-                                        obj->popFromHeader();
                                         obj->setMessageType("NAK_INFO_TO_QUORUM");
+                                        obj->popFromHeader();
                                         return obj;
                                 }
                         }
@@ -518,6 +519,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 if(obj->getDirectionToExecute().size()==0)
                 {
                         obj->setMessageType("NAK_INFO_IN_QUORUM");
+                        obj->popFromHeader();
                         return obj;
                 }
                 else //if the direction is not empty , continue the sending
@@ -539,6 +541,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                 {
                                         cout << "WIFI PROBLEM : The node disappeared INFO_IN_QUORUM in : " <<this->id <<endl;
                                         obj->setMessageType("NAK_INFO_TO_QUORUM");
+                                        obj->popFromHeader();
                                         return obj;
                                 }
                         }
@@ -609,6 +612,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                         if(obj->getDirectionToExecute().size()==0)
                         {
                                 obj->setMessageType("NAK_INFO_TO_QUORUM");
+                                obj->popFromHeader();
                                 return obj;
                         }
                         else //if the direction is not empty , continue the sending to the backbone
@@ -629,6 +633,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                         {
                                                 cout << "WIFI PROBLEM : The node disappeared , INFO_TO_QUORUM in : "<< this->id<<endl;
                                                 obj->setMessageType("NAK_INFO_TO_QUORUM");
+                                                obj->popFromHeader();
                                                 return obj;
                                         }
                                 }
