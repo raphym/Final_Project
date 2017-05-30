@@ -5,7 +5,7 @@ using namespace std;
 
 int main(int argc, char *argv[])
 {
-        Simulation *s= new Simulation("Demo1");
+        Simulation *s= new Simulation("Paris-Eiffel");
         s->startSim();
         delete s;
 }

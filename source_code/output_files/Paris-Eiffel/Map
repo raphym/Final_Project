@@ -1,0 +1,300 @@
+
+Name of the Map : Paris-Eiffel
+_____________
+
+TYPE: LAMP | ID : 0 | Name : L1 | Position : (37,0.5)
+available Nodes : 
+[L2,T1]
+_____________
+
+TYPE: LAMP | ID : 1 | Name : L2 | Position : (74,1)
+available Nodes : 
+[L1,T2]
+_____________
+
+TYPE: Backbone | ID : 2 | Name : L3 | Position : (138,2)
+available Nodes : 
+[L4,T2]
+
+Quorum of Backbone L3 contains :  L4 L12  T3 T8 L5
+_____________
+
+TYPE: LAMP | ID : 3 | Name : L4 | Position : (170,4)
+available Nodes : 
+[L3,L12 ,T3]
+_____________
+
+TYPE: Backbone | ID : 4 | Name : L5 | Position : (239,5)
+available Nodes : 
+[L6,T3]
+
+Quorum of Backbone L5 contains :  L6 L13  T4 T9 L7
+_____________
+
+TYPE: LAMP | ID : 5 | Name : L6 | Position : (270,8)
+available Nodes : 
+[L5,L13 ,T4]
+_____________
+
+TYPE: Backbone | ID : 6 | Name : L7 | Position : (326,9)
+available Nodes : 
+[L8,T4]
+
+Quorum of Backbone L7 contains :  L8 L9  T5 L10  T6
+_____________
+
+TYPE: LAMP | ID : 7 | Name : L8 | Position : (355,10)
+available Nodes : 
+[L7,L9 ]
+_____________
+
+TYPE: LAMP | ID : 8 | Name : L9  | Position : (383,12)
+available Nodes : 
+[L8,T5]
+_____________
+
+TYPE: Backbone | ID : 9 | Name : L10  | Position : (438,-8)
+available Nodes : 
+[L14 ,T5,T6]
+
+Quorum of Backbone L10  contains :  T6
+_____________
+
+TYPE: LAMP | ID : 10 | Name : L11  | Position : (508,14)
+available Nodes : 
+[]
+_____________
+
+TYPE: LAMP | ID : 11 | Name : L12  | Position : (174,-21)
+available Nodes : 
+[L4,T8]
+_____________
+
+TYPE: LAMP | ID : 12 | Name : L13  | Position : (285,-26)
+available Nodes : 
+[L6,L17 ,T4,T9]
+_____________
+
+TYPE: LAMP | ID : 13 | Name : L14  | Position : (476,-18)
+available Nodes : 
+[L10 ,P1,T11]
+_____________
+
+TYPE: LAMP | ID : 14 | Name : L15  | Position : (580,-8)
+available Nodes : 
+[T7,T13]
+_____________
+
+TYPE: LAMP | ID : 15 | Name : L16  | Position : (217,-57)
+available Nodes : 
+[L17 ,T8]
+_____________
+
+TYPE: LAMP | ID : 16 | Name : L17  | Position : (254,-49)
+available Nodes : 
+[L13 ,L16 ,T9]
+_____________
+
+TYPE: LAMP | ID : 17 | Name : L18  | Position : (322,-50)
+available Nodes : 
+[L19 ,T9]
+_____________
+
+TYPE: LAMP | ID : 18 | Name : L19  | Position : (355,-41)
+available Nodes : 
+[L18 ,T10]
+_____________
+
+TYPE: Backbone | ID : 19 | Name : L20  | Position : (432,-48)
+available Nodes : 
+[T10,T11]
+
+Quorum of Backbone L20  contains :  T11 L14  L28  T12 L10  P1 L29  T17
+_____________
+
+TYPE: LAMP | ID : 20 | Name : L21  | Position : (545,-50)
+available Nodes : 
+[L32 ,P1]
+_____________
+
+TYPE: LAMP | ID : 21 | Name : L22  | Position : (165,-73)
+available Nodes : 
+[T8,T14]
+_____________
+
+TYPE: LAMP | ID : 22 | Name : L23  | Position : (212,-110)
+available Nodes : 
+[L24 ,T14]
+_____________
+
+TYPE: LAMP | ID : 23 | Name : L24  | Position : (248,-108)
+available Nodes : 
+[L23 ,T15]
+_____________
+
+TYPE: LAMP | ID : 24 | Name : L25  | Position : (322,-106)
+available Nodes : 
+[L26 ,L34 ,T15]
+_____________
+
+TYPE: Backbone | ID : 25 | Name : L26  | Position : (358,-107)
+available Nodes : 
+[L25 ,L27 ]
+
+Quorum of Backbone L26  contains :  L27  T16 T17 L29 
+_____________
+
+TYPE: LAMP | ID : 26 | Name : L27  | Position : (391,-105)
+available Nodes : 
+[L26 ,T16]
+_____________
+
+TYPE: LAMP | ID : 27 | Name : L28  | Position : (480,-80)
+available Nodes : 
+[L29 ,T11,T12,T17]
+_____________
+
+TYPE: Backbone | ID : 28 | Name : L29  | Position : (494,-95)
+available Nodes : 
+[L28 ,L30 ,T17]
+
+Quorum of Backbone L29  contains :  L30  L31  T18
+_____________
+
+TYPE: LAMP | ID : 29 | Name : L30  | Position : (522,-90)
+available Nodes : 
+[L29 ,L31 ]
+_____________
+
+TYPE: LAMP | ID : 30 | Name : L31  | Position : (560,-90)
+available Nodes : 
+[L30 ,L32 ,T18]
+_____________
+
+TYPE: LAMP | ID : 31 | Name : L32  | Position : (575,-70)
+available Nodes : 
+[L21 ,L31 ,T13,T18]
+_____________
+
+TYPE: LAMP | ID : 32 | Name : L33  | Position : (180,-142)
+available Nodes : 
+[T14]
+_____________
+
+TYPE: LAMP | ID : 33 | Name : L34  | Position : (308,-120)
+available Nodes : 
+[L25 ,T15,T19]
+_____________
+
+TYPE: PROVIDER | ID : 34 | Name : P1 | Position : (510,-32)
+available Nodes : 
+[L14 ,L21 ,T12]
+_____________
+
+TYPE: Backbone | ID : 35 | Name : T1 | Position : (0,0)
+available Nodes : 
+[L1]
+
+Quorum of Backbone T1 contains :  L1 L2 T2 L3
+_____________
+
+TYPE: TRAFFIC_LIGHT | ID : 36 | Name : T2 | Position : (101,1)
+available Nodes : 
+[L2,L3]
+_____________
+
+TYPE: TRAFFIC_LIGHT | ID : 37 | Name : T3 | Position : (207,2)
+available Nodes : 
+[L4,L5]
+_____________
+
+TYPE: TRAFFIC_LIGHT | ID : 38 | Name : T4 | Position : (290,3)
+available Nodes : 
+[L6,L7,L13 ]
+_____________
+
+TYPE: TRAFFIC_LIGHT | ID : 39 | Name : T5 | Position : (419,4)
+available Nodes : 
+[L9 ,L10 ,T6]
+_____________
+
+TYPE: TRAFFIC_LIGHT | ID : 40 | Name : T6 | Position : (451,15)
+available Nodes : 
+[L10 ,T5]
+_____________
+
+TYPE: TRAFFIC_LIGHT | ID : 41 | Name : T7 | Position : (577,9)
+available Nodes : 
+[L15 ]
+_____________
+
+TYPE: Backbone | ID : 42 | Name : T8 | Position : (184,-50)
+available Nodes : 
+[L12 ,L16 ,L22 ]
+
+Quorum of Backbone T8 contains :  L16  L22  L17  T14 L13  T9
+_____________
+
+TYPE: Backbone | ID : 43 | Name : T9 | Position : (285,-48)
+available Nodes : 
+[L13 ,L17 ,L18 ]
+
+Quorum of Backbone T9 contains :  L18  L19  T10 L20 
+_____________
+
+TYPE: TRAFFIC_LIGHT | ID : 44 | Name : T10 | Position : (394,-46)
+available Nodes : 
+[L19 ,L20 ]
+_____________
+
+TYPE: TRAFFIC_LIGHT | ID : 45 | Name : T11 | Position : (459,-50)
+available Nodes : 
+[L14 ,L20 ,L28 ,T12]
+_____________
+
+TYPE: Backbone | ID : 46 | Name : T12 | Position : (498,-54)
+available Nodes : 
+[L28 ,P1,T11]
+
+Quorum of Backbone T12 contains :  P1 L21  L32  L31  T13 T18
+_____________
+
+TYPE: Backbone | ID : 47 | Name : T13 | Position : (595,-41)
+available Nodes : 
+[L15 ,L32 ]
+
+Quorum of Backbone T13 contains :  L15  T7
+_____________
+
+TYPE: Backbone | ID : 48 | Name : T14 | Position : (174,-105)
+available Nodes : 
+[L22 ,L23 ,L33 ]
+
+Quorum of Backbone T14 contains :  L23  L33  L24  T15
+_____________
+
+TYPE: Backbone | ID : 49 | Name : T15 | Position : (284,-106)
+available Nodes : 
+[L24 ,L25 ,L34 ,T19]
+
+Quorum of Backbone T15 contains :  L25  L34  T19 L26 
+_____________
+
+TYPE: TRAFFIC_LIGHT | ID : 50 | Name : T16 | Position : (427,-105)
+available Nodes : 
+[L27 ,T17]
+_____________
+
+TYPE: TRAFFIC_LIGHT | ID : 51 | Name : T17 | Position : (462,-98)
+available Nodes : 
+[L28 ,L29 ,T16]
+_____________
+
+TYPE: TRAFFIC_LIGHT | ID : 52 | Name : T18 | Position : (570,-90)
+available Nodes : 
+[L31 ,L32 ]
+_____________
+
+TYPE: TRAFFIC_LIGHT | ID : 53 | Name : T19 | Position : (280,-135)
+available Nodes : 
+[L34 ,T15]

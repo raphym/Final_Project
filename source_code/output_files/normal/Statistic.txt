@@ -1,0 +1,9 @@
+
+Statistic:
+-----------------------------------
+number of Requests : 2496
+number of Success : 2496
+number of Failures : 0
+Percentage of failures : 0 %
+TIME IN SECOND  : 21.2913
+-----------------------------------

@@ -1,1 +1,1 @@
-3	4	hello word
+39	0	hello word
