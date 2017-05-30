@@ -3,6 +3,9 @@
 using namespace std;
 static int next_id=0;
 
+///////////////////////////////////////////////////////////////////////////////
+//constructor
+//////////////////////////////////////////////////////////////////////////////
 Node::Node(string type,string n,int theId,double x, double y)  //ctor
 {
         this->type=type;
@@ -22,77 +25,107 @@ Node::Node(string type,string n,int theId,double x, double y)  //ctor
         visited=0;
         isBackbone=false;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//destructor
+//////////////////////////////////////////////////////////////////////////////
 Node::~Node() //dtor
 {
         delete name;
 }
+///////////////////////////////////////////////////////////////////////////////
+//Get ID
+//////////////////////////////////////////////////////////////////////////////
 int Node::getId()
 {
         return id;
 }
+///////////////////////////////////////////////////////////////////////////////
+//Get Name
+//////////////////////////////////////////////////////////////////////////////
 string Node::getName()
 {
         return *name;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//Get LocationX
+//////////////////////////////////////////////////////////////////////////////
 double Node::getLocationX()
 {
         return locationX;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//Get LocationY
+//////////////////////////////////////////////////////////////////////////////
 double Node::getLocationY()
 {
         return locationY;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//set LocationX
+//////////////////////////////////////////////////////////////////////////////
 void Node::setLocationX(double newX)
 {
         this->locationX=newX;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//set LocationY
+//////////////////////////////////////////////////////////////////////////////
 void Node::setLocationY(double newY)
 {
         this->locationY=newY;
 }
-
-
+///////////////////////////////////////////////////////////////////////////////
+//get Type
+//////////////////////////////////////////////////////////////////////////////
 string Node::getType()
 {
         return type;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//check If a node is Busy
+//////////////////////////////////////////////////////////////////////////////
 bool Node::checkIfBusy()
 {
         return isBusy;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//set a node to be Busy
+//////////////////////////////////////////////////////////////////////////////
 void Node::setIsBusy(bool b)
 {
         isBusy=b;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//check If a node is Erased
+//////////////////////////////////////////////////////////////////////////////
 bool Node::checkIfErased()
 {
         return isErased;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//Erase a node
+//////////////////////////////////////////////////////////////////////////////
 void Node::erase()
 {
         isErased=true;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//return the boolean isItBackbone
+//////////////////////////////////////////////////////////////////////////////
 bool Node::isItBackbone()
 {
         return isBackbone;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//set the boolean isItBackbone
+//////////////////////////////////////////////////////////////////////////////
 void Node::setToBeBackbone()
 {
         this->isBackbone = true;
 }
-
-
+///////////////////////////////////////////////////////////////////////////////
+//wifi scan hotspot
+//////////////////////////////////////////////////////////////////////////////
 void Node::scanHotspots(vector<Node*> inputNodes, vector<Node*> &outputNodes )
 {
         //the function check if a node is near to an another with a distance of 40 metters
@@ -115,11 +148,11 @@ void Node::scanHotspots(vector<Node*> inputNodes, vector<Node*> &outputNodes )
 
                 if(result <= 40 && this->getId() != inputNodes[i]->getId())
                         outputNodes.push_back(inputNodes[i]);
-
-
         }
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//print the Available Nodes according to the wifi scan
+//////////////////////////////////////////////////////////////////////////////
 void Node::printAvailableNodes()
 {
         if(vecAvailableNodes.size()==0)
@@ -139,17 +172,23 @@ void Node::printAvailableNodes()
                         cout << vecAvailableNodes[i]->getName() << ",";
         }
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//get the vector available nodes according to the wifi scan
+//////////////////////////////////////////////////////////////////////////////
 std::vector<Node*>&Node::getVectAvailableNodes()
 {
         return vecAvailableNodes;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//return the number visited (if 0 white , 1 grey , 2 black)
+//////////////////////////////////////////////////////////////////////////////
 int Node::getVisited()
 {
         return this->visited;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//set the number visited (if 0 white , 1 grey , 2 black)
+//////////////////////////////////////////////////////////////////////////////
 void Node::setVisited(int choice)
 {
         if(choice==INCREMENT)
@@ -158,13 +197,16 @@ void Node::setVisited(int choice)
         else if(choice==RESET)
                 this->visited=0;
 }
-
-
+///////////////////////////////////////////////////////////////////////////////
+//Get the members of a quorum (list)
+//////////////////////////////////////////////////////////////////////////////
 vector<int> Node::getlistOfQuorum()
 {
         return listOfQuorum;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//add a member to the quorum list
+//////////////////////////////////////////////////////////////////////////////
 void Node::addTolistOfQuorum(int id)
 {
         for(int i=0; i< this->listOfQuorum.size(); i++)
@@ -174,13 +216,16 @@ void Node::addTolistOfQuorum(int id)
         }
         listOfQuorum.push_back(id);
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//return the vector Traceroute (a vector to reach a backbone)
+//////////////////////////////////////////////////////////////////////////////
 vector<vector<int> >&Node::getTheTraceroute()
 {
         return theTraceroute;
 }
-
-
+///////////////////////////////////////////////////////////////////////////////
+//print the traceroutes (a vector to reach a backbone)
+//////////////////////////////////////////////////////////////////////////////
 void Node::printTraceroute()
 {
         for(int i=0; i< theTraceroute.size(); i++)
@@ -195,8 +240,9 @@ void Node::printTraceroute()
         }
         cout << endl <<endl;
 }
-
-
+///////////////////////////////////////////////////////////////////////////////
+//Check if a node id exist in the header of the object request
+//////////////////////////////////////////////////////////////////////////////
 bool Node::checkIfExistInHeader(vector<int> vec,int id)
 {
         for(int i=1; i<vec.size(); i++)
@@ -209,6 +255,9 @@ bool Node::checkIfExistInHeader(vector<int> vec,int id)
 
         return false;
 }
+///////////////////////////////////////////////////////////////////////////////
+//Check if a node id exist in a vector
+//////////////////////////////////////////////////////////////////////////////
 bool Node::checkIfExist(vector<int> vec,int id)
 {
         for(int i=0; i<vec.size(); i++)
@@ -221,6 +270,9 @@ bool Node::checkIfExist(vector<int> vec,int id)
 
         return false;
 }
+///////////////////////////////////////////////////////////////////////////////
+//Check if a node exist in a vector
+//////////////////////////////////////////////////////////////////////////////
 bool Node::checkIfExist(vector<Node*> vec,int id)
 {
         for(int i=0; i<vec.size(); i++)
@@ -234,73 +286,12 @@ bool Node::checkIfExist(vector<Node*> vec,int id)
 
         return false;
 }
-
-//function which split a string into a vector
-void Node::split(string& s, char delim,vector<string>& v)
-{
-        auto i = 0;
-        auto pos = s.find(delim);
-        while (pos != string::npos)
-        {
-                v.push_back(s.substr(i, pos-i));
-                i = ++pos;
-                pos = s.find(delim, pos);
-
-                if (pos == string::npos)
-                        v.push_back(s.substr(i, s.length()));
-        }
-}
-
-bool Node::checkIfIsAlreadySend(std::string packetId,int idBackboneFrom,int idBackboneTo)
-{
-        string line;
-        ifstream myfile ("output_files/database.txt");
-        if (myfile.is_open())
-        {
-                while ( getline (myfile,line) )
-                {
-                        vector<string> vecLineToCheck;
-                        split(line,'\t',vecLineToCheck);
-                        if(vecLineToCheck[0] == packetId)
-                        {
-                                if(stoi(vecLineToCheck[1]) == idBackboneFrom)
-                                {
-                                        if(stoi(vecLineToCheck[2]) == idBackboneTo)
-                                        {
-                                                myfile.close();
-                                                return true;
-                                        }
-                                }
-                        }
-                }
-                myfile.close();
-                return false;
-        }
-
-        else cout << "Unable to open file";
-        return false;
-}
-void Node::writeSendInDatabase(std::string packetId,int idBackboneFrom,int idBackboneTo)
-{
-        ofstream outfile;
-        outfile.open("output_files/database.txt",std::ios_base::app);
-        if (outfile.is_open())
-        {
-                outfile << packetId;
-                outfile << "\t";
-                outfile << "000000000000000000";
-                outfile << idBackboneFrom;
-                outfile << "\t";
-                outfile << "000000000000000000";
-                outfile << idBackboneTo;
-                outfile << "\n";
-                outfile.close();
-        }
-        else cout << "Unable to open file";
-}
-
+///////////////////////////////////////////////////////////////////////////////
+//The function send of a node
+//////////////////////////////////////////////////////////////////////////////
 ObjectRequest* Node::send(ObjectRequest *obj)
 {
+
         /*******************************************************************************************************************INFO*/
         //if the message is info
         if(obj->getmessageType()=="INFO")
@@ -380,6 +371,14 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                 //if not in the quorum
                                 else if(!foundInQuorum)
                                 {
+                                        //for the maxhop
+                                        if(obj->getHeader()[0] > MAX_HOP)
+                                        {
+                                                cout << "MAX_HOP (" <<obj->getHeader()[0] << ")"<<endl;
+                                                obj->setMessageType("NAK_INFO_TO_QUORUM");
+                                                obj->popFromHeader();
+                                                return obj;
+                                        }
                                         obj->setMessageType("INFO_TO_QUORUM");
                                         //check which traceroute can arrive to a backbone
                                         for(index=0; index < this->getTheTraceroute().size(); index++)
@@ -413,12 +412,10 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                                 }
                                         }
                                 }
-
                         }
                         //else if not backbone
                         else if(!this->isItBackbone())
                         {
-
                                 obj->setMessageType("INFO_TO_QUORUM");
                                 //check which traceroute can arrive to a backbone
                                 for(index=0; index < this->getTheTraceroute().size(); index++)
@@ -465,16 +462,6 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                 //begin to send
                                 obj->addToHeader(obj->getDirectionToExecute().back());
                                 obj->popFromDirectionToExecute();
-                                //write in the database about the quorum
-                                // int idBackbone=this->getTheTraceroute()[index][this->getTheTraceroute()[index].size()-1];
-                                // if(obj->getmessageType() == "INFO_IN_QUORUM")
-                                // {
-                                //         obj->addToVisitedTraceroutes(index);
-                                // }
-                                // if(obj->getmessageType() == "INFO_TO_QUORUM")
-                                // {
-                                //         obj->addToVisitedBackbones(idBackbone);
-                                // }
                                 return obj;
                         }
                         else if(!canSend)
@@ -524,8 +511,6 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 }
                 else //if the direction is not empty , continue the sending
                 {
-                        //
-                        //A verifier
                         //check wifi connection
                         int idTosend = obj->getDirectionToExecute().back();
                         for(int i=0; i<this->getVectAvailableNodes().size(); i++)
@@ -545,10 +530,6 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                         return obj;
                                 }
                         }
-
-                        // obj->addToHeader(obj->getDirectionToExecute().back());
-                        // obj->popFromDirectionToExecute();
-                        // return obj;
                 }
         }
 
@@ -573,14 +554,6 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 //                 return obj;
                 //         }
                 // }
-
-
-
-
-                // Call the recursive helper function to print all paths
-//                recursiveDFSInQuorum(idSource);
-
-
                 //stop
                 obj->setMessageType("NAK");
                 return obj;
@@ -608,7 +581,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 }
                 else //not arrived to backbone
                 {
-                        //if the directio is empty return NAK //to check hereeeeeeeeeeeeeeeeeeeeeeeeeee
+                        //if the directio is empty return NAK
                         if(obj->getDirectionToExecute().size()==0)
                         {
                                 obj->setMessageType("NAK_INFO_TO_QUORUM");
@@ -637,10 +610,8 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                                 return obj;
                                         }
                                 }
-
                         }
                 }
-
         }
 
         /************************************************************************************************************NAK_INFO_TO_QUORUM*/
@@ -664,7 +635,9 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                         obj->setMessageType("INFO");
                         return obj;
                 }
-
         }
         return NULL;
 }
+///////////////////////////////////////////////////////////////////////////////
+//END
+//////////////////////////////////////////////////////////////////////////////
