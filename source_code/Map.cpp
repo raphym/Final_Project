@@ -1,6 +1,8 @@
 #include "Map.h"
 using namespace std;
-
+///////////////////////////////////////////////////////////////////////////////
+//constructor
+//////////////////////////////////////////////////////////////////////////////
 Map::Map(string name,string fileProviders, string fileLamps, string fileTrafficLights)   //ctor
 {
         this->name=name;
@@ -10,7 +12,9 @@ Map::Map(string name,string fileProviders, string fileLamps, string fileTrafficL
 
         loadMap();
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//Destructor
+//////////////////////////////////////////////////////////////////////////////
 Map::~Map()
 {
         for(int i=0; i<vecElementsOfTheMap.size(); i++)
@@ -20,8 +24,9 @@ Map::~Map()
         }
 
 }
-
-
+///////////////////////////////////////////////////////////////////////////////
+//load the lamp return a vector of lamps
+//////////////////////////////////////////////////////////////////////////////
 vector<Node*> Map::loadLamps()
 {
         int i=0;
@@ -59,8 +64,9 @@ vector<Node*> Map::loadLamps()
 
         return lamps;
 }
-
-
+///////////////////////////////////////////////////////////////////////////////
+//load the providers return a vector of providers
+//////////////////////////////////////////////////////////////////////////////
 vector<Node*> Map::loadProviders()
 {
         int i=0;
@@ -95,7 +101,9 @@ vector<Node*> Map::loadProviders()
 
         return providers;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//load the trafficLights return a vector of trafficLights
+//////////////////////////////////////////////////////////////////////////////
 vector<Node*> Map::loadTrafficLights()
 {
         int i=0;
@@ -131,7 +139,9 @@ vector<Node*> Map::loadTrafficLights()
 
         return trafficLights;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//load the map with the lamps , providers and trafficlights
+//////////////////////////////////////////////////////////////////////////////
 void Map::loadMap()
 {
         //regroupper tous les elements:
@@ -154,16 +164,18 @@ void Map::loadMap()
                 vecElementsOfTheMap.push_back(trafficLights[i]);
 
 }
-//add a node
+///////////////////////////////////////////////////////////////////////////////
+//Add a node to the Map
+//////////////////////////////////////////////////////////////////////////////
 void Map::addNode(Node *n)
 {
         if(n==NULL)
                 return;
         vecElementsOfTheMap.push_back(n);
 }
-
-
-//remove a node
+///////////////////////////////////////////////////////////////////////////////
+//remove a node from the Map
+//////////////////////////////////////////////////////////////////////////////
 void Map::removeNode(int id)
 {
         for(int i=0; i < vecElementsOfTheMap.size(); i++)
@@ -173,13 +185,16 @@ void Map::removeNode(int id)
         }
 
 }
+///////////////////////////////////////////////////////////////////////////////
 // return a vectors of all elements of the map (nodes)
+//////////////////////////////////////////////////////////////////////////////
 vector<Node*> Map::getNodes()
 {
         return vecElementsOfTheMap;
 }
-
+///////////////////////////////////////////////////////////////////////////////
 // print the map
+//////////////////////////////////////////////////////////////////////////////
 void Map::PrintMap()
 {
         cout << endl << "Name of the Map : " << this->name << endl;
@@ -206,13 +221,12 @@ void Map::PrintMap()
                                 cout << vecElementsOfTheMap[currentNode->getlistOfQuorum()[j]]->getName() << " ";
                         }
                         cout << endl;
-
                 }
-
         }
 }
-
+///////////////////////////////////////////////////////////////////////////////
 //Refresh the scan hotspots of each node in the map
+//////////////////////////////////////////////////////////////////////////////
 void Map::refreshMap()
 {
         Node *currentNode = NULL;
@@ -222,8 +236,9 @@ void Map::refreshMap()
                 currentNode->scanHotspots(vecElementsOfTheMap,currentNode->getVectAvailableNodes());
         }
 }
-
+///////////////////////////////////////////////////////////////////////////////
 //clear the map of deleted elements
+//////////////////////////////////////////////////////////////////////////////
 void Map::Garbage_Collector()
 {
         for(int i=0; i< vecElementsOfTheMap.size(); i++)
@@ -235,9 +250,9 @@ void Map::Garbage_Collector()
                 }
         }
 }
-
-
+///////////////////////////////////////////////////////////////////////////////
 //Function which running BFS on a single Node
+//////////////////////////////////////////////////////////////////////////////
 vector<Node*> Map::runBFS(Node *currentNode)
 {
         //cout << currentNode->getName() << endl; // rajout pour test print the quorums
@@ -313,21 +328,22 @@ vector<Node*> Map::runBFS(Node *currentNode)
 
         return remainderNodes;
 }
-
-
-//reset visited
+///////////////////////////////////////////////////////////////////////////////
+//reset the visited indication (if 0 white , 1 grey , 2 black)
+//////////////////////////////////////////////////////////////////////////////
 void Map::resetVisited()
 {
         for(int i=0; i < vecElementsOfTheMap.size(); i++)
                 vecElementsOfTheMap[i]->setVisited(RESET);
 }
-
+///////////////////////////////////////////////////////////////////////////////
 //Function which construct the quorums it's running the function runBFS
+//////////////////////////////////////////////////////////////////////////////
 void Map::quorumConstruct()
 {
         // For BFS
         resetVisited();
-        int currentId = 35;//35
+        int currentId = 35; //35
         //int currentId = 47;
         vector<Node *> remainderNodes;
         vector<Node *> bfsNodes;
@@ -379,8 +395,9 @@ void Map::quorumConstruct()
         }
         refreshMap();
 }
-
-//print the quorums
+///////////////////////////////////////////////////////////////////////////////
+//Function which //print the quorums
+//////////////////////////////////////////////////////////////////////////////
 void Map::printListOfQuorum()
 {
         for(int i=0; i<vecElementsOfTheMap.size(); i++)
@@ -398,8 +415,9 @@ void Map::printListOfQuorum()
                 cout << endl;
         }
 }
-
+///////////////////////////////////////////////////////////////////////////////
 //check if a specific Node exists in a vector
+//////////////////////////////////////////////////////////////////////////////
 bool Map::check(vector<Node *> bfsNodes, int id)
 {
         for (int i = 0; i < bfsNodes.size(); i++)
@@ -409,7 +427,9 @@ bool Map::check(vector<Node *> bfsNodes, int id)
         }
         return false;
 }
-//check if a specific Node exists in a vector
+///////////////////////////////////////////////////////////////////////////////
+//check if a specific Node id exists in a vector
+//////////////////////////////////////////////////////////////////////////////
 bool Map::check(vector<int> bfsNodes, int id)
 {
         for (int i = 0; i < bfsNodes.size(); i++)
@@ -419,8 +439,9 @@ bool Map::check(vector<int> bfsNodes, int id)
         }
         return false;
 }
-
+///////////////////////////////////////////////////////////////////////////////
 //Construct the traceroutes for the nodes of the graph
+//////////////////////////////////////////////////////////////////////////////
 void Map::constructAllTraceroute()
 {
         int numsOfNodes = vecElementsOfTheMap.size();
@@ -429,8 +450,9 @@ void Map::constructAllTraceroute()
                 constructTraceroute(vecElementsOfTheMap[i]->getId());
         }
 }
-
+///////////////////////////////////////////////////////////////////////////////
 //Construct a traceroute for a specific node
+//////////////////////////////////////////////////////////////////////////////
 void Map::constructTraceroute(int idSource)
 {
         int idOrigin = idSource;
@@ -452,8 +474,9 @@ void Map::constructTraceroute(int idSource)
         delete [] visited;
         delete [] path;
 }
-
+///////////////////////////////////////////////////////////////////////////////
 //run DFS recursive to construct a traceroute
+//////////////////////////////////////////////////////////////////////////////
 void Map::recursiveDFS(int idSource,int idOrigin, bool visited[],int path[], int &path_index)
 {
         // Mark the current node and store it in path[]
@@ -491,7 +514,9 @@ void Map::recursiveDFS(int idSource,int idOrigin, bool visited[],int path[], int
         path_index--;
         visited[idSource] = false;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//print the Traceroute of each node
+//////////////////////////////////////////////////////////////////////////////
 void Map::printTraceroute()
 {
 
@@ -503,5 +528,4 @@ void Map::printTraceroute()
         }
 
         cout << "END of print TraceRoute" << endl<< endl;
-
 }
