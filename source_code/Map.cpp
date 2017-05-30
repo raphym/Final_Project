@@ -327,7 +327,7 @@ void Map::quorumConstruct()
 {
         // For BFS
         resetVisited();
-        int currentId = 0;//35
+        int currentId = 35;//35
         //int currentId = 47;
         vector<Node *> remainderNodes;
         vector<Node *> bfsNodes;
