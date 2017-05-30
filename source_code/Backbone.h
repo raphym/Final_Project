@@ -6,9 +6,9 @@
 class Backbone : public Node
 {
 public:
-        Backbone(std::string type,std::string n,int theId,double x, double y);
-        void printQuorum(std::vector<Node*> vecElementsOfTheMap);
-        virtual ~Backbone();
+Backbone(std::string type,std::string n,int theId,double x, double y); //constructor
+void printQuorum(std::vector<Node*> vecElementsOfTheMap); //print the members of the Quorum
+virtual ~Backbone(); //Destructor
 
 
 protected:
