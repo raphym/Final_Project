@@ -1,7 +1,9 @@
 #include "Simulation.h"
 
 using namespace std;
-
+///////////////////////////////////////////////////////////////////////////////
+//constructor
+//////////////////////////////////////////////////////////////////////////////
 Simulation::Simulation(string city)
 {
         this->nbSuccess=0;
@@ -25,9 +27,10 @@ Simulation::Simulation(string city)
         //theMap->printListOfQuorum();
         //theMap->PrintMap();
         //theMap->printTraceroute();
-
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//start the Simulation
+//////////////////////////////////////////////////////////////////////////////
 void Simulation::startSim()
 {
         //sendRequests();
@@ -42,8 +45,13 @@ void Simulation::startSim()
         nums = searchMaxInVector(vecOfHardwareHop) +1;
         analysisGraph = constructAnalysisGraph(vecOfHardwareHop,nums);
         writeDataGraph(analysisGraph,nums,"Graph of hardware hops");
-}
 
+        system("canberra-gtk-play -f input_files/sounds/beep-02.wav");
+
+}
+///////////////////////////////////////////////////////////////////////////////
+//send Requests according to the Events-Schedule
+//////////////////////////////////////////////////////////////////////////////
 void Simulation::sendRequests()
 {
 
@@ -52,15 +60,6 @@ void Simulation::sendRequests()
         int idDest;
         string message;
         string line;
-
-
-        //theMap->getNodes()[20]->setLocationY(1000000005);
-        // theMap->getNodes()[13]->setLocationY(5000000005);
-        // theMap->getNodes()[45]->setLocationY(8000000005);
-        // theMap->getNodes()[27]->setLocationY(8000000005);
-        // theMap->getNodes()[29]->setLocationY(8000000005);
-        // theMap->getNodes()[51]->setLocationY(8000000005);
-        // theMap->getNodes()[26]->setLocationY(8000000005);
         theMap->refreshMap();
 
         float temps;
@@ -97,7 +96,7 @@ void Simulation::sendRequests()
                 t2 = clock();
                 temps = (float)(t2-t1)/CLOCKS_PER_SEC;
                 ofstream outfile;
-                outfile.open("output_files/Statistic.txt",std::ios_base::app);
+                outfile.open("output_files/Statistic.txt"); //std::ios_base::app
                 if (outfile.is_open())
                 {
                         outfile << endl<<"Statistic:" <<endl;
@@ -118,7 +117,9 @@ void Simulation::sendRequests()
         }
         else cout << "Unable to open file";
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//send Requests n*n TEST Queries
+//////////////////////////////////////////////////////////////////////////////
 void Simulation::sendRequestsTest()
 {
 
@@ -132,7 +133,7 @@ void Simulation::sendRequestsTest()
         {
                 for(int j=0; j < theMap->getNodes().size(); j++)
                 {
-                        if(i!=j && i!=10 && j!=10 && j!=32 && j!=14 &&  j!=41 && j!=47) //&& i!=10 && j!=10 && j!=32 && j!=14 &&  j!=41 && j!=47
+                        if(i!=j && i!=10 && j!=10 && j!=32 && j!=14 &&  j!=41 && j!=47 ) //&& i!=10 && j!=10 && j!=32 && j!=14 &&  j!=41 && j!=47
                         {
                                 this->nbRequests++;
                                 string packetId = getRandomId(20,k);
@@ -156,7 +157,7 @@ void Simulation::sendRequestsTest()
         t2 = clock();
         temps = (float)(t2-t1)/CLOCKS_PER_SEC;
         ofstream outfile;
-        outfile.open("output_files/Statistic.txt",std::ios_base::app);
+        outfile.open("output_files/Statistic.txt"); //std::ios_base::app
         if (outfile.is_open())
         {
                 outfile << endl<<"Statistic:" <<endl;
@@ -174,9 +175,10 @@ void Simulation::sendRequestsTest()
                 outfile.close();
         }
         else cout << "Unable to open file";
-
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//the network send , this function mimics the wifi sending
+//////////////////////////////////////////////////////////////////////////////
 void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
 {
         int index =-1;
@@ -231,8 +233,9 @@ void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
         vecOfSoftwareHop.push_back(softwareHop);
         vecOfHardwareHop.push_back(hardwareHop);
 }
-
-
+///////////////////////////////////////////////////////////////////////////////
+//get a Random Id for a packet
+//////////////////////////////////////////////////////////////////////////////
 string Simulation::getRandomId(int len, int i)
 {
         srand (i);
@@ -246,7 +249,9 @@ string Simulation::getRandomId(int len, int i)
         }
         return newstr;
 }
+///////////////////////////////////////////////////////////////////////////////
 //function which split a string into a vector
+//////////////////////////////////////////////////////////////////////////////
 void Simulation::split(string& s, char delim,vector<string>& v)
 {
         auto i = 0;
@@ -261,7 +266,9 @@ void Simulation::split(string& s, char delim,vector<string>& v)
                         v.push_back(s.substr(i, s.length()));
         }
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//function which print a Vector
+//////////////////////////////////////////////////////////////////////////////
 void Simulation::printVector(string vectorName, vector<int> vec)
 {
         cout <<endl;
@@ -272,7 +279,9 @@ void Simulation::printVector(string vectorName, vector<int> vec)
         }
         cout <<endl;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//function which print an array
+//////////////////////////////////////////////////////////////////////////////
 void Simulation::printArray(std::string vectorName, int* arr,int nums)
 {
         cout <<endl;
@@ -287,8 +296,9 @@ void Simulation::printArray(std::string vectorName, int* arr,int nums)
         cout << "-----------------------------";
         cout <<endl;
 }
-
-
+///////////////////////////////////////////////////////////////////////////////
+//function which search the max in a vector
+//////////////////////////////////////////////////////////////////////////////
 int Simulation::searchMaxInVector(std::vector<int>v)
 {
         int max = v[0];
@@ -301,7 +311,9 @@ int Simulation::searchMaxInVector(std::vector<int>v)
         return max;
         //cout << "max : " << max<<endl;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//construct Analysis Graph
+//////////////////////////////////////////////////////////////////////////////
 int* Simulation::constructAnalysisGraph(std::vector<int>v,int nums)
 {
 
@@ -319,7 +331,9 @@ int* Simulation::constructAnalysisGraph(std::vector<int>v,int nums)
         }
         return graph;
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//write Data Graph
+//////////////////////////////////////////////////////////////////////////////
 void Simulation::writeDataGraph(int *analysisGraph,int nums,string name)
 {
         ofstream outfile;
@@ -337,7 +351,9 @@ void Simulation::writeDataGraph(int *analysisGraph,int nums,string name)
         }
         else cout << "Unable to open file";
 }
-
+///////////////////////////////////////////////////////////////////////////////
+//Destructor
+//////////////////////////////////////////////////////////////////////////////
 Simulation::~Simulation() // dtor
 {
         delete theMap;
