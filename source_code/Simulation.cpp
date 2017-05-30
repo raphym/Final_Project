@@ -33,19 +33,25 @@ Simulation::Simulation(string city)
 //////////////////////////////////////////////////////////////////////////////
 void Simulation::startSim()
 {
-        //sendRequests();
-        sendRequestsTest();
+        sendRequests();
+        //sendRequestsTest();
 
         //-----now we calcul the statistics
+
         //for the softwareHop hops
         int nums = searchMaxInVector(vecOfSoftwareHop) +1;
-        int *analysisGraph = constructAnalysisGraph(vecOfSoftwareHop,nums);
-        //for the hardware hops
-        writeDataGraph(analysisGraph,nums,"Graph of software hops");
-        nums = searchMaxInVector(vecOfHardwareHop) +1;
-        analysisGraph = constructAnalysisGraph(vecOfHardwareHop,nums);
-        writeDataGraph(analysisGraph,nums,"Graph of hardware hops");
+        int *analysisGraphVecOfSoftwareHop = constructAnalysisGraph(vecOfSoftwareHop,nums);
+        writeDataGraph(analysisGraphVecOfSoftwareHop,nums,"Graph of software hops");
 
+        //for the hardware hops
+        nums = searchMaxInVector(vecOfHardwareHop) +1;
+        int *analysisGraphVecOfHardwareHop = constructAnalysisGraph(vecOfHardwareHop,nums);
+        writeDataGraph(analysisGraphVecOfHardwareHop,nums,"Graph of hardware hops");
+
+        //free the memory from the graph
+        delete [] analysisGraphVecOfSoftwareHop;
+        delete [] analysisGraphVecOfHardwareHop;
+        //bip sound
         system("canberra-gtk-play -f input_files/sounds/beep-02.wav");
 
 }
