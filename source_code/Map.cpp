@@ -430,17 +430,19 @@ void Map::printListOfQuorum()
 {
         for(int i=0; i<vecElementsOfTheMap.size(); i++)
         {
-                cout << endl;
-                cout << "Name : " << vecElementsOfTheMap[i]->getName();
-                cout << " Voisins : ";
-                int size = vecElementsOfTheMap[i]->getlistOfQuorum().size();
-                if(vecElementsOfTheMap[i]->isItBackbone()==true)
+                if(vecElementsOfTheMap[i]->isItBackbone())
+                {
+                        cout << endl;
+                        cout << "Backbone Name : " << vecElementsOfTheMap[i]->getName();
+                        cout << ", contains : ";
+                        int size = vecElementsOfTheMap[i]->getlistOfQuorum().size();
                         for(int j=0; j< size; j++)
                         {
                                 int id = vecElementsOfTheMap[i]->getlistOfQuorum()[j];
                                 cout << " " <<  vecElementsOfTheMap[id]->getName();
                         }
-                cout << endl;
+                        cout << endl;
+                }
         }
 }
 ///////////////////////////////////////////////////////////////////////////////
@@ -629,7 +631,7 @@ void Map::writeMap()
                         string name = "Quorum of Backbone " + vecElementsOfTheMap[i]->getName();
                         ve.push_back("\n");
                         ve.push_back(name);
-                        ve.push_back(" contains : ");
+                        ve.push_back(", contains : ");
                         for(int j=0; j< size; j++)
                         {
                                 int id = b->getlistOfQuorum()[j];
@@ -658,7 +660,40 @@ void Map::writeMap()
 //////////////////////////////////////////////////////////////////////////////
 void Map::writeQuorums()
 {
+        vector<string> ve;
+        ve.push_back("\n");
+        ve.push_back("Quorums of the Map : " + this->name + "\n");
 
+        for(int i=0; i<vecElementsOfTheMap.size(); i++)
+        {
+                if(vecElementsOfTheMap[i]->isItBackbone())
+                {
+                        ve.push_back("\n");
+                        ve.push_back("Backbone Name : ");
+                        ve.push_back(vecElementsOfTheMap[i]->getName());
+                        ve.push_back(", contains : ");
+                        int size = vecElementsOfTheMap[i]->getlistOfQuorum().size();
+                        for(int j=0; j< size; j++)
+                        {
+                                int id = vecElementsOfTheMap[i]->getlistOfQuorum()[j];
+                                ve.push_back(" ");
+                                ve.push_back(vecElementsOfTheMap[id]->getName());
+                        }
+                        ve.push_back("\n");
+                }
+        }
+
+        ofstream outfile;
+        string path = "output_files/";
+        path+="Quorums";
+        path+=".txt";
+        outfile.open(path); //std::ios_base::app
+        if (outfile.is_open())
+        {
+                for(int i=0; i<ve.size(); i++)
+                        outfile << ve[i];
+        }
+        else cout << "Unable to write the Map data";
 }
 ///////////////////////////////////////////////////////////////////////////////
 //write the Traceroutes in a file
@@ -672,7 +707,7 @@ void Map::writeTraceroutes()
 //////////////////////////////////////////////////////////////////////////////
 string Map::to_string_with_precision(double a_value, const int n)
 {
-    ostringstream out;
-    out << setprecision(n) << a_value;
-    return out.str();
+        ostringstream out;
+        out << setprecision(n) << a_value;
+        return out.str();
 }
