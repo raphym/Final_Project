@@ -17,7 +17,7 @@
 class Map
 {
 public:
-Map(std::string name,std::string fileProviders, std::string fileLamps, std::string fileTrafficLights,int max_hop); //constructor
+Map(std::string name,std::string fileProviders, std::string fileLamps, std::string fileTrafficLights,int max_hop,int idStartConstructQuorum); //constructor
 virtual ~Map(); //Destructor
 std::vector<Node*> loadLamps(); //return the Lamps vector on the boot
 std::vector<Node*> loadProviders(); // return the Providers vector on the boot
@@ -54,6 +54,8 @@ std::string fileTrafficLights; //file input trafficLights
 std::vector<Node*> vecElementsOfTheMap; //vector of all elements of the map
 bool pbInLoading; // bool to check if there is a pb in the loading of the map
 int max_hop; //the max hop for the sending
+int idStartConstructQuorum;//the id to start to construct the quorum
+
 private:
 
 };

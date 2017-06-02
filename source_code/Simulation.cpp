@@ -4,7 +4,7 @@ using namespace std;
 ///////////////////////////////////////////////////////////////////////////////
 //constructor
 //////////////////////////////////////////////////////////////////////////////
-Simulation::Simulation(string city,int max_hop)
+Simulation::Simulation(string city,int max_hop,int idStartConstructQuorum)
 {
         this->nbSuccess=0;
         this->nbFailures=0;
@@ -12,12 +12,13 @@ Simulation::Simulation(string city,int max_hop)
         this->softwareHop=0;
         this->hardwareHop=0;
         this->loaded=false;
+        this->idStartConstructQuorum=idStartConstructQuorum;
 
         string pathProviders = "input_files/" + city + "/" + "providers.txt";
         string pathLamps = "input_files/" + city + "/" + "lamps.txt";
         string pathTrafficLights = "input_files/" + city + "/" + "trafficLights.txt";
 
-        theMap  = new Map(city, pathProviders, pathLamps, pathTrafficLights,max_hop);
+        theMap  = new Map(city, pathProviders, pathLamps, pathTrafficLights,max_hop,idStartConstructQuorum);
 
         //load the map and check if it is loaded
         int load = theMap->loadMap();

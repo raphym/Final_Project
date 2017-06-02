@@ -3,7 +3,7 @@ using namespace std;
 ///////////////////////////////////////////////////////////////////////////////
 //constructor
 //////////////////////////////////////////////////////////////////////////////
-Map::Map(string name,string fileProviders, string fileLamps, string fileTrafficLights,int max_hop)   //ctor
+Map::Map(string name,string fileProviders, string fileLamps, string fileTrafficLights,int max_hop,int idStartConstructQuorum)   //ctor
 {
         this->name=name;
         this->fileProviders=fileProviders;
@@ -11,6 +11,7 @@ Map::Map(string name,string fileProviders, string fileLamps, string fileTrafficL
         this->fileTrafficLights=fileTrafficLights;
         this->pbInLoading=false;
         this->max_hop=max_hop;
+        this->idStartConstructQuorum=idStartConstructQuorum;
 }
 ///////////////////////////////////////////////////////////////////////////////
 //Destructor
@@ -153,8 +154,14 @@ int Map::loadMap()
         vector<Node*> lamps= loadLamps();
         vector<Node*>providers=loadProviders();
         vector<Node*>trafficLights=loadTrafficLights();
-        if(this->pbInLoading==true)
+
+        int numsOfElements = lamps.size()+ providers.size() + trafficLights.size();
+        if(this->pbInLoading==true || (numsOfElements-1) < this->idStartConstructQuorum)
         {
+                if((numsOfElements-1) < this->idStartConstructQuorum)
+                {
+                  cout << "The id from start to construct the quorum is not valid (x >  numbers of elements)"<<endl;
+                }
                 //free the memory and return -1
                 int i=0;
                 for(i=0; i< lamps.size(); i++)
@@ -371,7 +378,7 @@ void Map::quorumConstruct()
 {
         // For BFS
         resetVisited();
-        int currentId = 0; //35
+        int currentId = this->idStartConstructQuorum;
         vector<Node *> remainderNodes;
         vector<Node *> bfsNodes;
         Node *pointer = NULL;

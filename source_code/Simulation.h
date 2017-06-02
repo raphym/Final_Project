@@ -13,7 +13,7 @@
 class Simulation
 {
 public:
-Simulation(std::string city,int max_hop); //constructor
+Simulation(std::string city,int max_hop,int idStartConstructQuorum); //constructor
 virtual ~Simulation(); //Destructor
 void startSim(int choice); //start the Simulation
 int sendRequests(); //send Requests according to the Events-Schedule
@@ -39,6 +39,7 @@ int hardwareHop;
 std::vector<int>vecOfSoftwareHop;
 std::vector<int>vecOfHardwareHop;
 bool loaded; //bool to know if the map is loaded
+int idStartConstructQuorum;//the id to start to construct the quorum
 
 private:
 
