@@ -29,6 +29,11 @@ Simulation::Simulation(string city)
                 theMap->constructAllTraceroute();
                 theMap->refreshMap();
                 this->loaded=true;
+
+                //to write in files about the map
+                theMap->writeMap();
+                theMap->writeQuorums();
+                theMap->writeTraceroutes();
                 return;
         }
         else
@@ -36,11 +41,6 @@ Simulation::Simulation(string city)
                 this->loaded=false;
                 return;
         }
-
-        //for debug
-        //theMap->printListOfQuorum();
-        //theMap->PrintMap();
-        //theMap->printTraceroute();
 }
 ///////////////////////////////////////////////////////////////////////////////
 //start the Simulation
