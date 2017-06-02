@@ -47,7 +47,8 @@ ObjectRequest* send(ObjectRequest *obj); // to send a message
 bool checkIfExist(std::vector<int>vec,int id); //Check if a node id exist in the header of the object request
 bool checkIfExist(std::vector<Node*>vec,int id); //Check if a node exist in the vector
 bool checkIfExistInHeader(std::vector<int> vec,int id); //Check if a node id exist in the vector
-
+void setMax_hop(int newMax_hop); //set the max hop for the sending
+int getMax_hop(); //get the max hop for the sending
 
 
 protected:
@@ -72,7 +73,7 @@ bool isBusy; // status of the node
 bool isErased; // bool to know if the node is erased
 int visited; //visited for bfs
 bool isBackbone; // to know if the node is a backbone
-int max_hop;//the max of hop for the sending
+int max_hop; //the max of hop for the sending
 
 private:
 };
