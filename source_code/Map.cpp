@@ -557,3 +557,122 @@ void Map::printTraceroute()
 
         cout << "END of print TraceRoute" << endl<< endl;
 }
+///////////////////////////////////////////////////////////////////////////////
+//write the Map in a file
+//////////////////////////////////////////////////////////////////////////////
+void Map::writeMap()
+{
+        vector<string> ve;
+        ve.push_back("\n");
+        ve.push_back("Name of the Map : " + this->name + "\n");
+
+        for(int i=0; i< vecElementsOfTheMap.size(); i++ )
+        {
+                if(vecElementsOfTheMap[i]->checkIfErased()==true)
+                        continue;
+                ve.push_back("_____________");
+                ve.push_back("\n\n");
+                ve.push_back("TYPE: ");
+                ve.push_back(vecElementsOfTheMap[i]->getType());
+                ve.push_back(" | ID : ");
+                ve.push_back( to_string(vecElementsOfTheMap[i]->getId()) );
+                ve.push_back(" | Name : ");
+                ve.push_back(vecElementsOfTheMap[i]->getName());
+                ve.push_back(" | Position : ");
+                ve.push_back("(");
+                ve.push_back( to_string_with_precision(vecElementsOfTheMap[i]->getLocationX(),6) );
+                ve.push_back(",");
+                ve.push_back( to_string_with_precision(vecElementsOfTheMap[i]->getLocationY(),6) );
+                ve.push_back(")");
+                ve.push_back("\n");
+                ve.push_back("available Nodes : ");
+
+                if(vecElementsOfTheMap[i]->getVectAvailableNodes().size()==0)
+                        ve.push_back("[]");
+                ve.push_back("\n");
+                for(int j=0; j<vecElementsOfTheMap[i]->getVectAvailableNodes().size(); j++)
+                {
+                        if (j==0 && j == vecElementsOfTheMap[i]->getVectAvailableNodes().size()-1)
+                        {
+                                ve.push_back("[");
+                                ve.push_back(vecElementsOfTheMap[i]->getVectAvailableNodes()[0]->getName());
+                                ve.push_back("]");
+                                ve.push_back("\n");
+                        }
+
+                        else if (j==0)
+                        {
+                                ve.push_back("[");
+                                ve.push_back(vecElementsOfTheMap[i]->getVectAvailableNodes()[0]->getName());
+                                ve.push_back(",");
+                        }
+
+                        else if (j==vecElementsOfTheMap[i]->getVectAvailableNodes().size() -1 )
+                        {
+                                ve.push_back(vecElementsOfTheMap[i]->getVectAvailableNodes()[j]->getName());
+                                ve.push_back("]");
+                                ve.push_back("\n");
+                        }
+
+                        else
+                        {
+                                ve.push_back(vecElementsOfTheMap[i]->getVectAvailableNodes()[j]->getName());
+                                ve.push_back(",");
+                        }
+                }
+
+                if(vecElementsOfTheMap[i]->getType()=="Backbone")
+                {
+                        Backbone *b = (Backbone*)vecElementsOfTheMap[i];
+
+                        int size = b->getlistOfQuorum().size();
+                        string name = "Quorum of Backbone " + vecElementsOfTheMap[i]->getName();
+                        ve.push_back("\n");
+                        ve.push_back(name);
+                        ve.push_back(" contains : ");
+                        for(int j=0; j< size; j++)
+                        {
+                                int id = b->getlistOfQuorum()[j];
+                                ve.push_back(" ");
+                                ve.push_back(vecElementsOfTheMap[id]->getName());
+                        }
+                        ve.push_back("\n");
+                }
+        }
+
+
+        ofstream outfile;
+        string path = "output_files/";
+        path+="Map";
+        path+=".txt";
+        outfile.open(path); //std::ios_base::app
+        if (outfile.is_open())
+        {
+                for(int i=0; i<ve.size(); i++)
+                        outfile << ve[i];
+        }
+        else cout << "Unable to write the Map data";
+}
+///////////////////////////////////////////////////////////////////////////////
+//write the Quorums in a file
+//////////////////////////////////////////////////////////////////////////////
+void Map::writeQuorums()
+{
+
+}
+///////////////////////////////////////////////////////////////////////////////
+//write the Traceroutes in a file
+//////////////////////////////////////////////////////////////////////////////
+void Map::writeTraceroutes()
+{
+
+}
+///////////////////////////////////////////////////////////////////////////////
+//to string with precision
+//////////////////////////////////////////////////////////////////////////////
+string Map::to_string_with_precision(double a_value, const int n)
+{
+    ostringstream out;
+    out << setprecision(n) << a_value;
+    return out.str();
+}

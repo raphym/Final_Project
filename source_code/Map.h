@@ -6,6 +6,8 @@
 #include <cmath>
 #include <vector>
 #include <queue>          // std::queue
+#include <sstream>
+#include <iomanip>
 #include "FileStream.h"
 #include "Node.h"
 #include "Backbone.h"
@@ -38,7 +40,10 @@ void constructAllTraceroute(); //Construct the traceroutes for the nodes of the 
 void constructTraceroute(int idSource); //Construct a traceroute for a specific node
 void recursiveDFS(int idSource,int idOrigin, bool visited[],int path[], int &path_index); //run DFS recursive to construct a traceroute
 bool checkPbInLoading(); //check if there is a pb in the loading of the map
-
+void writeQuorums();
+void writeTraceroutes();
+void writeMap();
+std::string to_string_with_precision(double a_value,int n);
 
 
 protected:
