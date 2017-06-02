@@ -13,7 +13,7 @@
 class Simulation
 {
 public:
-Simulation(std::string city); //constructor
+Simulation(std::string city,int max_hop); //constructor
 virtual ~Simulation(); //Destructor
 void startSim(int choice); //start the Simulation
 int sendRequests(); //send Requests according to the Events-Schedule

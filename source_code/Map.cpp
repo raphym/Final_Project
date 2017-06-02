@@ -3,14 +3,14 @@ using namespace std;
 ///////////////////////////////////////////////////////////////////////////////
 //constructor
 //////////////////////////////////////////////////////////////////////////////
-Map::Map(string name,string fileProviders, string fileLamps, string fileTrafficLights)   //ctor
+Map::Map(string name,string fileProviders, string fileLamps, string fileTrafficLights,int max_hop)   //ctor
 {
         this->name=name;
         this->fileProviders=fileProviders;
         this->fileLamps=fileLamps;
         this->fileTrafficLights=fileTrafficLights;
         this->pbInLoading=false;
-
+        this->max_hop=max_hop;
 }
 ///////////////////////////////////////////////////////////////////////////////
 //Destructor
@@ -58,7 +58,7 @@ vector<Node*> Map::loadLamps()
 
 
         for(i=0; i<nbLamps; i++)
-                lamps.push_back(new Node("LAMP",names[i],New_Node_Id,posX[i],posY[i]));
+                lamps.push_back(new Node("LAMP",names[i],New_Node_Id,posX[i],posY[i],max_hop));
         delete [] posX;
         delete [] posY;
         delete [] names;
@@ -97,7 +97,7 @@ vector<Node*> Map::loadProviders()
                 exit(-1);
         }
         for(i=0; i<nbProviders; i++)
-                providers.push_back(new Node("PROVIDER",names[i],New_Node_Id,posX[i],posY[i]));
+                providers.push_back(new Node("PROVIDER",names[i],New_Node_Id,posX[i],posY[i],max_hop));
         delete [] posX;
         delete [] posY;
         delete [] names;
@@ -137,7 +137,7 @@ vector<Node*> Map::loadTrafficLights()
                 exit(-1);
         }
         for(i=0; i<nbTrafficLight; i++)
-                trafficLights.push_back(new Node("TRAFFIC_LIGHT",names[i],New_Node_Id,posX[i],posY[i]));
+                trafficLights.push_back(new Node("TRAFFIC_LIGHT",names[i],New_Node_Id,posX[i],posY[i],max_hop));
         delete [] posX;
         delete [] posY;
         delete [] names;
@@ -371,8 +371,7 @@ void Map::quorumConstruct()
 {
         // For BFS
         resetVisited();
-        int currentId = 35; //35
-        //int currentId = 47;
+        int currentId = 0; //35
         vector<Node *> remainderNodes;
         vector<Node *> bfsNodes;
         Node *pointer = NULL;
@@ -412,7 +411,7 @@ void Map::quorumConstruct()
                         int oldId= current->getId();
                         int sizeOfQuorum = current->getlistOfQuorum().size();
 
-                        Backbone *b = new Backbone("Backbone",name,oldId,posX,posY);
+                        Backbone *b = new Backbone("Backbone",name,oldId,posX,posY,max_hop);
                         b->setToBeBackbone();
                         for(int k=0; k< sizeOfQuorum; k++)
                                 b->addTolistOfQuorum(current->getlistOfQuorum()[k]);

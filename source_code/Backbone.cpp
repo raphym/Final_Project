@@ -5,7 +5,7 @@ using namespace std;
 ///////////////////////////////////////////////////////////////////////////////
 //constructor
 //////////////////////////////////////////////////////////////////////////////
-Backbone::Backbone(string type,string name,int theId,double x, double y) : Node(type,name,theId,x,y)
+Backbone::Backbone(string type,string name,int theId,double x, double y,int max_hop) : Node(type,name,theId,x,y,max_hop)
 {
 
 }

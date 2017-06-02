@@ -6,12 +6,12 @@ static int next_id=0;
 ///////////////////////////////////////////////////////////////////////////////
 //constructor
 //////////////////////////////////////////////////////////////////////////////
-Node::Node(string type,string n,int theId,double x, double y)  //ctor
+Node::Node(string type,string n,int theId,double x, double y,int max_hop)  //ctor
 {
         this->type=type;
-        name = new string(n);
-        locationX = x;
-        locationY = y;
+        this->name = new string(n);
+        this->locationX = x;
+        this->locationY = y;
         if(theId==New_Node_Id)
         {
                 id=next_id;
@@ -20,10 +20,11 @@ Node::Node(string type,string n,int theId,double x, double y)  //ctor
         else
                 this->id=theId;
 
-        isBusy= false;
-        isErased=false;
-        visited=0;
-        isBackbone=false;
+        this->isBusy= false;
+        this->isErased=false;
+        this->visited=0;
+        this->isBackbone=false;
+        this->max_hop = max_hop;
 }
 ///////////////////////////////////////////////////////////////////////////////
 //destructor
@@ -372,7 +373,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                 else if(!foundInQuorum)
                                 {
                                         //for the maxhop
-                                        if(obj->getHeader()[0] > MAX_HOP)
+                                        if(obj->getHeader()[0] > this->max_hop)
                                         {
                                                 cout << "MAX_HOP (" <<obj->getHeader()[0] << ")"<<endl;
                                                 obj->setMessageType("NAK_INFO_TO_QUORUM");

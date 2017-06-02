@@ -14,13 +14,12 @@
 #define New_Node_Id -2
 #define INCREMENT 5
 #define RESET 6
-#define MAX_HOP 43
 
 
 class Node
 {
 public:
-Node(std::string type,std::string n,int theId,double x, double y); //constructor
+Node(std::string type,std::string n,int theId,double x, double y,int max_hop); //constructor
 virtual ~Node(); //destructor
 std::string getName(); //return the name
 int getId(); //return the id
@@ -73,7 +72,7 @@ bool isBusy; // status of the node
 bool isErased; // bool to know if the node is erased
 int visited; //visited for bfs
 bool isBackbone; // to know if the node is a backbone
-
+int max_hop;//the max of hop for the sending
 
 private:
 };
