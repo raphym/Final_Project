@@ -693,13 +693,52 @@ void Map::writeQuorums()
                 for(int i=0; i<ve.size(); i++)
                         outfile << ve[i];
         }
-        else cout << "Unable to write the Map data";
+        else cout << "Unable to write the Quorums data";
 }
 ///////////////////////////////////////////////////////////////////////////////
 //write the Traceroutes in a file
 //////////////////////////////////////////////////////////////////////////////
 void Map::writeTraceroutes()
 {
+        vector<string> ve;
+        ve.push_back("\n");
+        ve.push_back("TraceRoute for each node of the Map : " + this->name + "\n\n");
+
+        for(int k=0; k<vecElementsOfTheMap.size(); k++)
+        {
+                for(int i=0; i< vecElementsOfTheMap[k]->getTheTraceroute().size(); i++)
+                {
+                        ve.push_back("List of ");
+                        ve.push_back(vecElementsOfTheMap[k]->getName());
+                        ve.push_back(" : ");
+                        ve.push_back("\n");
+
+                        for(int j=0; j< vecElementsOfTheMap[k]->getTheTraceroute()[i].size(); j++)
+                        {
+                                ve.push_back("{ ID : ");
+                                ve.push_back(to_string(vecElementsOfTheMap[k]->getTheTraceroute()[i][j]));
+                                ve.push_back(" , Name : ");
+                                int theId=vecElementsOfTheMap[k]->getTheTraceroute()[i][j];
+                                ve.push_back(vecElementsOfTheMap[theId]->getName());
+                                ve.push_back(" }");
+                                ve.push_back("\n");
+                        }
+                        ve.push_back("\n");
+                }
+                ve.push_back("\n");
+        }
+
+        ofstream outfile;
+        string path = "output_files/";
+        path+="Traceroutes";
+        path+=".txt";
+        outfile.open(path); //std::ios_base::app
+        if (outfile.is_open())
+        {
+                for(int i=0; i<ve.size(); i++)
+                        outfile << ve[i];
+        }
+        else cout << "Unable to write the Traceroutes data";
 
 }
 ///////////////////////////////////////////////////////////////////////////////
