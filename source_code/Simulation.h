@@ -16,8 +16,8 @@ public:
 Simulation(std::string city); //constructor
 virtual ~Simulation(); //Destructor
 void startSim(int choice); //start the Simulation
-void sendRequests(); //send Requests according to the Events-Schedule
-void sendRequestsTest(); //send Requests n*n TEST Queries
+int sendRequests(); //send Requests according to the Events-Schedule
+int sendRequestsTest(); //send Requests n*n TEST Queries
 void networkSend(int idSource,int idDest,ObjectRequest *obj); //the network send , this function mimics the wifi sending
 std::string getRandomId(int len, int i); //get a Random Id for a packet
 void split(std::string& s, char delim,std::vector<std::string>& v); //function which split a string into a vector

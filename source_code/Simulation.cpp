@@ -47,33 +47,40 @@ Simulation::Simulation(string city)
 //////////////////////////////////////////////////////////////////////////////
 void Simulation::startSim(int choice)
 {
+        int flag =0;
         if(choice==0)
-                sendRequestsTest();
+                flag = sendRequestsTest();
         else if(choice==1)
-                sendRequests();
+                flag = sendRequests();
         else
                 return;
 
-        //-----now we calcul the statistics
+        if(flag==0)
+        {
+                //-----now we calcul the statistics
 
-        //for the softwareHop hops
-        int nums = searchMaxInVector(vecOfSoftwareHop) +1;
-        int *analysisGraphVecOfSoftwareHop = constructAnalysisGraph(vecOfSoftwareHop,nums);
-        writeDataGraph(analysisGraphVecOfSoftwareHop,nums,"Graph of software hops");
+                //for the softwareHop hops
+                int nums = searchMaxInVector(vecOfSoftwareHop) +1;
+                int *analysisGraphVecOfSoftwareHop = constructAnalysisGraph(vecOfSoftwareHop,nums);
+                writeDataGraph(analysisGraphVecOfSoftwareHop,nums,"Graph of software hops");
 
-        //for the hardware hops
-        nums = searchMaxInVector(vecOfHardwareHop) +1;
-        int *analysisGraphVecOfHardwareHop = constructAnalysisGraph(vecOfHardwareHop,nums);
-        writeDataGraph(analysisGraphVecOfHardwareHop,nums,"Graph of hardware hops");
+                //for the hardware hops
+                nums = searchMaxInVector(vecOfHardwareHop) +1;
+                int *analysisGraphVecOfHardwareHop = constructAnalysisGraph(vecOfHardwareHop,nums);
+                writeDataGraph(analysisGraphVecOfHardwareHop,nums,"Graph of hardware hops");
 
-        //free the memory from the graph
-        delete [] analysisGraphVecOfSoftwareHop;
-        delete [] analysisGraphVecOfHardwareHop;
+                //free the memory from the graph
+                delete [] analysisGraphVecOfSoftwareHop;
+                delete [] analysisGraphVecOfHardwareHop;
+        }
+        else
+                return;
+
 }
 ///////////////////////////////////////////////////////////////////////////////
 //send Requests according to the Events-Schedule
 //////////////////////////////////////////////////////////////////////////////
-void Simulation::sendRequests()
+int Simulation::sendRequests()
 {
 
         int k=1;
@@ -134,20 +141,29 @@ void Simulation::sendRequests()
                         outfile <<"-----------------------------------" <<endl;
                         outfile.close();
                 }
-                else cout << "Unable to open file";
+                else
+                {
+                        cout << "Unable to open Statistic"<<endl;
+                        return -1;
+                }
         }
-        else cout << "Unable to open file";
+        else
+        {
+                cout << "Unable to open Events-Schedule, your file is corrupted"<<endl;
+                return -1;
+        }
+        return 0;
 }
 ///////////////////////////////////////////////////////////////////////////////
 //send Requests n*n TEST Queries
 //////////////////////////////////////////////////////////////////////////////
-void Simulation::sendRequestsTest()
+int Simulation::sendRequestsTest()
 {
 
         float temps;
         clock_t t1, t2;
         t1 = clock();
-        //Start the test
+        //Start the sending
 
         int k=1;
         for(int i=0; i < theMap->getNodes().size(); i++)
@@ -170,7 +186,7 @@ void Simulation::sendRequestsTest()
                 }
         }
 
-        //End test
+        //End
         t2 = clock();
         temps = (float)(t2-t1)/CLOCKS_PER_SEC;
         //temps = temps/1000;//to sec
@@ -195,7 +211,12 @@ void Simulation::sendRequestsTest()
                 outfile <<"-----------------------------------" <<endl;
                 outfile.close();
         }
-        else cout << "Unable to open file";
+        else
+        {
+                cout << "Unable to open Statistic"<<endl;
+                return -1;
+        }
+        return 0;
 }
 ///////////////////////////////////////////////////////////////////////////////
 //the network send , this function mimics the wifi sending
