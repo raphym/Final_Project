@@ -15,7 +15,7 @@ class Simulation
 public:
 Simulation(std::string city); //constructor
 virtual ~Simulation(); //Destructor
-void startSim(); //start the Simulation
+void startSim(int choice); //start the Simulation
 void sendRequests(); //send Requests according to the Events-Schedule
 void sendRequestsTest(); //send Requests n*n TEST Queries
 void networkSend(int idSource,int idDest,ObjectRequest *obj); //the network send , this function mimics the wifi sending
@@ -26,6 +26,7 @@ void printArray(std::string vectorName, int* arr, int nums); //function which pr
 int searchMaxInVector(std::vector<int>v); //function which search the max in a vector
 int* constructAnalysisGraph(std::vector<int>v, int nums); //construct Analysis Graph
 void writeDataGraph(int *analysisGraph,int nums,std::string name); //write Data Graph
+bool getLoaded(); //return true if the map is loaded
 
 
 protected:
@@ -37,6 +38,7 @@ int softwareHop;
 int hardwareHop;
 std::vector<int>vecOfSoftwareHop;
 std::vector<int>vecOfHardwareHop;
+bool loaded; //bool to know if the map is loaded
 
 private:
 

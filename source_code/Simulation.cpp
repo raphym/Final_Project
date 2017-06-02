@@ -11,17 +11,31 @@ Simulation::Simulation(string city)
         this->nbRequests=0;
         this->softwareHop=0;
         this->hardwareHop=0;
+        this->loaded=false;
 
         string pathProviders = "input_files/" + city + "/" + "providers.txt";
         string pathLamps = "input_files/" + city + "/" + "lamps.txt";
         string pathTrafficLights = "input_files/" + city + "/" + "trafficLights.txt";
 
         theMap  = new Map(city, pathProviders, pathLamps, pathTrafficLights);
-        theMap->refreshMap();
-        theMap->quorumConstruct();
-        theMap->refreshMap();
-        theMap->constructAllTraceroute();
-        theMap->refreshMap();
+
+        //load the map and check if it is loaded
+        int load = theMap->loadMap();
+        if(load!=-1)
+        {
+                theMap->refreshMap();
+                theMap->quorumConstruct();
+                theMap->refreshMap();
+                theMap->constructAllTraceroute();
+                theMap->refreshMap();
+                this->loaded=true;
+                return;
+        }
+        else
+        {
+                this->loaded=false;
+                return;
+        }
 
         //for debug
         //theMap->printListOfQuorum();
@@ -31,10 +45,14 @@ Simulation::Simulation(string city)
 ///////////////////////////////////////////////////////////////////////////////
 //start the Simulation
 //////////////////////////////////////////////////////////////////////////////
-void Simulation::startSim()
+void Simulation::startSim(int choice)
 {
-        sendRequests();
-        //sendRequestsTest();
+        if(choice==0)
+                sendRequestsTest();
+        else if(choice==1)
+                sendRequests();
+        else
+                return;
 
         //-----now we calcul the statistics
 
@@ -51,9 +69,6 @@ void Simulation::startSim()
         //free the memory from the graph
         delete [] analysisGraphVecOfSoftwareHop;
         delete [] analysisGraphVecOfHardwareHop;
-        //bip sound
-        system("canberra-gtk-play -f input_files/sounds/beep-02.wav");
-
 }
 ///////////////////////////////////////////////////////////////////////////////
 //send Requests according to the Events-Schedule
@@ -358,9 +373,17 @@ void Simulation::writeDataGraph(int *analysisGraph,int nums,string name)
         else cout << "Unable to open file";
 }
 ///////////////////////////////////////////////////////////////////////////////
+//get the bool loaded to know if the map has been loaded
+//////////////////////////////////////////////////////////////////////////////
+bool Simulation::getLoaded()
+{
+        return loaded;
+}
+///////////////////////////////////////////////////////////////////////////////
 //Destructor
 //////////////////////////////////////////////////////////////////////////////
 Simulation::~Simulation() // dtor
 {
-        delete theMap;
+        if(theMap!=NULL)
+                delete theMap;
 }

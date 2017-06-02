@@ -9,8 +9,8 @@ Map::Map(string name,string fileProviders, string fileLamps, string fileTrafficL
         this->fileProviders=fileProviders;
         this->fileLamps=fileLamps;
         this->fileTrafficLights=fileTrafficLights;
+        this->pbInLoading=false;
 
-        loadMap();
 }
 ///////////////////////////////////////////////////////////////////////////////
 //Destructor
@@ -22,7 +22,6 @@ Map::~Map()
                 if(vecElementsOfTheMap[i]!=NULL)
                         delete vecElementsOfTheMap[i];
         }
-
 }
 ///////////////////////////////////////////////////////////////////////////////
 //load the lamp return a vector of lamps
@@ -36,7 +35,9 @@ vector<Node*> Map::loadLamps()
         if (nbLamps==0)
         {
                 cout << "your file : " << this->fileLamps << " is corrupted"<< endl;
-                exit(-1);
+                this->pbInLoading=true;
+                vector<Node*> lamps;
+                return lamps;
         }
         vector<Node*> lamps;
         lamps.reserve(nbLamps*sizeof(Node*));
@@ -77,7 +78,9 @@ vector<Node*> Map::loadProviders()
         if (nbProviders==0)
         {
                 cout << "your file : " << this->fileProviders << " is corrupted"<< endl;
-                exit(-1);
+                vector<Node*> providers;
+                this->pbInLoading=true;
+                return providers;
         }
         vector<Node*> providers;
         providers.reserve(nbProviders * sizeof(Node*));
@@ -113,7 +116,9 @@ vector<Node*> Map::loadTrafficLights()
         if (nbTrafficLight==0)
         {
                 cout << "your file : " << this->fileTrafficLights << " is corrupted"<< endl;
-                exit(-1);
+                vector<Node*> trafficLights;
+                this->pbInLoading=true;
+                return trafficLights;
         }
 
         vector<Node*> trafficLights;
@@ -142,12 +147,34 @@ vector<Node*> Map::loadTrafficLights()
 ///////////////////////////////////////////////////////////////////////////////
 //load the map with the lamps , providers and trafficlights
 //////////////////////////////////////////////////////////////////////////////
-void Map::loadMap()
+int Map::loadMap()
 {
         //regroupper tous les elements:
         vector<Node*> lamps= loadLamps();
         vector<Node*>providers=loadProviders();
         vector<Node*>trafficLights=loadTrafficLights();
+        if(this->pbInLoading==true)
+        {
+                //free the memory and return -1
+                int i=0;
+                for(i=0; i< lamps.size(); i++)
+                {
+                        if(lamps[i]!=NULL)
+                                delete lamps[i];
+                }
+                for(i=0; i< providers.size(); i++)
+                {
+                        if(providers[i]!=NULL)
+                                delete providers[i];
+                }
+                for(i=0; i< trafficLights.size(); i++)
+                {
+                        if(trafficLights[i]!=NULL)
+                                delete trafficLights[i];
+                }
+                return -1;
+        }
+
         size_t size = lamps.size()*sizeof(Node*);
         size+= providers.size()*sizeof(Node*);
         size+= trafficLights.size()*sizeof(Node*);
@@ -163,6 +190,7 @@ void Map::loadMap()
         for(int i=0; i<trafficLights.size(); i++)
                 vecElementsOfTheMap.push_back(trafficLights[i]);
 
+        return 0;
 }
 ///////////////////////////////////////////////////////////////////////////////
 //Add a node to the Map

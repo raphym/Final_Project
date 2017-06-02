@@ -20,7 +20,7 @@ virtual ~Map(); //Destructor
 std::vector<Node*> loadLamps(); //return the Lamps vector on the boot
 std::vector<Node*> loadProviders(); // return the Providers vector on the boot
 std::vector<Node*> loadTrafficLights(); // return the TrafficLights vector on the boot
-void loadMap(); // Load the entire map to the memory
+int loadMap(); // Load the entire map to the memory
 void PrintMap(); // print the map
 std::vector<Node*> getNodes(); // return a vectors of all elements of the map (nodes)
 void addNode(Node *n); // add a node to the map
@@ -37,6 +37,7 @@ void printTraceroute(); //print the Traceroute of each node
 void constructAllTraceroute(); //Construct the traceroutes for the nodes of the graph
 void constructTraceroute(int idSource); //Construct a traceroute for a specific node
 void recursiveDFS(int idSource,int idOrigin, bool visited[],int path[], int &path_index); //run DFS recursive to construct a traceroute
+bool checkPbInLoading(); //check if there is a pb in the loading of the map
 
 
 
@@ -46,8 +47,7 @@ std::string fileProviders; // file input providers
 std::string fileLamps; //file input lamps
 std::string fileTrafficLights; //file input trafficLights
 std::vector<Node*> vecElementsOfTheMap; //vector of all elements of the map
-
-
+bool pbInLoading; // bool to check if there is a pb in the loading of the map
 private:
 
 };
