@@ -48,6 +48,25 @@ Simulation::Simulation(string city,int max_hop,int idStartConstructQuorum)
 //////////////////////////////////////////////////////////////////////////////
 void Simulation::startSim(int choice)
 {
+        //For the file of messages
+        ofstream outfile;
+        string path = "output_files/";
+        path+="messages";
+        path+=".txt";
+        outfile.open(path);
+        if (outfile.is_open())
+        {
+                outfile << "---------------------------------------------------"<<endl;
+                outfile << "---------------------MESSAGES----------------------"<<endl;
+                outfile << "---------------------------------------------------"<<endl;
+                outfile.close();
+        }
+        else
+        {
+                cout << "Unable to write the file of messages";
+                return;
+        }
+
         int flag =0;
         if(choice==0)
                 flag = sendRequestsTest();
@@ -171,12 +190,14 @@ int Simulation::sendRequestsTest()
         {
                 for(int j=0; j < theMap->getNodes().size(); j++)
                 {
-                        if(i!=j && i!=10 && j!=10 && j!=32 && j!=14 &&  j!=41 && j!=47 ) //&& i!=10 && j!=10 && j!=32 && j!=14 &&  j!=41 && j!=47
+                        if(i!=j) //&& i!=10 && j!=10 && j!=32 && j!=14 &&  j!=41 && j!=47
                         {
                                 this->nbRequests++;
                                 string packetId = getRandomId(20,k);
                                 k++;
-                                ObjectRequest *obj = new ObjectRequest("INFO",packetId,i,j,"hello");
+                                string message = "Hello it is a test ";
+                                string encodedMessage = base64_encode(reinterpret_cast<const unsigned char*>(message.c_str()), message.length());
+                                ObjectRequest *obj = new ObjectRequest("INFO",packetId,i,j,encodedMessage);
                                 //send the request
                                 networkSend(i,j,obj);
                                 delete obj;
@@ -269,7 +290,27 @@ void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
         {
                 this->nbSuccess++;
                 softwareHop++;
-                //cout << "ACK RECEIVE : "<<idSource<<" SENT MESSAGE TO "<<idDest <<endl;
+
+
+                ofstream outfile;
+                string path = "output_files/";
+                path+="messages";
+                path+=".txt";
+                outfile.open(path,std::ios_base::app);
+                if (outfile.is_open())
+                {
+                        outfile << "---------------------------------------------------"<<endl;
+                        outfile <<"The ID " <<idDest << " received encrypted message from the ID "<< obj->getSenderId()<<endl;
+                        outfile << obj->getMessage() <<endl;
+                        outfile << "Decrypted message : " <<endl;
+                        outfile << base64_decode(obj->getMessage())<<endl;
+                        outfile.close();
+                }
+                else cout << "Unable to open file";
+
+
+
+                cout << "ACK RECEIVE : "<<idSource<<" SENT MESSAGE TO "<<idDest <<endl;
         }
 
         //cout << endl<<"softwareHop : " << softwareHop <<endl;
