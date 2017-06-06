@@ -160,7 +160,7 @@ int Map::loadMap()
         {
                 if((numsOfElements-1) < this->idStartConstructQuorum)
                 {
-                  cout << "The id from start to construct the quorum is not valid (x >  numbers of elements)"<<endl;
+                        cout << "The id from start to construct the quorum is not valid (x >  numbers of elements)"<<endl;
                 }
                 //free the memory and return -1
                 int i=0;
@@ -573,59 +573,60 @@ void Map::writeMap()
         vector<string> ve;
         ve.push_back("\n");
         ve.push_back("Name of the Map : " + this->name + "\n");
-
+        string temp ="";
         for(int i=0; i< vecElementsOfTheMap.size(); i++ )
         {
+                temp ="";
                 if(vecElementsOfTheMap[i]->checkIfErased()==true)
                         continue;
-                ve.push_back("_____________");
-                ve.push_back("\n\n");
-                ve.push_back("TYPE: ");
-                ve.push_back(vecElementsOfTheMap[i]->getType());
-                ve.push_back(" | ID : ");
-                ve.push_back( to_string(vecElementsOfTheMap[i]->getId()) );
-                ve.push_back(" | Name : ");
-                ve.push_back(vecElementsOfTheMap[i]->getName());
-                ve.push_back(" | Position : ");
-                ve.push_back("(");
-                ve.push_back( to_string_with_precision(vecElementsOfTheMap[i]->getLocationX(),6) );
-                ve.push_back(",");
-                ve.push_back( to_string_with_precision(vecElementsOfTheMap[i]->getLocationY(),6) );
-                ve.push_back(")");
-                ve.push_back("\n");
-                ve.push_back("available Nodes : ");
+                temp += "_____________";
+                temp += "\n\n";
+                temp += "TYPE: ";
+                temp += vecElementsOfTheMap[i]->getType();
+                temp += " | ID : ";
+                temp +=  to_string(vecElementsOfTheMap[i]->getId());
+                temp += " | Name : ";
+                temp += vecElementsOfTheMap[i]->getName();
+                temp += " | Position : ";
+                temp += "(";
+                temp +=  to_string_with_precision(vecElementsOfTheMap[i]->getLocationX(),6);
+                temp += ",";
+                temp +=  to_string_with_precision(vecElementsOfTheMap[i]->getLocationY(),6);
+                temp += ")";
+                temp += "\n";
+                temp += "available Nodes : ";
 
                 if(vecElementsOfTheMap[i]->getVectAvailableNodes().size()==0)
-                        ve.push_back("[]");
-                ve.push_back("\n");
+                        temp += "[]";
+                temp += "\n";
                 for(int j=0; j<vecElementsOfTheMap[i]->getVectAvailableNodes().size(); j++)
                 {
                         if (j==0 && j == vecElementsOfTheMap[i]->getVectAvailableNodes().size()-1)
                         {
-                                ve.push_back("[");
-                                ve.push_back(vecElementsOfTheMap[i]->getVectAvailableNodes()[0]->getName());
-                                ve.push_back("]");
-                                ve.push_back("\n");
+                                temp += "[";
+                                temp += vecElementsOfTheMap[i]->getVectAvailableNodes()[0]->getName();
+                                temp += "]";
+                                temp += "\n";
                         }
 
                         else if (j==0)
                         {
-                                ve.push_back("[");
-                                ve.push_back(vecElementsOfTheMap[i]->getVectAvailableNodes()[0]->getName());
-                                ve.push_back(",");
+                                temp += "[";
+                                temp += vecElementsOfTheMap[i]->getVectAvailableNodes()[0]->getName();
+                                temp += ",";
                         }
 
                         else if (j==vecElementsOfTheMap[i]->getVectAvailableNodes().size() -1 )
                         {
-                                ve.push_back(vecElementsOfTheMap[i]->getVectAvailableNodes()[j]->getName());
-                                ve.push_back("]");
-                                ve.push_back("\n");
+                                temp += vecElementsOfTheMap[i]->getVectAvailableNodes()[j]->getName();
+                                temp += "]";
+                                temp += "\n";
                         }
 
                         else
                         {
-                                ve.push_back(vecElementsOfTheMap[i]->getVectAvailableNodes()[j]->getName());
-                                ve.push_back(",");
+                                temp += vecElementsOfTheMap[i]->getVectAvailableNodes()[j]->getName();
+                                temp += ",";
                         }
                 }
 
@@ -635,17 +636,18 @@ void Map::writeMap()
 
                         int size = b->getlistOfQuorum().size();
                         string name = "Quorum of Backbone " + vecElementsOfTheMap[i]->getName();
-                        ve.push_back("\n");
-                        ve.push_back(name);
-                        ve.push_back(", contains : ");
+                        temp += "\n";
+                        temp += name;
+                        temp += ", contains : ";
                         for(int j=0; j< size; j++)
                         {
                                 int id = b->getlistOfQuorum()[j];
-                                ve.push_back(" ");
-                                ve.push_back(vecElementsOfTheMap[id]->getName());
+                                temp += " ";
+                                temp += vecElementsOfTheMap[id]->getName();
                         }
-                        ve.push_back("\n");
+                        temp += "\n";
                 }
+                ve.push_back(temp);
         }
 
 
@@ -669,24 +671,26 @@ void Map::writeQuorums()
         vector<string> ve;
         ve.push_back("\n");
         ve.push_back("Quorums of the Map : " + this->name + "\n");
-
+        string temp="";
         for(int i=0; i<vecElementsOfTheMap.size(); i++)
         {
+                temp="";
                 if(vecElementsOfTheMap[i]->isItBackbone())
                 {
-                        ve.push_back("\n");
-                        ve.push_back("Backbone Name : ");
-                        ve.push_back(vecElementsOfTheMap[i]->getName());
-                        ve.push_back(", contains : ");
+                        temp +="\n";
+                        temp +="Backbone Name : ";
+                        temp +=vecElementsOfTheMap[i]->getName();
+                        temp +=", contains : ";
                         int size = vecElementsOfTheMap[i]->getlistOfQuorum().size();
                         for(int j=0; j< size; j++)
                         {
                                 int id = vecElementsOfTheMap[i]->getlistOfQuorum()[j];
-                                ve.push_back(" ");
-                                ve.push_back(vecElementsOfTheMap[id]->getName());
+                                temp +=" ";
+                                temp +=vecElementsOfTheMap[id]->getName();
                         }
-                        ve.push_back("\n");
+                        temp +="\n";
                 }
+                ve.push_back(temp);
         }
 
         ofstream outfile;
@@ -709,29 +713,32 @@ void Map::writeTraceroutes()
         vector<string> ve;
         ve.push_back("\n");
         ve.push_back("TraceRoute for each node of the Map : " + this->name + "\n\n");
+        string temp="";
 
         for(int k=0; k<vecElementsOfTheMap.size(); k++)
         {
+                temp="";
                 for(int i=0; i< vecElementsOfTheMap[k]->getTheTraceroute().size(); i++)
                 {
-                        ve.push_back("List of ");
-                        ve.push_back(vecElementsOfTheMap[k]->getName());
-                        ve.push_back(" : ");
-                        ve.push_back("\n");
+                        temp +="List of ";
+                        temp += vecElementsOfTheMap[k]->getName();
+                        temp += " : ";
+                        temp += "\n";
 
                         for(int j=0; j< vecElementsOfTheMap[k]->getTheTraceroute()[i].size(); j++)
                         {
-                                ve.push_back("{ ID : ");
-                                ve.push_back(to_string(vecElementsOfTheMap[k]->getTheTraceroute()[i][j]));
-                                ve.push_back(" , Name : ");
+                                temp += "{ ID : ";
+                                temp += to_string(vecElementsOfTheMap[k]->getTheTraceroute()[i][j]);
+                                temp += " , Name : ";
                                 int theId=vecElementsOfTheMap[k]->getTheTraceroute()[i][j];
-                                ve.push_back(vecElementsOfTheMap[theId]->getName());
-                                ve.push_back(" }");
-                                ve.push_back("\n");
+                                temp += vecElementsOfTheMap[theId]->getName();
+                                temp += " }";
+                                temp += "\n";
                         }
-                        ve.push_back("\n");
+                        temp += "\n";
                 }
-                ve.push_back("\n");
+                temp += "\n";
+                ve.push_back(temp);
         }
 
         ofstream outfile;
