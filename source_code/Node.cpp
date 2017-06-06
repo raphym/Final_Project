@@ -306,6 +306,16 @@ bool Node::checkIfExist(vector<Node*> vec,int id)
 //////////////////////////////////////////////////////////////////////////////
 ObjectRequest* Node::send(ObjectRequest *obj)
 {
+        //first check wifi connection if it is in the range
+        for(int i=0; i<this->vecAvailableNodes.size(); i++)
+        {
+                if(this->vecAvailableNodes[i]->getId()==obj->getDestinationId())
+                {
+                        obj->setMessageType("ACK");
+                        obj->addToHeader(this->vecAvailableNodes[i]->getId());
+                        return obj;
+                }
+        }
 
         /*******************************************************************************************************************INFO*/
         //if the message is info
@@ -560,15 +570,15 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 //the traceroutes don't pass through this node
                 //We will do brute force into the quorum
 
-                // for(int i=0; i<this->vecAvailableNodes.size(); i++)
-                // {
-                //         if(vecAvailableNodes[i]->getId()==obj->getDestinationId())
-                //         {
-                //                 obj->setMessageType("ACK");
-                //                 obj->addToHeader(vecAvailableNodes[i]->getId());
-                //                 return obj;
-                //         }
-                // }
+                for(int i=0; i<this->vecAvailableNodes.size(); i++)
+                {
+                        if(this->vecAvailableNodes[i]->getId()==obj->getDestinationId())
+                        {
+                                obj->setMessageType("ACK");
+                                obj->addToHeader(this->vecAvailableNodes[i]->getId());
+                                return obj;
+                        }
+                }
                 //stop
                 obj->setMessageType("NAK");
                 return obj;
