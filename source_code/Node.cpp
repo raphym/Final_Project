@@ -404,6 +404,7 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                                 obj->popFromHeader();
                                                 return obj;
                                         }
+                                        //End max_hop
                                         obj->setMessageType("INFO_TO_QUORUM");
                                         //check which traceroute can arrive to a backbone
                                         for(index=0; index < this->getTheTraceroute().size(); index++)
