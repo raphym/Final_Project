@@ -190,7 +190,7 @@ int Simulation::sendRequestsTest()
         {
                 for(int j=0; j < theMap->getNodes().size(); j++)
                 {
-                        if(i!=j) //&& i!=10 && j!=10 && j!=32 && j!=14 &&  j!=41 && j!=47
+                        if(i!=j && i!=10 && j!=10) //&& i!=10 && j!=10 && j!=32 && j!=14 &&  j!=41 && j!=47
                         {
                                 this->nbRequests++;
                                 string packetId = getRandomId(20,k);
@@ -271,6 +271,8 @@ void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
                 else
                 {
                         index = obj->getHeader()[obj->getHeader()[0]];
+                        if(index==idDest)
+                                break;
                         if(obj->getmessageType()!="INFO")
                         {
                                 hardwareHop++;
