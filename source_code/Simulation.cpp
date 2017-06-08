@@ -190,7 +190,7 @@ int Simulation::sendRequestsTest()
         {
                 for(int j=0; j < theMap->getNodes().size(); j++)
                 {
-                        if(i!=j) //&& i!=10 && j!=10 && j!=32 && j!=14 &&  j!=41 && j!=47
+                        if(i!=j) //&& i!=10 && j!=10 &&  j!=41
                         {
                                 this->nbRequests++;
                                 string packetId = getRandomId(20,k);
