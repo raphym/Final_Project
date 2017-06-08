@@ -397,14 +397,14 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                                 else if(!foundInQuorum)
                                 {
                                         //for the maxhop
-                                        if(obj->getHeader()[0] == 1 && obj->getHeader()[0] > this->max_hop)
+                                        if(obj->getHeader()[0] == 1 && obj->getCounterBackbone() > this->max_hop)
                                         {
                                                 obj->setMessageType("NAK");
                                                 return obj;
                                         }
-                                        if(obj->getHeader()[0] > this->max_hop)
+                                        if(obj->getCounterBackbone() > this->max_hop)
                                         {
-                                                cout << "MAX_HOP (" <<obj->getHeader()[0] << ")"<<endl;
+                                                cout << "MAX_HOP (" <<obj->getCounterBackbone() << ")"<<endl;
                                                 obj->setMessageType("NAK_INFO_TO_QUORUM");
                                                 obj->popFromHeader();
                                                 return obj;
@@ -607,6 +607,8 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 //if arrive to the Quorum
                 if(this->isItBackbone())
                 {
+                        //for the counter max hop
+                        obj->incrementCounterBackbone();
                         obj->setMessageType("INFO");
                         return obj;
                 }
@@ -663,6 +665,8 @@ ObjectRequest* Node::send(ObjectRequest *obj)
                 }
                 else //if you arrived to the origin
                 {
+                        //for the counter max hop
+                        obj->decrementCounterBackBone();
                         obj->setMessageType("INFO");
                         return obj;
                 }
