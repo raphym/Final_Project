@@ -31,6 +31,9 @@ void clearDirectionToExecute(); //clear the vector directionToExecute
 void setMessageType(std::string messageType); //set the MessageType
 void clearVisitedTraceroutes(); //clear the vector VisitedTraceroutes
 void popFromVisitedBackbones(); //pop From VisitedBackbones
+int getCounterBackbone(); // get the counter value of backbone that have been traversed
+void incrementCounterBackbone(); //increment the counter value of backbone that have been traversed
+void decrementCounterBackBone(); //decrement the counter value of backbone that have been traversed
 
 protected:
 std::string messageType; // the type of the message
@@ -42,7 +45,7 @@ std::vector<int> header; //the header
 std::vector<int> directionToExecute; //the direction to execute
 std::vector<int> visitedBackbones; //the vector of visited backbones
 std::vector<int> visitedTraceroutes; //the vector of visited traceroutes
-
+int counterBackbone; //this value is a counter of backbone that have been traversed
 
 private:
 };

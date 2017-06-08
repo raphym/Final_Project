@@ -13,6 +13,7 @@ ObjectRequest::ObjectRequest(string typeOfMessage,std::string packetId, int send
         this->destinationId=destinationId;
         this->message=message;
         this->header.push_back(0);
+        this->counterBackbone=0;
 }
 ///////////////////////////////////////////////////////////////////////////////
 //destructor
@@ -151,4 +152,25 @@ void ObjectRequest::clearVisitedTraceroutes()
 void ObjectRequest::popFromVisitedBackbones()
 {
         visitedBackbones.pop_back();
+}
+///////////////////////////////////////////////////////////////////////////////
+//get the counter value of backbone that have been traversed
+//////////////////////////////////////////////////////////////////////////////
+int ObjectRequest::getCounterBackbone()
+{
+        return this->counterBackbone;
+}
+///////////////////////////////////////////////////////////////////////////////
+//increment the counter value of backbone that have been traversed
+//////////////////////////////////////////////////////////////////////////////
+void ObjectRequest::incrementCounterBackbone()
+{
+        this->counterBackbone++;
+}
+///////////////////////////////////////////////////////////////////////////////
+//decrement the counter value of backbone that have been traversed
+//////////////////////////////////////////////////////////////////////////////
+void ObjectRequest::decrementCounterBackBone()
+{
+        this->counterBackbone--;
 }
