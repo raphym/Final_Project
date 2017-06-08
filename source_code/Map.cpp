@@ -12,6 +12,7 @@ Map::Map(string name,string fileProviders, string fileLamps, string fileTrafficL
         this->pbInLoading=false;
         this->max_hop=max_hop;
         this->idStartConstructQuorum=idStartConstructQuorum;
+        this->maxTracerouteLength=9;
 }
 ///////////////////////////////////////////////////////////////////////////////
 //Destructor
@@ -526,13 +527,17 @@ void Map::recursiveDFS(int idSource,int idOrigin, bool visited[],int path[], int
         {
                 vector<int>*traceroute = new std::vector<int>();
 
-                for (int i = 1; i<path_index; i++)
+                //save the traceroute only if the size is not bigger than a max
+                if(path_index < this->maxTracerouteLength)
                 {
-                        traceroute->push_back(path[i]);
+                        for (int i = 1; i<path_index; i++)
+                        {
+                                traceroute->push_back(path[i]);
+                        }
+                        //add the vect of traceroute to the traceroute of the origin node
+                        vecElementsOfTheMap[idOrigin]->getTheTraceroute().push_back(*traceroute);
+                        delete traceroute;
                 }
-                //add the vect of traceroute to the traceroute of the origin node
-                vecElementsOfTheMap[idOrigin]->getTheTraceroute().push_back(*traceroute);
-                delete traceroute;
         }
 
         else // If current vertex is not a backbone

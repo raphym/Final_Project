@@ -40,10 +40,10 @@ void constructAllTraceroute(); //Construct the traceroutes for the nodes of the 
 void constructTraceroute(int idSource); //Construct a traceroute for a specific node
 void recursiveDFS(int idSource,int idOrigin, bool visited[],int path[], int &path_index); //run DFS recursive to construct a traceroute
 bool checkPbInLoading(); //check if there is a pb in the loading of the map
-void writeQuorums();
-void writeTraceroutes();
-void writeMap();
-std::string to_string_with_precision(double a_value,int n);
+void writeQuorums(); //function to write the quorums into a file
+void writeTraceroutes(); //function to write the Traceroute into a file
+void writeMap(); //function to write the Map into a file
+std::string to_string_with_precision(double a_value,int n); //convert to a string
 
 
 protected:
@@ -54,7 +54,8 @@ std::string fileTrafficLights; //file input trafficLights
 std::vector<Node*> vecElementsOfTheMap; //vector of all elements of the map
 bool pbInLoading; // bool to check if there is a pb in the loading of the map
 int max_hop; //the max hop for the sending
-int idStartConstructQuorum;//the id to start to construct the quorum
+int idStartConstructQuorum; //the id to start to construct the quorum
+int maxTracerouteLength; //this value is the max which a traceroute can contains
 
 private:
 
