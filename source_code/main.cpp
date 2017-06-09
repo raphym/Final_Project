@@ -28,7 +28,7 @@ int main(int argc, char *argv[])
                 }catch(exception e)
                 {
                         cout << "Error of input, Please write :"<< endl;
-                        cout <<"<city_name><choice><max_hop><id_from_we_start_to_construct_the_quorums>"<<endl;
+                        cout <<"<city_name> <choice> <max_hop> <id_from_we_start_to_construct_the_quorums>"<<endl<<endl;
                         cout << "The choice should to be 0 for test or 1 for Events-Schedule"<<endl;
                         //bip sound
                         system("canberra-gtk-play -f input_files/sounds/beep-02.wav");
@@ -54,7 +54,8 @@ int main(int argc, char *argv[])
         }
         else
         {
-                cout << "Error of input please write : <city name><choice><max_hop><id_from_we_start_to_construct_the_quorums>"<<endl;
+                cout << "Error of input, Please write :"<< endl;
+                cout <<"<city_name> <choice> <max_hop> <id_from_we_start_to_construct_the_quorums>"<<endl<<endl;
                 cout << "The choice should to be 0 for test or 1 for Events-Schedule"<<endl;
                 //bip sound
                 system("canberra-gtk-play -f input_files/sounds/beep-02.wav");
