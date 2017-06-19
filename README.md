@@ -5,7 +5,7 @@
 
 ## Disclaimer
 * This is the repository of my final project B.Sc in Software engineer for year 2016-2017
-* The project takes place in the [Jerusale College of Engineering](www.jce.ac.il), in Ramat Bet HaKerem, Jerusalem, Israel.
+* The project takes place in the [Jerusale College of Engineering](https://www.jce.ac.il/), in Ramat Bet HaKerem, Jerusalem, Israel.
 * The project is scheduled between October 2016 untill July 2017 
 
 ## Staff:
