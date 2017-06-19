@@ -7,22 +7,9 @@
 * This is the repository of my final project B.Sc in Software engineer for year 2016-2017
 * The project takes place in the [Jerusale College of Engineering](www.jce.ac.il), in Ramat Bet HaKerem, Jerusalem, Israel.
 * The project is scheduled between October 2016 untill July 2017 
-* This repository will include all the codes and informations about the progress of the project, from the zero stage to the presentation.
-* [Please view the wiki-pages for more information](https://github.com/raphym/Simulation-of-routing-problem-with-intelligent-agents/wiki)
 
 ## Staff:
 Presentor: Raphael Mazouz<br><br>
 <a href="https://github.com/raphym">
 <img src="https://avatars2.githubusercontent.com/u/17546494?v=3&s=460" alt="Raphael Mazouz" width="100" height="100"></a>
 <br>Academic advisor: Guy Kelman
-
-##[Issue Board](https://huboard.com/)
-
-##[Project schedule](https://calendar.google.com/)
-
-## Project Documents
-- All documents
-- [Article Links](https://github.com/)
-
-## Stages pages
-Under construction
