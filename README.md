@@ -35,3 +35,36 @@ The output of the simulation will help to improve the ability of the algorithm w
 
 ## How to run:
 
+Requirements:
+* Workspace should be Linux
+* C / C ++ compiler
+* If the selection is run by event log then this file should appear in the input file folder
+
+Compile files with
+
+  g++ -std=c++11 *.cpp *.h -o app
+  
+Run the simulation
+
+There are two modes for simulation
+
+• Normal mode: events called by log events
+
+• TESTS Mode : This means sending messages from all network nodes to all network nodes.
+
+So run this : ./app W X Y Z > output_files/log.txt
+
+when :
+
+• W = city_name
+
+• X = choice 0 for test OR 1 for Events-Schedule
+
+• Y = max_hop
+
+• Z = id_from_we_start_to_construct_the_quorums
+
+  
+  
+
+
