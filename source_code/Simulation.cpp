@@ -122,6 +122,12 @@ int Simulation::sendRequests()
                         vector<string> request;
                         split(line,'\t',request);
 
+                        if(request.size()<3)
+                        {
+                                cout << "Unable to read this line of Events-Schedule"<<endl;
+                                continue;
+                        }
+
                         //details of the request
                         idSource = stoi(request[0]);
                         idDest = stoi(request[1]);
@@ -302,9 +308,9 @@ void Simulation::networkSend(int idSource,int idDest,ObjectRequest *obj)
                 if (outfile.is_open())
                 {
                         outfile << "---------------------------------------------------"<<endl;
-                        outfile <<"The ID " <<idDest << " received encrypted message from the ID "<< obj->getSenderId()<<endl;
+                        outfile <<"The ID " <<idDest << " received encoded message from the ID "<< obj->getSenderId()<<endl;
                         outfile << obj->getMessage() <<endl;
-                        outfile << "Decrypted message : " <<endl;
+                        outfile << "Decoded message : " <<endl;
                         outfile << base64_decode(obj->getMessage())<<endl;
                         outfile.close();
                 }
@@ -351,6 +357,7 @@ void Simulation::split(string& s, char delim,vector<string>& v)
                 if (pos == string::npos)
                         v.push_back(s.substr(i, s.length()));
         }
+
 }
 ///////////////////////////////////////////////////////////////////////////////
 //function which print a Vector

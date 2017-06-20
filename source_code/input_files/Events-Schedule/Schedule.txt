@@ -1,6 +1,4 @@
 0	37	Red_TrafficLight_0_is_not_working
+37	0	OK_I_Will_Repair_This_problem
 0	37	Red_TrafficLight_0_is_now_operational
-
-
-
-
+37	0	Great
