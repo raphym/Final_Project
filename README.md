@@ -13,7 +13,4 @@ Presentor: Raphael Mazouz<br><br>
 <a href="https://github.com/raphym">
 <img src="https://avatars2.githubusercontent.com/u/17546494?v=3&s=460" alt="Raphael Mazouz" width="100" height="100"></a>
 <br>Academic advisor: Guy Kelman
-<<<<<<< HEAD
 
-=======
->>>>>>> b9f96542ce890a66127ca5c86c3d98dd613fd4e2
