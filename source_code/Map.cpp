@@ -525,11 +525,10 @@ void Map::recursiveDFS(int idSource,int idOrigin, bool visited[],int path[], int
         // current path[]
         if( (vecElementsOfTheMap[idSource]->isItBackbone()) && (idSource!=idOrigin) )
         {
-                vector<int>*traceroute = new std::vector<int>();
-
                 //save the traceroute only if the size is not bigger than a max
                 if(path_index < this->maxTracerouteLength)
                 {
+                        vector<int>*traceroute = new std::vector<int>();
                         for (int i = 1; i<path_index; i++)
                         {
                                 traceroute->push_back(path[i]);
