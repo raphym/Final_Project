@@ -22,7 +22,7 @@ Azrieli – College of Engineering Jerusalem, I will implement a final project f
 This company develop a “smart city” and want to create a smart system to control the traffic in the city by automatically system and without control center.
 
 I need to create an algorithm that will allow data routing in a distributed network.
-Each node is a computer component with the ability to transmit and receive packets wirelessly. The difficulty is to create a decentralized network when each component can communicate only with its neighbors.
+Each node is a computer component with the ability to transmit and receive packets wirelessly. The difficult is to create a decentralized network when each component can communicate only with its neighbors.
 The routing solution that I implement is the construction of sub-graphs linked by nodes called "Quorums" that will help in the routing of the packages. (Backbones and Quorums)
 
 
