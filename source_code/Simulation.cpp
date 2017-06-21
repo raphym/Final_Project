@@ -122,16 +122,24 @@ int Simulation::sendRequests()
                         vector<string> request;
                         split(line,'\t',request);
 
-                        if(request.size()<3)
+                        if(request.size()!=3)
                         {
                                 cout << "Unable to read this line of Events-Schedule"<<endl;
                                 continue;
                         }
 
                         //details of the request
-                        idSource = stoi(request[0]);
-                        idDest = stoi(request[1]);
-                        message = request[2];
+                        try
+                        {
+                                idSource = stoi(request[0]);
+                                idDest = stoi(request[1]);
+                                message = request[2];
+                        }
+                        catch(exception e)
+                        {
+                                cout << "Unable to read this line of Events-Schedule"<<endl;
+                                continue;
+                        }
                         string packetId = getRandomId(20,k);
                         k++;
                         string encodedMessage = base64_encode(reinterpret_cast<const unsigned char*>(message.c_str()), message.length());
