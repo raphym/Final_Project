@@ -33,6 +33,10 @@ In order to make measurements and comparisons with other networks, it is possibl
 This mode is called "Test mode" and it allows you to check the ability of the system by sending packets from each node to each node.
 The output of the simulation will help to improve the ability of the algorithm with statistics and data on the network information.
 
+For more information you can read the [Final Report](https://github.com/raphym/Simulation_of_message_routing_by_intelligent_agents/tree/master/documentations/5_%D7%9E%D7%A1%D7%99%D7%A8%D7%94)
+
+Other informations can be found in the folder Documentations
+
 ## How to run:
 
 Requirements:
